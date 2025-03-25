@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Bibliotecaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row min-vh-100">
+            <div class="col-md-6 bg-primary text-white d-flex flex-column justify-content-center align-items-center text-center p-4">
+                <h1 class="display-4 fw-bold">Biblioteca DUOC UC</h1>
+                <p class="lead mb-4">Sistema Integrado de Gestión Bibliotecaria</p>
+
+                <!-- Mostrar solo si es Estudiante -->
+                <div class="features d-none" id="features-estudiante">
+                    <div class="feature">
+                        <i class="fas fa-book fa-3x mb-3"></i>
+                        <h3>Ve cuando devuelves</h3>
+                        <p>Consulta el tiempo restante para devolver tu libro a tiempo.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-clock fa-3x mb-3"></i>
+                        <h3>Solicita más tiempo</h3>
+                        <p>Si necesitas más tiempo, puedes solicitar una extensión del préstamo.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                        <h3>Agenda tu hora</h3>
+                        <p>Planifica tu hora de devolución de libros de manera eficiente.</p>
+                    </div>
+                </div>
+
+                <!-- Mostrar solo si es Funcionario -->
+                <div class="features d-none" id="features-funcionario">
+                    <div class="feature">
+                        <i class="fas fa-book fa-3x mb-3"></i>
+                        <h3>Gestión de Catálogo</h3>
+                        <p>Administra todo el inventario de libros con información detallada.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+                        <h3>Préstamos y Devoluciones</h3>
+                        <p>Automatiza el proceso completo de circulación de material.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line fa-3x mb-3"></i>
+                        <h3>Reportes y Estadísticas</h3>
+                        <p>Obtén información valiosa para la toma de decisiones.</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="card shadow-lg mx-auto" style="max-width: 400px;">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+
+                        <!-- Mensajes de error/success -->
+                        <div class="alert alert-{{ category }}"></div>
+
+                        <form method="POST" action="/login" onsubmit="return validateEmail()">
+                            <!-- Select de tipo de usuario -->
+                            <div class="mb-3">
+                                <label for="user_type" class="form-label">Tipo de Usuario</label>
+                                <select class="form-select" id="user_type" name="user_type" required>
+                                    <option value="estudiante">Estudiante</option>
+                                    <option value="funcionario">Funcionario</option>
+                                </select>
+                            </div>
+
+                            <!-- Campo para el correo o RUT -->
+                            <div class="mb-3" id="email-field">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="mb-3 d-none" id="rut-field">
+                                <label for="rut" class="form-label">RUT</label>
+                                <input type="text" class="form-control" id="rut" name="rut" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para cambiar el campo según el tipo de usuario
+        document.getElementById('user_type').addEventListener('change', function () {
+            const userType = this.value;
+            const emailField = document.getElementById('email-field');
+            const rutField = document.getElementById('rut-field');
+            const featuresEstudiante = document.getElementById('features-estudiante');
+            const featuresFuncionario = document.getElementById('features-funcionario');
+            
+            if (userType === 'funcionario') {
+                emailField.classList.add('d-none'); // Ocultar correo
+                rutField.classList.remove('d-none'); // Mostrar RUT
+                featuresEstudiante.classList.add('d-none'); // Ocultar características estudiante
+                featuresFuncionario.classList.remove('d-none'); // Mostrar características funcionario
+            } else {
+                emailField.classList.remove('d-none'); // Mostrar correo
+                rutField.classList.add('d-none'); // Ocultar RUT
+                featuresEstudiante.classList.remove('d-none'); // Mostrar características estudiante
+                featuresFuncionario.classList.add('d-none'); // Ocultar características funcionario
+            }
+        });
+
+        // Validación del correo electrónico para el estudiante
+        function validateEmail() {
+            const userType = document.getElementById('user_type').value;
+            const email = document.getElementById('email').value;
+            
+            if (userType === 'estudiante') {
+                // Verificar que el correo termine con '@duocuc.cl'
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@duocuc\.cl$/;
+                if (!emailRegex.test(email)) {
+                    alert("El correo debe ser de la forma: tu_correo@duocuc.cl");
+                    return false; // Evitar el envío del formulario si no es válido
+                }
+            }
+            return true; // Permitir el envío del formulario si es válido
+        }
+    </script>
+</body>
+</html>
+
+
