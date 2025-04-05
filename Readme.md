@@ -120,8 +120,9 @@ Este kit está pensado para estudiantes con conocimientos básicos de Java, que 
 
 ### 📁 Estructura del Proyecto Sugerida
 
-\`\`\`
-src/
+
+<pre>
+    src/
 ├── main/
 │   ├── java/
 │   │   └── com.miempresa.inventario/
@@ -133,9 +134,8 @@ src/
 │       ├── static/               # Archivos CSS / JS
 │       ├── templates/            # Vistas HTML (Thymeleaf)
 │       └── application.properties
-\`\`\`
 
----
+</pre>
 
 ### 🧪 Herramientas de Desarrollo
 
