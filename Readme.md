@@ -160,4 +160,8 @@ Este kit está pensado para estudiantes con conocimientos básicos de Java, que 
 
     - Metodología de desarrollo a emplear (Scrum, Kanban, etc.): kanban
     - Posible vinculación con otras asignaturas: fullstack, base de datos, ingenieria de software?
-    
+---
+### FIGMA
+
+    - Espacio para trabajar el diseño en Figma:
+            https://www.figma.com/files/team/1373693046743509687/project/359582592/GestionInventario?fuid=1373693044816156470
