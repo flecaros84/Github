@@ -3,7 +3,7 @@
 Este documento detalla las pantallas mínimas necesarias que deben diseñarse en Figma, basadas en los requisitos funcionales definidos anteriormente.
 
 Link del Poryecto:
-  https://www.figma.com/files/team/1373693046743509687/project/359582592/GestionInventario?fuid=1373693044816156470
+  https://www.figma.com/files/project/359582592
 
 ---
 
