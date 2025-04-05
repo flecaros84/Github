@@ -161,3 +161,72 @@ Este kit está pensado para estudiantes con conocimientos básicos de Java, que 
     - Metodología de desarrollo a emplear (Scrum, Kanban, etc.): kanban
     - Posible vinculación con otras asignaturas: fullstack, base de datos, ingenieria de software?
     
+# 🔗 Relación entre Requisitos y Herramientas – Sistema de Gestión de Inventario
+
+Este documento describe qué herramientas del kit básico se deben usar para implementar cada requisito funcional y no funcional del sistema, incluyendo una breve explicación del rol que cumple cada herramienta.
+
+---
+
+## ✅ Requisitos Funcionales
+
+### RF01: Inicio de sesión
+**Herramientas:** Spring Boot (Security opcional), Thymeleaf, HTML, Oracle  
+**Explicación:** Spring Boot maneja el flujo de login. Thymeleaf genera el formulario. Oracle almacena los usuarios y contraseñas (encriptadas si se usa Spring Security).
+
+### RF02–RF06: Gestión de Productos
+**Herramientas:** Spring Boot + JPA, Thymeleaf, HTML, Oracle  
+**Explicación:** JPA permite mapear clases Producto a tablas. Thymeleaf muestra productos y formularios en pantalla. HTML estructura la vista. Oracle guarda los datos.
+
+### RF07–RF09: Gestión de Inventario
+**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
+**Explicación:** Se registran entradas, salidas y ajustes con formularios Thymeleaf y se guardan en Oracle usando JPA.
+
+### RF10–RF12: Gestión de Proveedores
+**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
+**Explicación:** CRUD de proveedores manejado por Spring Boot y persistido con JPA en Oracle. Thymeleaf crea la interfaz.
+
+### RF13–RF15: Gestión de Clientes
+**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
+**Explicación:** Igual que proveedores, pero aplicado a entidades Cliente.
+
+### RF16–RF18: Gestión de Usuarios
+**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
+**Explicación:** Solo accesible por administradores. Se administra quién puede acceder al sistema.
+
+### RF19–RF23: Gestión de Pedidos
+**Herramientas:** Spring Boot + JPA, Thymeleaf, HTML, Oracle  
+**Explicación:** El sistema permite crear y actualizar pedidos con formularios y listas renderizadas con Thymeleaf.
+
+### RF24–RF25: Reportes
+**Herramientas:** Spring Boot, Thymeleaf, HTML, Oracle (consultas), JavaScript (descarga PDF opcional)  
+**Explicación:** Los reportes se generan en base a consultas SQL, se visualizan con HTML + Thymeleaf y se pueden descargar con JS.
+
+---
+
+## 🛠️ Requisitos No Funcionales
+
+### RNF01–RNF03: Seguridad
+**Herramientas:** Spring Boot Security, Oracle (roles), validaciones  
+**Explicación:** Spring Security permite manejar roles y sesiones. Las validaciones protegen la entrada de datos maliciosos.
+
+### RNF04–RNF05: Rendimiento
+**Herramientas:** Java eficiente, consultas optimizadas en Oracle  
+**Explicación:** Buenas prácticas en código y consultas aseguran un sistema rápido incluso con muchos datos.
+
+### RNF06–RNF08: Usabilidad
+**Herramientas:** Thymeleaf, HTML/CSS, diseño simple  
+**Explicación:** Interfaz clara y formularios intuitivos permiten que cualquier usuario pueda navegar fácilmente.
+
+### RNF09–RNF10: Mantenibilidad
+**Herramientas:** Estructura en capas con Spring Boot, buenas prácticas  
+**Explicación:** Organizar bien el código (controladores, servicios, repositorios) facilita futuros cambios.
+
+### RNF11–RNF12: Disponibilidad
+**Herramientas:** Despliegue estable en PC local o servidor básico  
+**Explicación:** El sistema debe estar accesible de forma continua, incluso si no se usa la nube.
+
+### RNF13–RNF14: Integridad de datos
+**Herramientas:** Spring Validation, Oracle, control de errores  
+**Explicación:** Se validan datos antes de guardarlos y se controla que no haya fallos en las operaciones.
+
+---

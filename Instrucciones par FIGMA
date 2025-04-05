@@ -1,117 +1,112 @@
-#Diseño FIGMA
+# 🧩 Prototipos de Pantallas para el Sistema de Gestión de Inventario
 
-##Propuesta de Diseño de Interfaces de Usuario para un Sistema de Gestión de Inventario
-A continuación, se presenta una propuesta de diseño de interfaces de usuario para un sistema de gestión de inventario, basada en los módulos previamente definidos:
+Este documento detalla las pantallas mínimas necesarias que deben diseñarse en Figma, basadas en los requisitos funcionales definidos anteriormente.
 
-###Tablero de Control:
+---
 
-Descripción: El tablero de control ofrecerá una visión general del sistema, destacando métricas clave como el valor total del inventario, los productos más vendidos y las alertas de bajo stock.
+## 1. 🟦 Pantalla de Inicio de Sesión
 
-Elementos Clave: Gráficos, tablas resumen y accesos directos a otras secciones del sistema.
+**Requisitos Relacionados:** RF01
 
-Vistas:
+**Elementos:**
+- Campo de usuario
+- Campo de contraseña
+- Botón “Iniciar Sesión”
+- Mensaje de error si las credenciales son incorrectas
 
-Vista Principal: Exhibirá las métricas clave, gráficos y tablas resumen.
+---
 
-Vista de Alertas de Bajo Stock: Detallará los productos que se encuentren por debajo del nivel mínimo de stock.
+## 2. 🏠 Panel Principal / Dashboard
 
-Vista de Productos Más Vendidos: Presentará una clasificación de los productos con mayor volumen de ventas.
+**Requisitos Relacionados:** Navegación general
 
-Vista de Valor de Inventario: Mostrará el valor total del inventario, posiblemente con opciones para visualizar su evolución a lo largo del tiempo.
+**Elementos:**
+- Mensaje de bienvenida
+- Menú de navegación con accesos a:
+  - Productos
+  - Proveedores
+  - Clientes
+  - Usuarios (solo admin)
+  - Pedidos
+  - Inventario
+  - Reportes
+- Botón de cerrar sesión
 
-###Gestión de Productos:
+---
 
-Lista de Productos:
+## 3. 📦 Gestión de Productos
 
-Descripción: Mostrará todos los productos disponibles en el inventario.
+**Requisitos Relacionados:** RF02–RF06
 
-Elementos Clave: Una tabla con información detallada de cada producto (nombre, descripción, precio, stock, categoría), una barra de búsqueda, filtros y botones para agregar, editar y eliminar productos.
+**Elementos:**
+- Tabla con lista de productos (nombre, stock, proveedor, etc.)
+- Botones por producto: “Editar”, “Eliminar”, “Ver Stock”
+- Botón “Agregar Producto”
+- Barra de búsqueda y filtros
+- Modal o formulario para crear/editar producto
 
-Agregar/Editar Producto:
+---
 
-Descripción: Un formulario que permitirá agregar un nuevo producto o modificar la información de uno existente.
+## 4. 🤝 Gestión de Proveedores / Clientes / Usuarios
 
-Elementos Clave: Campos de entrada para la información del producto, un selector de categoría, y botones para guardar y cancelar la operación.
+**Requisitos Relacionados:** RF10–RF18
 
-###Gestión de Proveedores:
+**Elementos Comunes:**
+- Tabla de datos
+- Botones: “Agregar”, “Editar”, “Eliminar”
+- Formulario para alta o edición
+- Buscador y paginación
 
-Lista de Proveedores:
+---
 
-Descripción: Mostrará todos los proveedores registrados en el sistema.
+## 5. 📑 Gestión de Pedidos
 
-Elementos Clave: Una tabla con información del proveedor (nombre, dirección, teléfono), una barra de búsqueda y botones para agregar, editar y eliminar proveedores.
+**Requisitos Relacionados:** RF19–RF23
 
-Agregar/Editar Proveedor:
+**Elementos:**
+- Lista de pedidos con estado (pendiente, despachado, cancelado)
+- Botón “Realizar Pedido”
+- Botón “Cancelar” / “Actualizar Estado”
+- Detalles del pedido
+- Formulario: cliente, productos, cantidades
 
-Descripción: Un formulario para agregar un nuevo proveedor o modificar la información de uno existente.
+---
 
-Elementos Clave: Campos de entrada para la información del proveedor y botones para guardar y cancelar la operación.
+## 6. 🗃️ Gestión de Inventario
 
-###Gestión de Clientes:
+**Requisitos Relacionados:** RF07–RF09
 
-Lista de Clientes:
+**Elementos:**
+- Botones: “Registrar Recepción”, “Registrar Salida”, “Ajuste de Inventario”
+- Tabla con historial de movimientos
+- Formulario con producto, cantidad, motivo
 
-Descripción: Mostrará todos los clientes registrados en el sistema.
+---
 
-Elementos Clave: Una tabla con información del cliente (nombre, dirección, teléfono), una barra de búsqueda y botones para agregar, editar y eliminar clientes.
+## 7. 📊 Reportes
 
-Agregar/Editar Cliente:
+**Requisitos Relacionados:** RF24–RF25
 
-Descripción: Un formulario para agregar un nuevo cliente o modificar la información de uno existente.
+**Elementos:**
+- Selector de tipo de reporte (Inventario, Pedidos, etc.)
+- Filtros por fecha, categoría, proveedor
+- Botón “Generar Reporte”
+- Vista previa del reporte (tabla)
+- Botón opcional “Descargar PDF”
 
-Elementos Clave: Campos de entrada para la información del cliente y botones para guardar y cancelar la operación.
+---
 
-###Gestión de Inventario:
+## 🧠 Extras
 
-Registro de Movimientos:
+- Una sola pantalla de Dashboard puede variar según el rol del usuario (Admin, Bodeguero, etc.).
+- Reutilizar componentes como tablas, formularios, y modales para simplificar el diseño.
+- Usar Auto Layout en Figma para que las pantallas se adapten bien.
 
-Descripción: Permitirá registrar las entradas y salidas de productos del inventario.
+---
 
-Elementos Clave: Un selector de producto, un campo para la cantidad, un selector del tipo de movimiento (entrada/salida), un campo para la ubicación y un botón para registrar el movimiento.
+## 🖌️ Consejos para Figma
 
-Ajustes de Inventario:
-
-Descripción: Permitirá realizar ajustes en el inventario, por ejemplo, debido a pérdidas o robos.
-
-Elementos Clave: Un selector de producto, un campo para la cantidad, un campo para el motivo del ajuste y un botón para registrar el ajuste.
-
-###Reportes:
-
-Generación de Reportes:
-
-Descripción: Permitirá generar diversos tipos de reportes, como reportes de stock, ventas y movimientos de inventario.
-
-Elementos Clave: Un selector del tipo de reporte, filtros de fecha, un botón para generar el reporte y una vista del reporte (en forma de tabla o gráfico).
-
-###Gestión de Usuarios:
-
-Lista de Usuarios:
-
-Descripción: Mostrará todos los usuarios del sistema.
-
-Elementos Clave: Una tabla con información del usuario (nombre, correo electrónico, rol) y botones para agregar, editar y eliminar usuarios.
-
-Agregar/Editar Usuario:
-
-Descripción: Un formulario para agregar un nuevo usuario o modificar la información de uno existente.
-
-Elementos Clave: Campos de entrada para la información del usuario, un selector de rol y botones para guardar y cancelar la operación.
-
-###Inicio de Sesión:
-
-Descripción: Permitirá a los usuarios iniciar sesión en el sistema.
-
-Elementos Clave: Campos de entrada para el correo electrónico y la contraseña, y un botón para iniciar sesión.
-
-Recomendaciones para el Diseño del Mockup en Figma:
-Se recomienda la utilización de componentes para elementos reutilizables, como botones y campos de entrada.
-
-Es importante definir una guía de estilo para mantener la consistencia visual en todo el diseño.
-
-Se sugiere crear versiones del diseño para diferentes tamaños de pantalla, tanto para computadoras de escritorio como para dispositivos móviles, con el objetivo de asegurar la adaptabilidad del diseño.
-
-La utilización de prototipos permitirá simular la navegación entre las diferentes interfaces.
-
-Se aconseja solicitar retroalimentación sobre el diseño del mockup para identificar posibles mejoras antes de comenzar la fase de desarrollo.
-
-Este conjunto de interfaces proporcionará una base sólida para el desarrollo de su sistema de gestión de inventario. No dude en consultar si requiere información adicional o asistencia con el diseño en Figma.
+- Usar Auto Layout y estilos consistentes
+- Crear un sistema de diseño mínimo (colores, botones, inputs)
+- Separar pantallas en páginas: Login, Dashboard, Productos, etc.
+- Nombrar correctamente todos los frames y componentes
