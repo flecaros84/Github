@@ -2,6 +2,10 @@
 
 Este documento detalla las pantallas mínimas necesarias que deben diseñarse en Figma, basadas en los requisitos funcionales definidos anteriormente.
 
+Link del Poryecto:
+
+-  https://www.figma.com/design/EpSws0LHrJkFfagjZGJry5/GestionInventario?node-id=0-1&t=8gmwRmZgeeWggRN5-1
+
 ---
 
 ## 1. 🟦 Pantalla de Inicio de Sesión
