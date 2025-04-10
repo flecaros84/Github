@@ -1,232 +1,209 @@
+# Documentación del Proyecto MasterBikes
 
-1. **Definir el Proyecto:**
-    - Descripción general del proyecto.(nombre)
-
-    El proyecto a desarrollar es un sistema de gestión de inventarios generico.
-
-    # 📦 Requisitos del Sistema de Gestión de Inventario
-
-## ✅ Requisitos Funcionales
-
-### 1. Autenticación
-- **RF01**: El sistema debe permitir a los usuarios iniciar sesión con credenciales válidas.
-
-### 2. Gestión de Productos
-- **RF02**: El sistema debe permitir agregar nuevos productos al inventario.
-- **RF03**: El sistema debe permitir editar los datos de productos existentes.
-- **RF04**: El sistema debe permitir eliminar productos del inventario.
-- **RF05**: El sistema debe permitir consultar la información de productos.
-- **RF06**: El sistema debe permitir consultar el stock de los productos.
-
-### 3. Gestión de Inventario
-- **RF07**: El sistema debe permitir registrar la recepción de productos.
-- **RF08**: El sistema debe permitir registrar la salida de productos.
-- **RF09**: El sistema debe permitir realizar ajustes de inventario.
-
-### 4. Gestión de Proveedores
-- **RF10**: El sistema debe permitir agregar nuevos proveedores.
-- **RF11**: El sistema debe permitir editar la información de proveedores.
-- **RF12**: El sistema debe permitir eliminar proveedores del sistema.
-
-### 5. Gestión de Clientes
-- **RF13**: El sistema debe permitir agregar nuevos clientes.
-- **RF14**: El sistema debe permitir editar la información de clientes.
-- **RF15**: El sistema debe permitir eliminar clientes del sistema.
-
-### 6. Gestión de Usuarios
-- **RF16**: El sistema debe permitir agregar nuevos usuarios.
-- **RF17**: El sistema debe permitir editar información de usuarios.
-- **RF18**: El sistema debe permitir eliminar usuarios del sistema.
-
-### 7. Gestión de Pedidos
-- **RF19**: El sistema debe permitir realizar pedidos de productos.
-- **RF20**: El sistema debe permitir recibir un pedido.
-- **RF21**: El sistema debe permitir despachar un pedido.
-- **RF22**: El sistema debe permitir cancelar un pedido (si aplica).
-- **RF23**: El sistema debe permitir actualizar el estado de un pedido.
-
-### 8. Generación de Reportes
-- **RF24**: El sistema debe permitir seleccionar el tipo de reporte a generar.
-- **RF25**: El sistema debe permitir personalizar los reportes con filtros o criterios específicos.
+Este documento presenta la planificación, análisis, especificación de requisitos y kit de herramientas para el desarrollo de un sistema de gestión integral para la empresa **MasterBikes**.
 
 ---
 
-## 🛠️ Requisitos No Funcionales
+## 🌟 1. Objetivos del Proyecto
 
-### 🔐 Seguridad
-- **RNF01**: El sistema debe encriptar las credenciales de los usuarios durante la autenticación.
-- **RNF02**: El sistema debe implementar control de acceso por roles (Administrador, Bodeguero, Operario Externo).
-- **RNF03**: El sistema debe cerrar sesión automáticamente tras 15 minutos de inactividad.
+### Objetivo General
+Desarrollar una plataforma web que modernice los procesos de venta, arriendo, reparación y despacho de bicicletas, mejorando la experiencia del cliente y la eficiencia operativa de la empresa MasterBikes.
 
-### ⚡ Rendimiento
-- **RNF04**: El sistema debe responder a cualquier solicitud del usuario en menos de 2 segundos bajo carga normal.
-- **RNF05**: El sistema debe ser capaz de soportar al menos 100 usuarios concurrentes sin degradación significativa del rendimiento.
-
-### 📱 Usabilidad
-- **RNF06**: La interfaz del sistema debe ser intuitiva y accesible para usuarios con conocimientos básicos de informática.
-- **RNF07**: El sistema debe permitir su uso desde navegadores web modernos sin requerir instalación adicional.
-- **RNF08**: El sistema debe estar disponible en idioma español por defecto.
-
-### 🔧 Mantenibilidad
-- **RNF09**: El sistema debe estar documentado para permitir su mantenimiento por terceros.
-- **RNF10**: El código fuente debe seguir una arquitectura modular para facilitar la escalabilidad.
-
-### 🔄 Disponibilidad
-- **RNF11**: El sistema debe estar disponible al menos el 99.5% del tiempo durante horas laborales.
-- **RNF12**: Las copias de seguridad de la base de datos deben realizarse automáticamente cada 24 horas.
-
-### 📊 Integridad de datos
-- **RNF13**: El sistema debe validar la información ingresada por los usuarios antes de guardarla en la base de datos.
-- **RNF14**: El sistema debe registrar un historial de cambios para productos, pedidos e inventario.
-
-    - Tecnologías a utilizar (Frontend, Backend, Base de Datos): java, spring, html,css, javascript, oracle
-
-# ⚙️ Kit Básico de Herramientas – Sistema de Gestión de Inventario
-
-Este kit está pensado para estudiantes con conocimientos básicos de Java, que quieran desarrollar una aplicación web funcional utilizando **Spring Boot**, **Oracle Database** y tecnologías web simples.
+### Objetivos Específicos
+- Crear una plataforma en línea para mostrar y vender productos.
+- Implementar funcionalidades de arriendo y reparación.
+- Mejorar el control de stock y trazabilidad de pedidos.
+- Facilitar la integración con proveedores como SHIMANO.
+- Automatizar reportes y comunicaciones con clientes.
 
 ---
 
-## 🧱 Tecnologías Principales
+## 📅 2. Planificación - Carta Gantt
 
-### 🔙 Backend – Java + Spring Boot
+### Metodología
+Se utilizará una **metodología incremental**, enfocada en entregar módulos funcionales por etapas y recolectar retroalimentación continua.
 
-- **Java 17**: Lenguaje principal del sistema.
-- **Spring Boot**:
-  - `spring-boot-starter-web`: Para construir la lógica del sistema (controladores y endpoints).
-  - `spring-boot-starter-thymeleaf`: Para generar páginas web dinámicas.
-  - `spring-boot-starter-data-jpa`: Para interactuar con la base de datos Oracle mediante entidades.
-  - `spring-boot-starter-validation`: Para validar formularios.
-- **Maven**: Herramienta para gestionar dependencias.
+### Ciclo de vida del software aplicado:
+- Inicio
+- Análisis
+- Diseño
+- Desarrollo
+- Pruebas
+- Mantenimiento
 
----
-
-### 🗃️ Base de Datos – Oracle
-
-- **Oracle Database XE** (Express Edition): Motor de base de datos gratuito.
-- **Oracle SQL Developer**: Cliente visual para gestionar tablas, consultas y conexiones.
-- **JPA (Hibernate)**: ORM utilizado para mapear clases Java a tablas de Oracle.
-
----
-
-### 🖥️ Frontend – HTML + CSS + JavaScript
-
-- **HTML**: Estructura de las páginas web.
-- **CSS**: Estilo básico de las interfaces.
-- **JavaScript (básico)**: Para validaciones simples o alertas.
-- **Thymeleaf**: Motor de plantillas que integra backend con frontend sin necesidad de frameworks complejos.
+### Cronograma resumido
+| Fase              | Actividad                        | Inicio      | Duración | Fin         |
+|------------------|----------------------------------|-------------|-----------|-------------|
+| Inicio           | Inicio del Proyecto              | 2025-04-10  | 3 días   | 2025-04-13  |
+|                  | Definición de Objetivos          | 2025-04-13  | 2 días   | 2025-04-15  |
+| Análisis         | Análisis de Requisitos           | 2025-04-15  | 5 días   | 2025-04-20  |
+|                  | Especificación de Requisitos     | 2025-04-20  | 4 días   | 2025-04-24  |
+| Diseño           | Arquitectura, BD, Interfaces     | 2025-04-24  | 9 días   | 2025-05-04  |
+| Desarrollo       | Backend, Frontend, Integración   | 2025-05-04  | 20 días  | 2025-05-24  |
+| Pruebas          | Unitarias, Integración, Usuario | 2025-05-27  | 9 días   | 2025-06-06  |
+| Mantenimiento    | Despliegue, soporte inicial      | 2025-06-06  | 9 días   | 2025-06-15  |
 
 ---
 
-### 📁 Estructura del Proyecto Sugerida
+## 🔗 3. Requisitos del Sistema (IEEE 830)
 
+### 3.1 Requisitos Funcionales por Módulo
 
-<pre>
-    src/
-├── main/
-│   ├── java/
-│   │   └── com.miempresa.inventario/
-│   │       ├── controllers/      # Controladores Spring MVC
-│   │       ├── models/           # Entidades JPA (tablas)
-│   │       ├── repositories/     # Repositorios JPA
-│   │       └── InventarioApp.java
-│   └── resources/
-│       ├── static/               # Archivos CSS / JS
-│       ├── templates/            # Vistas HTML (Thymeleaf)
-│       └── application.properties
+A continuación se detallan los requisitos funcionales por módulo, acompañados de su respectiva historia de usuario como guía para su implementación:
 
-</pre>
+#### Gestión de Clientes
+- **RF01 – Registro de usuarios con verificación por correo.**
+  - *Historia de Usuario:* Como nuevo cliente, quiero poder registrarme usando mi correo electrónico para acceder a los servicios de arriendo, reparación y seguimiento de mis pedidos.
+- **RF02 – Inicio y cierre de sesión.**
+  - *Historia de Usuario:* Como cliente registrado, quiero iniciar y cerrar sesión de forma segura para acceder a mis servicios personalizados.
+- **RF08 – Visualización del historial de servicios.**
+  - *Historia de Usuario:* Como cliente, quiero poder consultar mi historial de arriendos y reparaciones para saber cuándo y qué servicios he utilizado.
+- **RF12 – Gestión y recepción de promociones.**
+  - *Historia de Usuario:* Como cliente registrado, quiero recibir promociones personalizadas en mi correo para aprovechar descuentos en servicios.
 
-### 🧪 Herramientas de Desarrollo
+#### Arriendo de Bicicletas
+- **RF03 – Solicitud de arriendo de bicicletas.**
+  - *Historia de Usuario:* Como usuario, quiero solicitar una bicicleta por un periodo definido para utilizarla en paseos o traslados específicos.
+- **RF07 – Seguimiento del despacho del producto al cliente.**
+  - *Historia de Usuario:* Como cliente, quiero seguir en línea el estado del despacho de mi bicicleta para saber cuándo llegará a mi domicilio.
 
-- **IDE:** IntelliJ IDEA Community o Eclipse
-- **Navegador Web:** Para probar formularios y vistas
-- **Postman (opcional):** Para probar endpoints si se usan APIs
-- **Git + GitHub:** Para control de versiones del proyecto
+#### Reparaciones
+- **RF04 – Solicitud de reparación indicando problema y horario.**
+  - *Historia de Usuario:* Como usuario, quiero poder solicitar la reparación de mi bicicleta indicando el problema y mi disponibilidad para que el técnico lo revise.
+- **RF05 – Consulta de stock por parte del técnico.**
+  - *Historia de Usuario:* Como técnico, quiero consultar el stock de piezas para saber si puedo realizar una reparación en base a la disponibilidad.
+- **RF06 – Consulta del estado de reparación por el cliente.**
+  - *Historia de Usuario:* Como cliente, quiero consultar en qué etapa se encuentra la reparación de mi bicicleta para estar informado del progreso.
 
----
+#### Supervisión y Administración
+- **RF10 – Reportes de ventas y servicios para supervisores.**
+  - *Historia de Usuario:* Como supervisor, quiero acceder a reportes de ventas y servicios para analizar el rendimiento del negocio y tomar decisiones.
 
-### ✅ ¿Qué permite este kit?
+#### Integración con Proveedores
+- **RF11 – Acceso a servicios web del proveedor SHIMANO.**
+  - *Historia de Usuario:* Como responsable de bodega, quiero consultar el stock y precios de SHIMANO desde el sistema para agilizar los pedidos y mantener el inventario actualizado.
 
-- Crear formularios para gestionar productos, clientes, usuarios, pedidos, etc.
-- Conectar formularios con base de datos usando Spring Boot y JPA.
-- Validar datos antes de guardarlos.
-- Mostrar información en pantalla con HTML y Thymeleaf.
-- Usar operaciones CRUD (crear, leer, actualizar, eliminar) completas.
+#### Comunicación y Notificaciones
+- **RF09 – Envío de correos automáticos de confirmación, estado de reparación y seguimiento.**
+  - *Historia de Usuario:* Como cliente, quiero recibir notificaciones automáticas sobre mis pedidos y servicios para mantenerme informado sin necesidad de llamar o consultar manualmente.
 
----
+### 3.2 Requisitos No Funcionales por Tipo
 
-> 🎓 Este stack es ideal para aprender a crear una aplicación web full-stack sencilla, sin frameworks ni servicios externos complejos.
+#### Seguridad
+- RNF01 – Autenticación y cifrado de la información de los usuarios.
+- RNF08 – Registro de accesos y acciones administrativas (auditoría).
 
-    - Metodología de desarrollo a emplear (Scrum, Kanban, etc.): kanban
-    - Posible vinculación con otras asignaturas: fullstack, base de datos, ingenieria de software?
-    
-# 🔗 Relación entre Requisitos y Herramientas – Sistema de Gestión de Inventario
+#### Usabilidad
+- RNF02 – Interfaz amigable para usuarios no técnicos.
+- RNF12 – Adaptación futura a distintos idiomas (localización).
 
-Este documento describe qué herramientas del kit básico se deben usar para implementar cada requisito funcional y no funcional del sistema, incluyendo una breve explicación del rol que cumple cada herramienta.
+#### Rendimiento / Eficiencia
+- RNF04 – Respuestas en menos de 2 segundos bajo carga normal.
+- RNF11 – Soporte para múltiples usuarios concurrentes.
 
----
+#### Compatibilidad / Portabilidad
+- RNF07 – Accesibilidad desde navegadores modernos y dispositivos móviles.
 
-## ✅ Requisitos Funcionales
+#### Mantenibilidad
+- RNF06 – Arquitectura modular que facilite mantenimiento.
 
-### RF01: Inicio de sesión
-**Herramientas:** Spring Boot (Security opcional), Thymeleaf, HTML, Oracle  
-**Explicación:** Spring Boot maneja el flujo de login. Thymeleaf genera el formulario. Oracle almacena los usuarios y contraseñas (encriptadas si se usa Spring Security).
+#### Disponibilidad / Fiabilidad
+- RNF05 – Disponibilidad del sistema al menos 99% mensual.
+- RNF09 – Backup diario automático de la base de datos.
 
-### RF02–RF06: Gestión de Productos
-**Herramientas:** Spring Boot + JPA, Thymeleaf, HTML, Oracle  
-**Explicación:** JPA permite mapear clases Producto a tablas. Thymeleaf muestra productos y formularios en pantalla. HTML estructura la vista. Oracle guarda los datos.
-
-### RF07–RF09: Gestión de Inventario
-**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
-**Explicación:** Se registran entradas, salidas y ajustes con formularios Thymeleaf y se guardan en Oracle usando JPA.
-
-### RF10–RF12: Gestión de Proveedores
-**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
-**Explicación:** CRUD de proveedores manejado por Spring Boot y persistido con JPA en Oracle. Thymeleaf crea la interfaz.
-
-### RF13–RF15: Gestión de Clientes
-**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
-**Explicación:** Igual que proveedores, pero aplicado a entidades Cliente.
-
-### RF16–RF18: Gestión de Usuarios
-**Herramientas:** Spring Boot + JPA, Thymeleaf, Oracle, HTML  
-**Explicación:** Solo accesible por administradores. Se administra quién puede acceder al sistema.
-
-### RF19–RF23: Gestión de Pedidos
-**Herramientas:** Spring Boot + JPA, Thymeleaf, HTML, Oracle  
-**Explicación:** El sistema permite crear y actualizar pedidos con formularios y listas renderizadas con Thymeleaf.
-
-### RF24–RF25: Reportes
-**Herramientas:** Spring Boot, Thymeleaf, HTML, Oracle (consultas), JavaScript (descarga PDF opcional)  
-**Explicación:** Los reportes se generan en base a consultas SQL, se visualizan con HTML + Thymeleaf y se pueden descargar con JS.
+#### Interoperabilidad / Escalabilidad
+- RNF10 – Integración mediante APIs.
+- RNF03 – Posibilidad de ampliar funcionalidades futuras.
 
 ---
 
-## 🛠️ Requisitos No Funcionales
+## 🔬 4. Casos de Uso
 
-### RNF01–RNF03: Seguridad
-**Herramientas:** Spring Boot Security, Oracle (roles), validaciones  
-**Explicación:** Spring Security permite manejar roles y sesiones. Las validaciones protegen la entrada de datos maliciosos.
+### Actores Principales
+- Cliente
+- Técnico
+- Vendedor
+- Supervisor
+- Proveedor (SHIMANO)
+- Sistema (automatizado)
 
-### RNF04–RNF05: Rendimiento
-**Herramientas:** Java eficiente, consultas optimizadas en Oracle  
-**Explicación:** Buenas prácticas en código y consultas aseguran un sistema rápido incluso con muchos datos.
+### Casos de Uso Destacados
+- CU01: Registrarse
+- CU03: Solicitar arriendo
+- CU04: Solicitar reparación
+- CU05: Ver estado de reparación
+- CU06: Ver historial de servicios
+- CU09: Ver solicitudes técnicas
+- CU10: Confirmar posibilidad de reparación
+- CU14: Reportes de ventas
+- CU16: Consulta a SHIMANO
+- CU20: Enviar promociones
 
-### RNF06–RNF08: Usabilidad
-**Herramientas:** Thymeleaf, HTML/CSS, diseño simple  
-**Explicación:** Interfaz clara y formularios intuitivos permiten que cualquier usuario pueda navegar fácilmente.
-
-### RNF09–RNF10: Mantenibilidad
-**Herramientas:** Estructura en capas con Spring Boot, buenas prácticas  
-**Explicación:** Organizar bien el código (controladores, servicios, repositorios) facilita futuros cambios.
-
-### RNF11–RNF12: Disponibilidad
-**Herramientas:** Despliegue estable en PC local o servidor básico  
-**Explicación:** El sistema debe estar accesible de forma continua, incluso si no se usa la nube.
-
-### RNF13–RNF14: Integridad de datos
-**Herramientas:** Spring Validation, Oracle, control de errores  
-**Explicación:** Se validan datos antes de guardarlos y se controla que no haya fallos en las operaciones.
+*El diagrama UML está disponible en la carpeta de diagramas del repositorio.*
 
 ---
+
+## 🚀 5. Kit de Herramientas Tecnológicas
+
+### Backend (Java + Spring Boot)
+- Spring Boot (MVC, JPA, Mail)
+- Hibernate (ORM)
+- Java 17
+
+### Base de Datos
+- Oracle Database XE
+- SQL Developer
+
+### Frontend
+- HTML5 + CSS3 + JavaScript
+- Bootstrap (diseño responsive)
+- Thymeleaf (plantillas)
+
+### Dev & Testing
+- IntelliJ IDEA / Eclipse
+- Postman (API REST)
+- Git + GitHub
+- Maven (dependencias)
+- JUnit (testing)
+
+### Extras
+- WebClient / RestTemplate (integración con SHIMANO)
+- JavaMailSender (notificaciones)
+- Trello / Notion (planificación)
+
+---
+
+## 🌐 6. Relación Herramientas - Requisitos
+
+A continuación se explica cómo cada herramienta contribuye directamente al cumplimiento de uno o varios requisitos del sistema:
+
+| Herramienta               | Requisitos Relacionados                   | Explicación de la Interacción |
+|---------------------------|-------------------------------------------|-------------------------------|
+| **Spring Boot**           | RF01-12, RNF04, RNF06, RNF10, RNF03       | Proporciona el framework para crear la lógica de negocio, APIs REST y la estructura modular del sistema. |
+| **Thymeleaf**             | RF01-10, RNF02, RNF07                     | Permite generar páginas dinámicas conectadas con el backend para formularios, historial, seguimientos, etc. |
+| **Oracle Database**       | RF01, RF03-10, RNF05, RNF09               | Guarda toda la información del sistema: usuarios, productos, historial, stock y respaldo. |
+| **Spring Security**       | RF02, RNF01, RNF08                        | Asegura el inicio de sesión, protege rutas y registra eventos de seguridad. |
+| **JavaMailSender**        | RF09, RF12, RNF01                         | Envía correos de confirmación, estado de servicios y promociones de manera automática. |
+| **WebClient / RestTemplate** | RF11, RNF10                             | Se usa para conectar la plataforma con los servicios web de proveedores como SHIMANO. |
+| **HTML + Bootstrap**      | RF03, RF04, RF06, RF07, RNF02, RNF07      | Construye interfaces responsivas y usables en distintos dispositivos. |
+| **Git + GitHub**          | RNF06                                    | Controla versiones, historial de cambios y facilita trabajo colaborativo. |
+| **JUnit**                 | RNF04, RNF06                              | Permite validar el comportamiento del sistema mediante pruebas automatizadas. |
+| **Postman**               | RF03–RF11                                 | Prueba los endpoints de la API para asegurar que responden correctamente. |
+| **SQL Developer**         | RF05, RF10, RNF09                         | Herramienta visual para gestionar base de datos Oracle y ejecutar consultas necesarias. |
+| **Maven**                 | RNF06, RNF10                              | Maneja dependencias y organiza el proyecto de forma estructurada. |
+| **Trello / Notion**       | —                                         | Ayudan a planificar tareas, iteraciones y seguimiento de entregas. |
+
+---
+
+Este documento puede ser actualizado conforme se desarrollen las siguientes fases del proyecto. Se recomienda vincular este README.md con otras carpetas:
+- `/src` para el código fuente
+- `/docs` para los diagramas UML y PDFs
+- `/sql` para los scripts de Oracle
+
+---
+
+**Equipo:** Estudiantes de Ingeniería de Software
+
+**Proyecto:** MasterBikes - Plataforma Web
+
+**Fecha de inicio:** 2025-04-10
