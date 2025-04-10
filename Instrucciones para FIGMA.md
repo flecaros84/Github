@@ -1,116 +1,119 @@
-# 🧩 Prototipos de Pantallas para el Sistema de Gestión de Inventario
 
-Este documento detalla las pantallas mínimas necesarias que deben diseñarse en Figma, basadas en los requisitos funcionales definidos anteriormente.
-
-Link del Poryecto:
+# Link del Proyecto
 
 -  https://www.figma.com/design/EpSws0LHrJkFfagjZGJry5/GestionInventario?node-id=0-1&t=8gmwRmZgeeWggRN5-1
 
 ---
 
-## 1. 🟦 Pantalla de Inicio de Sesión
+# Prototipo Figma – Sistema MasterBikes
 
-**Requisitos Relacionados:** RF01
-
-**Elementos:**
-- Campo de usuario
-- Campo de contraseña
-- Botón “Iniciar Sesión”
-- Mensaje de error si las credenciales son incorrectas
+Este documento describe las pantallas necesarias para el desarrollo de un prototipo en Figma que cumpla con los requisitos funcionales y no funcionales del sistema MasterBikes.
 
 ---
 
-## 2. 🏠 Panel Principal / Dashboard
+## 🎨 Pantallas por Módulo y Requisito
 
-**Requisitos Relacionados:** Navegación general
+### 🧑 Gestión de Clientes
 
-**Elementos:**
-- Mensaje de bienvenida
-- Menú de navegación con accesos a:
-  - Productos
-  - Proveedores
-  - Clientes
-  - Usuarios (solo admin)
-  - Pedidos
-  - Inventario
-  - Reportes
-- Botón de cerrar sesión
+| Pantalla | Función | Requisitos cubiertos |
+|----------|---------|----------------------|
+| Registro de Usuario | Formulario con validación de correo y contraseña | RF01 |
+| Login / Logout | Inicio y cierre de sesión | RF02 |
+| Perfil del Cliente | Acceso a historial, promociones y seguimiento | RF08, RF12 |
+| Historial de Servicios | Lista de arriendos y reparaciones previas | RF08 |
+| Promociones Activas | Ofertas y descuentos disponibles | RF12 |
 
 ---
 
-## 3. 📦 Gestión de Productos
+### 🚲 Arriendo de Bicicletas
 
-**Requisitos Relacionados:** RF02–RF06
-
-**Elementos:**
-- Tabla con lista de productos (nombre, stock, proveedor, etc.)
-- Botones por producto: “Editar”, “Eliminar”, “Ver Stock”
-- Botón “Agregar Producto”
-- Barra de búsqueda y filtros
-- Modal o formulario para crear/editar producto
+| Pantalla | Función | Requisitos cubiertos |
+|----------|---------|----------------------|
+| Catálogo de Bicicletas | Filtro, búsqueda, selección de bicicletas | RF03 |
+| Formulario de Arriendo | Fecha, duración, forma de pago, entrega | RF03 |
+| Seguimiento de Despacho | Progreso del pedido (línea de tiempo) | RF07 |
 
 ---
 
-## 4. 🤝 Gestión de Proveedores / Clientes / Usuarios
+### 🔧 Reparaciones
 
-**Requisitos Relacionados:** RF10–RF18
-
-**Elementos Comunes:**
-- Tabla de datos
-- Botones: “Agregar”, “Editar”, “Eliminar”
-- Formulario para alta o edición
-- Buscador y paginación
+| Pantalla | Función | Requisitos cubiertos |
+|----------|---------|----------------------|
+| Solicitar Reparación | Formulario con descripción y horario | RF04 |
+| Estado de Reparación | Seguimiento del progreso | RF06 |
+| Consulta de Stock Técnico | Disponible para técnicos | RF05 |
 
 ---
 
-## 5. 📑 Gestión de Pedidos
+### 🧑‍💼 Supervisión y Administración
 
-**Requisitos Relacionados:** RF19–RF23
-
-**Elementos:**
-- Lista de pedidos con estado (pendiente, despachado, cancelado)
-- Botón “Realizar Pedido”
-- Botón “Cancelar” / “Actualizar Estado”
-- Detalles del pedido
-- Formulario: cliente, productos, cantidades
+| Pantalla | Función | Requisitos cubiertos |
+|----------|---------|----------------------|
+| Panel del Supervisor | Acceso a reportes y estadísticas | RF10 |
+| Reportes Detallados | Listado de ventas y servicios exportable | RF10 |
 
 ---
 
-## 6. 🗃️ Gestión de Inventario
+### 🔗 Integración con Proveedores
 
-**Requisitos Relacionados:** RF07–RF09
-
-**Elementos:**
-- Botones: “Registrar Recepción”, “Registrar Salida”, “Ajuste de Inventario”
-- Tabla con historial de movimientos
-- Formulario con producto, cantidad, motivo
+| Pantalla | Función | Requisitos cubiertos |
+|----------|---------|----------------------|
+| Consulta SHIMANO | Búsqueda de piezas en tiempo real | RF11 |
 
 ---
 
-## 7. 📊 Reportes
+### 📧 Comunicación y Notificaciones
 
-**Requisitos Relacionados:** RF24–RF25
-
-**Elementos:**
-- Selector de tipo de reporte (Inventario, Pedidos, etc.)
-- Filtros por fecha, categoría, proveedor
-- Botón “Generar Reporte”
-- Vista previa del reporte (tabla)
-- Botón opcional “Descargar PDF”
+| Pantalla | Función | Requisitos cubiertos |
+|----------|---------|----------------------|
+| Mockups de Correos | Confirmaciones, seguimiento, promociones | RF09 |
 
 ---
 
-## 🧠 Extras
+## 🧩 Requisitos No Funcionales en el Prototipo
 
-- Una sola pantalla de Dashboard puede variar según el rol del usuario (Admin, Bodeguero, etc.).
-- Reutilizar componentes como tablas, formularios, y modales para simplificar el diseño.
-- Usar Auto Layout en Figma para que las pantallas se adapten bien.
+| Tipo | Reflejo en el diseño |
+|------|----------------------|
+| Seguridad (RNF01, RNF08) | Indicadores de validación, formularios protegidos |
+| Usabilidad (RNF02, RNF12) | Interfaz clara, navegación intuitiva, opción de idioma |
+| Rendimiento (RNF04, RNF11) | Flujos simples, cargas rápidas simuladas |
+| Compatibilidad (RNF07) | Diseño responsive (desktop y mobile) |
+| Mantenibilidad (RNF06) | Reutilización de componentes visuales |
+| Disponibilidad (RNF05, RNF09) | Simulación de backup/estados del sistema |
+| Interoperabilidad (RNF10, RNF03) | Integración visible con servicios externos |
 
 ---
 
-## 🖌️ Consejos para Figma
+## 🗂️ Organización Sugerida en Figma
 
-- Usar Auto Layout y estilos consistentes
-- Crear un sistema de diseño mínimo (colores, botones, inputs)
-- Separar pantallas en páginas: Login, Dashboard, Productos, etc.
-- Nombrar correctamente todos los frames y componentes
+```
+📁 MasterBikes Prototype
+├── 🧑 Gestión de Clientes
+│   ├── Registro
+│   ├── Login
+│   ├── Perfil
+│   ├── Historial
+│   └── Promociones
+├── 🚲 Arriendo
+│   ├── Catálogo
+│   ├── Formulario
+│   └── Seguimiento
+├── 🔧 Reparaciones
+│   ├── Solicitud
+│   ├── Estado
+│   └── Stock Técnico
+├── 🧑‍💼 Supervisor
+│   ├── Dashboard
+│   └── Reportes
+├── 🔗 Proveedores
+│   └── Consulta SHIMANO
+├── 📧 Notificaciones
+│   └── Mails Mockup
+└── 🌐 Extras
+    ├── Idiomas
+    └── Mobile Views
+```
+
+---
+
+**Documento auxiliar para el diseño de prototipo funcional en Figma - Proyecto MasterBikes**
