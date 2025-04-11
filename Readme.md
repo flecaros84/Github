@@ -1,3 +1,6 @@
+# Link al GoogleDocs:
+https://docs.google.com/document/d/1L2oZydWk8yrXAr68o2ikXGucSavi13PVdmq6Dz7_olo/edit?hl=es&tab=t.0
+
 # Documentación del Proyecto MasterBikes
 
 Este documento presenta la planificación, análisis, especificación de requisitos y kit de herramientas para el desarrollo de un sistema de gestión integral para la empresa **MasterBikes**.
