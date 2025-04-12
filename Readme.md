@@ -308,24 +308,22 @@ Este kit está diseñado para implementar una solución de microservicios en un 
 | Maven                     | RNF06, RNF10                      | Gestión de dependencias y estructura modular.                                             |
 | Trello / Notion           | —                                 | Planificación y seguimiento académico del proyecto.                                       |
 
-# 🔗 Relación entre Requisitos, Módulos y Microservicios
+# 🔗 Relación entre Requisitos, Módulos, Microservicios y Herramientas
 
-| **Requisito (ID)** | **Descripción del Requisito**                                | **Módulo Funcional**            | **Microservicio Responsable**             |
-|--------------------|---------------------------------------------------------------|----------------------------------|-------------------------------------------|
-| RF01               | Registro de usuarios con verificación por correo              | Gestión de Clientes              | Usuarios y Autenticación                  |
-| RF02               | Inicio y cierre de sesión seguro                              | Gestión de Clientes              | Usuarios y Autenticación                  |
-| RF08               | Visualización del historial de servicios                      | Gestión de Clientes              | Usuarios y Autenticación                  |
-| RF12               | Gestión y recepción de promociones                            | Gestión de Clientes              | Usuarios y Autenticación / Notificaciones |
-| RF03               | Solicitud de arriendo de bicicletas                           | Arriendo de Bicicletas           | Arriendos                                 |
-| RF07               | Seguimiento del despacho del producto al cliente              | Arriendo de Bicicletas           | Arriendos                                 |
-| RF04               | Solicitud de reparación indicando problema y horario          | Reparaciones                     | Reparaciones                              |
-| RF05               | Consulta de stock por parte del técnico                       | Reparaciones                     | Reparaciones / Proveedores                |
-| RF06               | Consulta del estado de reparación por el cliente              | Reparaciones                     | Reparaciones                              |
-| RF10               | Reportes de ventas y servicios para supervisores              | Supervisión y Administración     | Supervisión y Reportes                    |
-| RF11               | Acceso a servicios web del proveedor SHIMANO                  | Integración con Proveedores      | Proveedores                               |
-| RF09               | Envío de correos automáticos de confirmación y seguimiento    | Comunicación y Notificaciones    | Notificaciones                            |
-
-
+| **Requisito (ID)** | **Descripción del Requisito**                                | **Módulo Funcional**            | **Microservicio Responsable**             | **Herramientas Involucradas**                                                                          |
+|--------------------|---------------------------------------------------------------|----------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| RF01               | Registro de usuarios con verificación por correo              | Gestión de Clientes              | Usuarios y Autenticación                  | Spring Boot, Spring Security, Oracle DB, JavaMailSender, Thymeleaf                                     |
+| RF02               | Inicio y cierre de sesión seguro                              | Gestión de Clientes              | Usuarios y Autenticación                  | Spring Security, Spring Boot, Oracle DB                                                                |
+| RF08               | Visualización del historial de servicios                      | Gestión de Clientes              | Usuarios y Autenticación                  | Spring Boot, Thymeleaf, Oracle DB                                                                      |
+| RF12               | Gestión y recepción de promociones                            | Gestión de Clientes              | Usuarios y Autenticación / Notificaciones | JavaMailSender, Oracle DB, Spring Boot                                                                 |
+| RF03               | Solicitud de arriendo de bicicletas                           | Arriendo de Bicicletas           | Arriendos                                 | Spring Boot, Oracle DB, HTML+Bootstrap, Postman                                                        |
+| RF07               | Seguimiento del despacho del producto al cliente              | Arriendo de Bicicletas           | Arriendos                                 | Spring Boot, Oracle DB, Thymeleaf, Bootstrap                                                           |
+| RF04               | Solicitud de reparación indicando problema y horario          | Reparaciones                     | Reparaciones                              | Spring Boot, Oracle DB, Thymeleaf                                                                      |
+| RF05               | Consulta de stock por parte del técnico                       | Reparaciones                     | Reparaciones / Proveedores                | Oracle DB, SQL Developer, Spring Boot, RestTemplate                                                    |
+| RF06               | Consulta del estado de reparación por el cliente              | Reparaciones                     | Reparaciones                              | Spring Boot, Thymeleaf, Oracle DB                                                                      |
+| RF10               | Reportes de ventas y servicios para supervisores              | Supervisión y Administración     | Supervisión y Reportes                    | Spring Boot, SQL Developer, Oracle DB, JUnit                                                           |
+| RF11               | Acceso a servicios web del proveedor SHIMANO                  | Integración con Proveedores      | Proveedores                               | Spring Boot, RestTemplate, Oracle DB                                                                   |
+| RF09               | Envío de correos automáticos de confirmación y seguimiento    | Comunicación y Notificaciones    | Notificaciones                            | JavaMailSender, Spring Boot, Thymeleaf                                                                 |
 
 ---
 
