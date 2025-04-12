@@ -146,6 +146,103 @@ A continuación se detallan los requisitos funcionales por módulo, acompañados
 
 ---
 
+# ⚙️ Microservicios Propuestos – Sistema Bicicletas Masterbikes
+
+Esta propuesta define los microservicios necesarios para cubrir los requisitos funcionales y no funcionales del sistema, siguiendo una arquitectura basada en **Spring Boot** y **Oracle Database**, en un contexto académico.
+
+---
+
+## 1. 🧑‍💼 Microservicio de Usuarios y Autenticación
+
+- **Requisitos Relacionados:** RF01, RF02, RF12, RNF01, RNF08
+- **Responsabilidades:**
+  - Registro de usuarios con validación por correo.
+  - Inicio y cierre de sesión con control de acceso.
+  - Gestión de perfiles de usuario.
+  - Registro de actividad y accesos (auditoría).
+  - Envío de promociones personalizadas por correo.
+
+---
+
+## 2. 🚲 Microservicio de Arriendos
+
+- **Requisitos Relacionados:** RF03, RF07, RF08
+- **Responsabilidades:**
+  - Solicitud y registro de arriendos de bicicletas.
+  - Seguimiento del estado del arriendo y despacho.
+  - Consulta de historial de arriendos por parte del cliente.
+
+---
+
+## 3. 🔧 Microservicio de Reparaciones
+
+- **Requisitos Relacionados:** RF04, RF05, RF06
+- **Responsabilidades:**
+  - Registro y solicitud de reparaciones con detalle del problema.
+  - Consulta de disponibilidad de repuestos.
+  - Seguimiento del estado del proceso de reparación por parte del cliente.
+
+---
+
+## 4. 📊 Microservicio de Supervisión y Reportes
+
+- **Requisitos Relacionados:** RF10, RNF04, RNF05
+- **Responsabilidades:**
+  - Generación de reportes de ventas y servicios.
+  - Acceso para perfiles administrativos.
+  - Exportación y visualización de datos consolidados.
+
+---
+
+## 5. 📬 Microservicio de Notificaciones
+
+- **Requisitos Relacionados:** RF09, RF12, RNF01
+- **Responsabilidades:**
+  - Envío de correos automáticos (registro, confirmaciones, reparaciones).
+  - Enlace con los otros microservicios vía REST para recibir eventos y generar notificaciones.
+  - Manejo de plantillas de correo y promociones.
+
+---
+
+## 6. 🏭 Microservicio de Integración con Proveedores
+
+- **Requisitos Relacionados:** RF11, RNF10
+- **Responsabilidades:**
+  - Conexión con servicios externos como el sistema de SHIMANO.
+  - Consulta de stock y precios de productos externos.
+  - Actualización de inventario desde proveedores.
+
+---
+
+## 7. 🌐 API Gateway *(opcional para versiones más avanzadas)*
+
+- **Requisitos Relacionados:** RNF07, RNF10
+- **Responsabilidades:**
+  - Punto único de entrada para el frontend.
+  - Redirección de peticiones a cada microservicio.
+  - Gestión básica de rutas públicas/privadas.
+
+---
+
+## 8. ⚙️ Configuración Centralizada *(opcional para escalar el proyecto)*
+
+- **Herramienta:** Spring Cloud Config Server
+- **Responsabilidad:**
+  - Gestión de propiedades de configuración para todos los microservicios desde un repositorio central.
+
+---
+
+## 🔄 Comunicación entre Microservicios
+
+- Comunicación **sincrónica REST** mediante `RestTemplate`.
+- Ejemplos:
+  - **Arriendos** ↔ **Notificaciones**
+  - **Reparaciones** ↔ **Notificaciones**
+  - **Usuarios** ↔ **Reportes**
+
+---
+
+
 # 🧰 Kit de Herramientas Tecnológicas – Microservicios (Versión Académica)
 
 Este kit está diseñado para implementar una solución de microservicios en un contexto académico, manteniendo la base tecnológica de **Spring Boot** y **Oracle Database**, pero simplificando herramientas para facilitar el aprendizaje.
