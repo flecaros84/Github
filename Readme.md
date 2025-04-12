@@ -146,67 +146,71 @@ A continuación se detallan los requisitos funcionales por módulo, acompañados
 
 ---
 
-## 🚀 5. Kit de Herramientas Tecnológicas
+# 🧰 Kit de Herramientas Tecnológicas – Microservicios (Versión Académica)
 
-### Backend (Java + Spring Boot)
-- Spring Boot (MVC, JPA, Mail)
-- Hibernate (ORM)
-- Java 17
+Este kit está diseñado para implementar una solución de microservicios en un contexto académico, manteniendo la base tecnológica de **Spring Boot** y **Oracle Database**, pero simplificando herramientas para facilitar el aprendizaje.
 
-### Base de Datos
-- Oracle Database XE
-- SQL Developer
+## ⚙️ Backend (Microservicios con Spring Boot)
 
-### Frontend
-- HTML5 + CSS3 + JavaScript
-- Bootstrap (diseño responsive)
-- Thymeleaf (plantillas)
+| Herramienta               | Propósito                                                                 |
+|---------------------------|---------------------------------------------------------------------------|
+| Spring Boot (MVC, JPA)    | Base para cada microservicio (controladores REST, lógica y persistencia). |
+| Spring Security           | Seguridad básica: login, rutas protegidas, cifrado.                       |
+| Spring Boot Mail          | Envío de correos automáticos (servicio de notificaciones).                |
+| RestTemplate              | Comunicación entre servicios o con SHIMANO.                               |
 
-### Dev & Testing
-- IntelliJ IDEA / Eclipse
-- Postman (API REST)
-- Git + GitHub
-- Maven (dependencias)
-- JUnit (testing)
+## 🛢️ Base de Datos
 
-### Extras
-- WebClient / RestTemplate (integración con SHIMANO)
-- JavaMailSender (notificaciones)
-- Trello / Notion (planificación)
+| Herramienta             | Propósito                                                    |
+|-------------------------|--------------------------------------------------------------|
+| Oracle Database XE      | Almacén de datos (compartido o por servicio según diseño).   |
+| SQL Developer           | Gestión visual de tablas, datos y consultas.                 |
 
----
+## 💻 Frontend
 
-## 🌐 6. Relación Herramientas - Requisitos
+| Herramienta             | Propósito                                                   |
+|-------------------------|-------------------------------------------------------------|
+| HTML5 + CSS3 + JS       | Interfaz del usuario.                                       |
+| Bootstrap               | Estilo responsivo y componentes visuales.                   |
+| Thymeleaf (opcional)    | Plantillas si se usa renderizado desde el backend.          |
 
-A continuación se explica cómo cada herramienta contribuye directamente al cumplimiento de uno o varios requisitos del sistema:
+## 🧪 Desarrollo y Pruebas
 
-| Herramienta               | Requisitos Relacionados                   | Explicación de la Interacción |
-|---------------------------|-------------------------------------------|-------------------------------|
-| **Spring Boot**           | RF01-12, RNF04, RNF06, RNF10, RNF03       | Proporciona el framework para crear la lógica de negocio, APIs REST y la estructura modular del sistema. |
-| **Thymeleaf**             | RF01-10, RNF02, RNF07                     | Permite generar páginas dinámicas conectadas con el backend para formularios, historial, seguimientos, etc. |
-| **Oracle Database**       | RF01, RF03-10, RNF05, RNF09               | Guarda toda la información del sistema: usuarios, productos, historial, stock y respaldo. |
-| **Spring Security**       | RF02, RNF01, RNF08                        | Asegura el inicio de sesión, protege rutas y registra eventos de seguridad. |
-| **JavaMailSender**        | RF09, RF12, RNF01                         | Envía correos de confirmación, estado de servicios y promociones de manera automática. |
-| **WebClient / RestTemplate** | RF11, RNF10                             | Se usa para conectar la plataforma con los servicios web de proveedores como SHIMANO. |
-| **HTML + Bootstrap**      | RF03, RF04, RF06, RF07, RNF02, RNF07      | Construye interfaces responsivas y usables en distintos dispositivos. |
-| **Git + GitHub**          | RNF06                                    | Controla versiones, historial de cambios y facilita trabajo colaborativo. |
-| **JUnit**                 | RNF04, RNF06                              | Permite validar el comportamiento del sistema mediante pruebas automatizadas. |
-| **Postman**               | RF03–RF11                                 | Prueba los endpoints de la API para asegurar que responden correctamente. |
-| **SQL Developer**         | RF05, RF10, RNF09                         | Herramienta visual para gestionar base de datos Oracle y ejecutar consultas necesarias. |
-| **Maven**                 | RNF06, RNF10                              | Maneja dependencias y organiza el proyecto de forma estructurada. |
-| **Trello / Notion**       | —                                         | Ayudan a planificar tareas, iteraciones y seguimiento de entregas. |
+| Herramienta              | Propósito                                                  |
+|--------------------------|------------------------------------------------------------|
+| IntelliJ IDEA / Eclipse  | Entorno de desarrollo para codificar microservicios.       |
+| Postman                  | Probar endpoints de cada servicio.                         |
+| JUnit                    | Pruebas unitarias básicas por servicio.                    |
+| Git + GitHub             | Versionado y trabajo colaborativo.                         |
+| Maven                    | Manejo de dependencias y estructura del proyecto.          |
+
+## 📋 Planificación y Gestión
+
+| Herramienta         | Propósito                                   |
+|---------------------|---------------------------------------------|
+| Trello / Notion     | Organización de tareas y seguimiento ágil. |
 
 ---
 
-Este documento puede ser actualizado conforme se desarrollen las siguientes fases del proyecto. Se recomienda vincular este README.md con otras carpetas:
-- `/src` para el código fuente
-- `/docs` para los diagramas UML y PDFs
-- `/sql` para los scripts de Oracle
+## ✅ Relación Herramientas – Requisitos
+
+| Herramienta               | Requisitos Relacionados           | Explicación de la Interacción                                                             |
+|---------------------------|-----------------------------------|--------------------------------------------------------------------------------------------|
+| Spring Boot (MVC, JPA)    | RF01–RF12, RNF03, RNF04, RNF06, RNF10 | Desarrolla cada microservicio con REST y acceso a datos.                                  |
+| Spring Security           | RF02, RNF01, RNF08                | Login seguro y control de acceso.                                                         |
+| JavaMailSender            | RF09, RF12                        | Envío de correos automatizados.                                                           |
+| RestTemplate              | RF11, RNF10                       | Conexión con servicios externos como SHIMANO.                                             |
+| Oracle Database XE        | RF01–RF10, RNF05, RNF09           | Persistencia de datos críticos.                                                           |
+| SQL Developer             | RF05, RF10                        | Consulta y gestión de la base de datos Oracle.                                            |
+| HTML + Bootstrap + JS     | RF03–RF07, RF10, RNF02, RNF07     | Interfaces responsivas y funcionales.                                                     |
+| Thymeleaf (opcional)      | RF01–RF10                         | Renderizado desde backend.                                                                |
+| IntelliJ IDEA / Eclipse   | —                                 | IDE de desarrollo.                                                                        |
+| Postman                   | RF03–RF11                         | Pruebas de endpoints REST.                                                                |
+| JUnit                     | RNF04, RNF06                      | Validación de comportamiento de servicios.                                                |
+| Git + GitHub              | RNF06                             | Control de versiones y colaboración.                                                      |
+| Maven                     | RNF06, RNF10                      | Gestión de dependencias y estructura modular.                                             |
+| Trello / Notion           | —                                 | Planificación y seguimiento académico del proyecto.                                       |
 
 ---
 
-**Equipo:** Estudiantes de Ingeniería de Software
 
-**Proyecto:** MasterBikes - Plataforma Web
-
-**Fecha de inicio:** 2025-04-10
