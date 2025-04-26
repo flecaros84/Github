@@ -1,330 +1,213 @@
-# Link al GoogleDocs:
+# Documento - Google Docs
+
 https://docs.google.com/document/d/1L2oZydWk8yrXAr68o2ikXGucSavi13PVdmq6Dz7_olo/edit?hl=es&tab=t.0
 
-# Documentación del Proyecto MasterBikes
+# MasterBikes - Plataforma de Transformación Digital
 
-Este documento presenta la planificación, análisis, especificación de requisitos y kit de herramientas para el desarrollo de un sistema de gestión integral para la empresa **MasterBikes**.
+## 1. Explicación detallada del proyecto
 
----
+### 1.1 Contexto General
+La empresa **MasterBikes**, anteriormente conocida como "San Diego", es una empresa de fabricación y venta de bicicletas y triciclos con más de 30 años de experiencia.
 
-## 🌟 1. Objetivos del Proyecto
+Actualmente opera mediante:
+- Una **casa matriz** (fábrica y ventas).
+- Una **sucursal de ventas**.
 
-### Objetivo General
-Desarrollar una plataforma web que modernice los procesos de venta, arriendo, reparación y despacho de bicicletas, mejorando la experiencia del cliente y la eficiencia operativa de la empresa MasterBikes.
+Problemas actuales:
+- Procesos manuales.
+- Ineficiencia en gestión de stock y pedidos.
+- Contacto poco eficiente con proveedores.
 
-### Objetivos Específicos
-- Crear una plataforma en línea para mostrar y vender productos.
+**Objetivo del proyecto:** Modernizar operaciones mediante una plataforma web con:
+- Registro de clientes y servicios.
+- Trazabilidad de pedidos.
+- Integración con proveedores.
+- Promoción de productos online.
+
+### 1.2 Modelo de Negocio Actual
+- Fabricación propia y adquisición de insumos.
+- Atención presencial.
+- Gestión de pagos mediante hojas de pedido.
+- Reemplazo de productos defectuosos.
+- Consolidación manual de reportes.
+
+### 1.3 Problemas Actuales
+- Venta directa enfocada.
+- Nuevas necesidades: arriendo, mantención, venta de piezas.
+- Competencia con servicios digitales.
+- Procesos manuales lentos y daño de registros.
+- Proveedores modernos con catálogos online.
+
+### 1.4 Justificación del Proyecto
+MasterBikes busca:
+- Diversificar servicios: **venta, reparación y arriendo**.
+- Consulta de stock y seguimiento vía web.
+- Integración con proveedores como **SHIMANO**.
+
+### 1.5 Objetivos del Proyecto
+
+**Objetivo General:**
+> Desarrollar una plataforma web que modernice los procesos de venta, arriendo, reparación y despacho de bicicletas.
+
+**Objetivos Específicos:**
+- Crear plataforma online para productos.
 - Implementar funcionalidades de arriendo y reparación.
-- Mejorar el control de stock y trazabilidad de pedidos.
-- Facilitar la integración con proveedores como SHIMANO.
-- Automatizar reportes y comunicaciones con clientes.
+- Mejorar control de stock y trazabilidad.
+- Integrar servicios de proveedores.
+- Automatizar reportes y comunicaciones.
 
 ---
 
-## 📅 2. Planificación - Carta Gantt
+## 2. Requisitos del Sistema
 
-### Metodología
-Se utilizará una **metodología incremental**, enfocada en entregar módulos funcionales por etapas y recolectar retroalimentación continua.
+### 2.1 Requisitos de Alto Nivel
 
-### Ciclo de vida del software aplicado:
-- Inicio
-- Análisis
-- Diseño
-- Desarrollo
-- Pruebas
-- Mantenimiento
+| ID   | Requisito de Alto Nivel |
+|------|-------------------------|
+| RH01 | Registro de clientes para servicios. |
+| RH02 | Solicitud de arriendo de bicicletas. |
+| RH03 | Solicitud de reparaciones. |
+| RH04 | Gestión de reparaciones por técnicos. |
+| RH05 | Consulta de stock. |
+| RH06 | Visualización del estado de reparaciones. |
+| RH07 | Seguimiento de despachos. |
+| RH08 | Generación de reportes de ventas y servicios. |
+| RH09 | Integración con servicios web de proveedores. |
+| RH10 | Promoción de productos y ofertas personalizadas. |
 
-### Cronograma resumido
-| Fase              | Actividad                        | Inicio      | Duración | Fin         |
-|------------------|----------------------------------|-------------|-----------|-------------|
-| Inicio           | Inicio del Proyecto              | 2025-04-10  | 3 días   | 2025-04-13  |
-|                  | Definición de Objetivos          | 2025-04-13  | 2 días   | 2025-04-15  |
-| Análisis         | Análisis de Requisitos           | 2025-04-15  | 5 días   | 2025-04-20  |
-|                  | Especificación de Requisitos     | 2025-04-20  | 4 días   | 2025-04-24  |
-| Diseño           | Arquitectura, BD, Interfaces     | 2025-04-24  | 9 días   | 2025-05-04  |
-| Desarrollo       | Backend, Frontend, Integración   | 2025-05-04  | 20 días  | 2025-05-24  |
-| Pruebas          | Unitarias, Integración, Usuario | 2025-05-27  | 9 días   | 2025-06-06  |
-| Mantenimiento    | Despliegue, soporte inicial      | 2025-06-06  | 9 días   | 2025-06-15  |
+### 2.2 Requisitos Específicos
 
----
+#### Requisitos Funcionales
 
-## 🔗 3. Requisitos del Sistema (IEEE 830)
+| ID   | Requisito Funcional |
+|------|---------------------|
+| RF01 | Registro de clientes con validación de correo. |
+| RF02 | Solicitudes de arriendo. |
+| RF03 | Agenda de reparaciones. |
+| RF04 | Confirmación de viabilidad por técnicos. |
+| RF05 | Consulta de stock por técnicos/vendedores. |
+| RF06 | Consulta de estado de reparaciones. |
+| RF07 | Seguimiento de despacho. |
+| RF08 | Generación de reportes diarios o personalizados. |
+| RF09 | Consulta a servicios web de proveedores. |
+| RF10 | Envío de promociones automatizadas. |
 
-### 3.1 Requisitos Funcionales por Módulo
+#### Requisitos No Funcionales
 
-A continuación se detallan los requisitos funcionales por módulo, acompañados de su respectiva historia de usuario como guía para su implementación:
-
-#### Gestión de Clientes
-- **RF01 – Registro de usuarios con verificación por correo.**
-  - *Historia de Usuario:* Como nuevo cliente, quiero poder registrarme usando mi correo electrónico para acceder a los servicios de arriendo, reparación y seguimiento de mis pedidos.
-- **RF02 – Inicio y cierre de sesión.**
-  - *Historia de Usuario:* Como cliente registrado, quiero iniciar y cerrar sesión de forma segura para acceder a mis servicios personalizados.
-- **RF08 – Visualización del historial de servicios.**
-  - *Historia de Usuario:* Como cliente, quiero poder consultar mi historial de arriendos y reparaciones para saber cuándo y qué servicios he utilizado.
-- **RF12 – Gestión y recepción de promociones.**
-  - *Historia de Usuario:* Como cliente registrado, quiero recibir promociones personalizadas en mi correo para aprovechar descuentos en servicios.
-
-#### Arriendo de Bicicletas
-- **RF03 – Solicitud de arriendo de bicicletas.**
-  - *Historia de Usuario:* Como usuario, quiero solicitar una bicicleta por un periodo definido para utilizarla en paseos o traslados específicos.
-- **RF07 – Seguimiento del despacho del producto al cliente.**
-  - *Historia de Usuario:* Como cliente, quiero seguir en línea el estado del despacho de mi bicicleta para saber cuándo llegará a mi domicilio.
-
-#### Reparaciones
-- **RF04 – Solicitud de reparación indicando problema y horario.**
-  - *Historia de Usuario:* Como usuario, quiero poder solicitar la reparación de mi bicicleta indicando el problema y mi disponibilidad para que el técnico lo revise.
-- **RF05 – Consulta de stock por parte del técnico.**
-  - *Historia de Usuario:* Como técnico, quiero consultar el stock de piezas para saber si puedo realizar una reparación en base a la disponibilidad.
-- **RF06 – Consulta del estado de reparación por el cliente.**
-  - *Historia de Usuario:* Como cliente, quiero consultar en qué etapa se encuentra la reparación de mi bicicleta para estar informado del progreso.
-
-#### Supervisión y Administración
-- **RF10 – Reportes de ventas y servicios para supervisores.**
-  - *Historia de Usuario:* Como supervisor, quiero acceder a reportes de ventas y servicios para analizar el rendimiento del negocio y tomar decisiones.
-
-#### Integración con Proveedores
-- **RF11 – Acceso a servicios web del proveedor SHIMANO.**
-  - *Historia de Usuario:* Como responsable de bodega, quiero consultar el stock y precios de SHIMANO desde el sistema para agilizar los pedidos y mantener el inventario actualizado.
-
-#### Comunicación y Notificaciones
-- **RF09 – Envío de correos automáticos de confirmación, estado de reparación y seguimiento.**
-  - *Historia de Usuario:* Como cliente, quiero recibir notificaciones automáticas sobre mis pedidos y servicios para mantenerme informado sin necesidad de llamar o consultar manualmente.
-
-### 3.2 Requisitos No Funcionales por Tipo
-
-#### Seguridad
-- RNF01 – Autenticación y cifrado de la información de los usuarios.
-- RNF08 – Registro de accesos y acciones administrativas (auditoría).
-
-#### Usabilidad
-- RNF02 – Interfaz amigable para usuarios no técnicos.
-- RNF12 – Adaptación futura a distintos idiomas (localización).
-
-#### Rendimiento / Eficiencia
-- RNF04 – Respuestas en menos de 2 segundos bajo carga normal.
-- RNF11 – Soporte para múltiples usuarios concurrentes.
-
-#### Compatibilidad / Portabilidad
-- RNF07 – Accesibilidad desde navegadores modernos y dispositivos móviles.
-
-#### Mantenibilidad
-- RNF06 – Arquitectura modular que facilite mantenimiento.
-
-#### Disponibilidad / Fiabilidad
-- RNF05 – Disponibilidad del sistema al menos 99% mensual.
-- RNF09 – Backup diario automático de la base de datos.
-
-#### Interoperabilidad / Escalabilidad
-- RNF10 – Integración mediante APIs.
-- RNF03 – Posibilidad de ampliar funcionalidades futuras.
+- Disponibilidad del 99%.
+- Tiempo de respuesta < 2s.
+- Compatible con navegadores modernos.
+- Seguridad y cifrado de datos.
+- Arquitectura modular.
+- Soporte de 100 usuarios concurrentes.
+- Respaldo diario.
+- Mensajes de error claros.
+- Registro de eventos importantes.
 
 ---
 
-## 🔬 4. Casos de Uso
+## 3. Descripción General del Sistema
 
-### Actores Principales
-- Cliente
-- Técnico
-- Vendedor
-- Supervisor
-- Proveedor (SHIMANO)
-- Sistema (automatizado)
+### 3.1 Perspectiva del Producto
+Sistema de microservicios desarrollado en **Java Spring Boot**, usando **Oracle Database** y desplegado en **AWS**.
 
-### Casos de Uso Destacados
-- CU01: Registrarse
-- CU03: Solicitar arriendo
-- CU04: Solicitar reparación
-- CU05: Ver estado de reparación
-- CU06: Ver historial de servicios
-- CU09: Ver solicitudes técnicas
-- CU10: Confirmar posibilidad de reparación
-- CU14: Reportes de ventas
-- CU16: Consulta a SHIMANO
-- CU20: Enviar promociones
+### 3.2 Funciones Generales
+- Registro y autenticación de usuarios.
+- Arriendo de bicicletas.
+- Solicitud y gestión de reparaciones.
+- Historial de mantenciones.
+- Registro de ventas.
+- Consulta de stock.
+- Seguimiento de despachos.
+- Promociones personalizadas.
+- Generación de reportes.
+- Integración con proveedores externos.
 
-*El diagrama UML está disponible en la carpeta de diagramas del repositorio.*
+### 3.3 Características de los Usuarios
 
----
+| Perfil      | Nivel Técnico | Funcionalidad |
+|-------------|---------------|---------------|
+| Clientes    | Bajo          | Registro, solicitudes, historial, promociones |
+| Vendedores  | Medio         | Registro de ventas, stock, despacho |
+| Técnicos    | Medio         | Gestión de reparaciones, stock |
+| Supervisores| Medio         | Visualización de reportes y gestión |
 
-# ⚙️ Microservicios Propuestos – Sistema Bicicletas Masterbikes
+### 3.4 Restricciones
+- Uso de Java, Spring Boot, Oracle DB, AWS.
+- JWT para seguridad.
+- Roles diferenciados.
 
-Esta propuesta define los microservicios necesarios para cubrir los requisitos funcionales y no funcionales del sistema, siguiendo una arquitectura basada en **Spring Boot** y **Oracle Database**, en un contexto académico.
-
----
-
-## 1. 🧑‍💼 Microservicio de Usuarios y Autenticación
-
-- **Requisitos Relacionados:** RF01, RF02, RF12, RNF01, RNF08
-- **Responsabilidades:**
-  - Registro de usuarios con validación por correo.
-  - Inicio y cierre de sesión con control de acceso.
-  - Gestión de perfiles de usuario.
-  - Registro de actividad y accesos (auditoría).
-  - Envío de promociones personalizadas por correo.
+### 3.5 Supuestos y Dependencias
+- Usuarios finales con acceso a internet.
+- Infraestructura disponible en AWS.
+- API de SHIMANO funcional.
 
 ---
 
-## 2. 🚲 Microservicio de Arriendos
+## 4. Tecnologías a Utilizar y Justificación
 
-- **Requisitos Relacionados:** RF03, RF07, RF08
-- **Responsabilidades:**
-  - Solicitud y registro de arriendos de bicicletas.
-  - Seguimiento del estado del arriendo y despacho.
-  - Consulta de historial de arriendos por parte del cliente.
-
----
-
-## 3. 🔧 Microservicio de Reparaciones
-
-- **Requisitos Relacionados:** RF04, RF05, RF06
-- **Responsabilidades:**
-  - Registro y solicitud de reparaciones con detalle del problema.
-  - Consulta de disponibilidad de repuestos.
-  - Seguimiento del estado del proceso de reparación por parte del cliente.
+| Componente         | Tecnología                          | Uso |
+|--------------------|--------------------------------------|-----|
+| Frontend Web       | HTML, CSS, JavaScript, React o Vue    | Interfaz de usuario |
+| Backend            | Java + Spring Boot                   | Lógica de negocio y APIs |
+| Base de datos      | Oracle Database (local o RDS)         | Almacenamiento de datos |
+| Seguridad          | Spring Security + JWT                | Autenticación y control de acceso |
+| API Gateway        | Spring Cloud Gateway                 | Enrutamiento de microservicios |
+| Despliegue         | AWS EC2 + RDS                        | Infraestructura en la nube |
+| Control de versiones | GitHub                              | Gestión de versiones y colaboración |
 
 ---
 
-## 4. 📊 Microservicio de Supervisión y Reportes
+## 5. Organización del Equipo
 
-- **Requisitos Relacionados:** RF10, RNF04, RNF05
-- **Responsabilidades:**
-  - Generación de reportes de ventas y servicios.
-  - Acceso para perfiles administrativos.
-  - Exportación y visualización de datos consolidados.
-
----
-
-## 5. 📬 Microservicio de Notificaciones
-
-- **Requisitos Relacionados:** RF09, RF12, RNF01
-- **Responsabilidades:**
-  - Envío de correos automáticos (registro, confirmaciones, reparaciones).
-  - Enlace con los otros microservicios vía REST para recibir eventos y generar notificaciones.
-  - Manejo de plantillas de correo y promociones.
+| Nombre            | Roles |
+|-------------------|-------|
+| Fabián Lecaros     | Product Owner y Developer |
+| Héctor Águila     | Analista y Developer |
+| Cesar Veliz       | Analista y Developer |
+| Franco Ruz        | Diseñador y Developer |
+| Vicente Barrera   | Tester y Developer |
 
 ---
 
-## 6. 🏭 Microservicio de Integración con Proveedores
+## 6. Metodología de Trabajo
 
-- **Requisitos Relacionados:** RF11, RNF10
-- **Responsabilidades:**
-  - Conexión con servicios externos como el sistema de SHIMANO.
-  - Consulta de stock y precios de productos externos.
-  - Actualización de inventario desde proveedores.
+Se utilizará **Scrum**, con sprints de **2 semanas** de duración, enfocándose en entregas incrementales y revisiones continuas.
 
 ---
 
-## 7. 🌐 API Gateway *(opcional para versiones más avanzadas)*
+## 7. Carta Gantt del Proyecto
 
-- **Requisitos Relacionados:** RNF07, RNF10
-- **Responsabilidades:**
-  - Punto único de entrada para el frontend.
-  - Redirección de peticiones a cada microservicio.
-  - Gestión básica de rutas públicas/privadas.
+Duración: **21/04/2025 - 04/07/2025**
 
----
-
-## 8. ⚙️ Configuración Centralizada *(opcional para escalar el proyecto)*
-
-- **Herramienta:** Spring Cloud Config Server
-- **Responsabilidad:**
-  - Gestión de propiedades de configuración para todos los microservicios desde un repositorio central.
+Actividades:
+- Inicio, Análisis, Diseño.
+- 4 Sprints de desarrollo y pruebas.
+- Pruebas del sistema.
+- Mantenimiento inicial.
+- Cierre y entrega final.
 
 ---
 
-## 🔄 Comunicación entre Microservicios
+## 8. Evaluación y Mejoras Esperadas
 
-- Comunicación **sincrónica REST** mediante `RestTemplate`.
-- Ejemplos:
-  - **Arriendos** ↔ **Notificaciones**
-  - **Reparaciones** ↔ **Notificaciones**
-  - **Usuarios** ↔ **Reportes**
-
----
-
-
-# 🧰 Kit de Herramientas Tecnológicas – Microservicios (Versión Académica)
-
-Este kit está diseñado para implementar una solución de microservicios en un contexto académico, manteniendo la base tecnológica de **Spring Boot** y **Oracle Database**, pero simplificando herramientas para facilitar el aprendizaje.
-
-## ⚙️ Backend (Microservicios con Spring Boot)
-
-| Herramienta               | Propósito                                                                 |
-|---------------------------|---------------------------------------------------------------------------|
-| Spring Boot (MVC, JPA)    | Base para cada microservicio (controladores REST, lógica y persistencia). |
-| Spring Security           | Seguridad básica: login, rutas protegidas, cifrado.                       |
-| Spring Boot Mail          | Envío de correos automáticos (servicio de notificaciones).                |
-| RestTemplate              | Comunicación entre servicios o con SHIMANO.                               |
-
-## 🛢️ Base de Datos
-
-| Herramienta             | Propósito                                                    |
-|-------------------------|--------------------------------------------------------------|
-| Oracle Database XE      | Almacén de datos (compartido o por servicio según diseño).   |
-| SQL Developer           | Gestión visual de tablas, datos y consultas.                 |
-
-## 💻 Frontend
-
-| Herramienta             | Propósito                                                   |
-|-------------------------|-------------------------------------------------------------|
-| HTML5 + CSS3 + JS       | Interfaz del usuario.                                       |
-| Bootstrap               | Estilo responsivo y componentes visuales.                   |
-| Thymeleaf (opcional)    | Plantillas si se usa renderizado desde el backend.          |
-
-## 🧪 Desarrollo y Pruebas
-
-| Herramienta              | Propósito                                                  |
-|--------------------------|------------------------------------------------------------|
-| IntelliJ IDEA / Eclipse  | Entorno de desarrollo para codificar microservicios.       |
-| Postman                  | Probar endpoints de cada servicio.                         |
-| JUnit                    | Pruebas unitarias básicas por servicio.                    |
-| Git + GitHub             | Versionado y trabajo colaborativo.                         |
-| Maven                    | Manejo de dependencias y estructura del proyecto.          |
-
-## 📋 Planificación y Gestión
-
-| Herramienta         | Propósito                                   |
-|---------------------|---------------------------------------------|
-| Trello / Notion     | Organización de tareas y seguimiento ágil. |
+- Optimizar procesos internos.
+- Mejorar la toma de decisiones.
+- Ampliar el modelo de negocio.
+- Mejorar atención al cliente.
+- Aumentar la seguridad y escalabilidad.
 
 ---
 
-## ✅ Relación Herramientas – Requisitos
+## 9. Plan de Capacitación
 
-| Herramienta               | Requisitos Relacionados           | Explicación de la Interacción                                                             |
-|---------------------------|-----------------------------------|--------------------------------------------------------------------------------------------|
-| Spring Boot (MVC, JPA)    | RF01–RF12, RNF03, RNF04, RNF06, RNF10 | Desarrolla cada microservicio con REST y acceso a datos.                                  |
-| Spring Security           | RF02, RNF01, RNF08                | Login seguro y control de acceso.                                                         |
-| JavaMailSender            | RF09, RF12                        | Envío de correos automatizados.                                                           |
-| RestTemplate              | RF11, RNF10                       | Conexión con servicios externos como SHIMANO.                                             |
-| Oracle Database XE        | RF01–RF10, RNF05, RNF09           | Persistencia de datos críticos.                                                           |
-| SQL Developer             | RF05, RF10                        | Consulta y gestión de la base de datos Oracle.                                            |
-| HTML + Bootstrap + JS     | RF03–RF07, RF10, RNF02, RNF07     | Interfaces responsivas y funcionales.                                                     |
-| Thymeleaf (opcional)      | RF01–RF10                         | Renderizado desde backend.                                                                |
-| IntelliJ IDEA / Eclipse   | —                                 | IDE de desarrollo.                                                                        |
-| Postman                   | RF03–RF11                         | Pruebas de endpoints REST.                                                                |
-| JUnit                     | RNF04, RNF06                      | Validación de comportamiento de servicios.                                                |
-| Git + GitHub              | RNF06                             | Control de versiones y colaboración.                                                      |
-| Maven                     | RNF06, RNF10                      | Gestión de dependencias y estructura modular.                                             |
-| Trello / Notion           | —                                 | Planificación y seguimiento académico del proyecto.                                       |
-
-# 🔗 Relación entre Requisitos, Módulos, Microservicios y Herramientas
-
-| **Requisito (ID)** | **Descripción del Requisito**                                | **Módulo Funcional**            | **Microservicio Responsable**             | **Herramientas Involucradas**                                                                          |
-|--------------------|---------------------------------------------------------------|----------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------|
-| RF01               | Registro de usuarios con verificación por correo              | Gestión de Clientes              | Usuarios y Autenticación                  | Spring Boot, Spring Security, Oracle DB, JavaMailSender, Thymeleaf                                     |
-| RF02               | Inicio y cierre de sesión seguro                              | Gestión de Clientes              | Usuarios y Autenticación                  | Spring Security, Spring Boot, Oracle DB                                                                |
-| RF08               | Visualización del historial de servicios                      | Gestión de Clientes              | Usuarios y Autenticación                  | Spring Boot, Thymeleaf, Oracle DB                                                                      |
-| RF12               | Gestión y recepción de promociones                            | Gestión de Clientes              | Usuarios y Autenticación / Notificaciones | JavaMailSender, Oracle DB, Spring Boot                                                                 |
-| RF03               | Solicitud de arriendo de bicicletas                           | Arriendo de Bicicletas           | Arriendos                                 | Spring Boot, Oracle DB, HTML+Bootstrap, Postman                                                        |
-| RF07               | Seguimiento del despacho del producto al cliente              | Arriendo de Bicicletas           | Arriendos                                 | Spring Boot, Oracle DB, Thymeleaf, Bootstrap                                                           |
-| RF04               | Solicitud de reparación indicando problema y horario          | Reparaciones                     | Reparaciones                              | Spring Boot, Oracle DB, Thymeleaf                                                                      |
-| RF05               | Consulta de stock por parte del técnico                       | Reparaciones                     | Reparaciones / Proveedores                | Oracle DB, SQL Developer, Spring Boot, RestTemplate                                                    |
-| RF06               | Consulta del estado de reparación por el cliente              | Reparaciones                     | Reparaciones                              | Spring Boot, Thymeleaf, Oracle DB                                                                      |
-| RF10               | Reportes de ventas y servicios para supervisores              | Supervisión y Administración     | Supervisión y Reportes                    | Spring Boot, SQL Developer, Oracle DB, JUnit                                                           |
-| RF11               | Acceso a servicios web del proveedor SHIMANO                  | Integración con Proveedores      | Proveedores                               | Spring Boot, RestTemplate, Oracle DB                                                                   |
-| RF09               | Envío de correos automáticos de confirmación y seguimiento    | Comunicación y Notificaciones    | Notificaciones                            | JavaMailSender, Spring Boot, Thymeleaf                                                                 |
-
----
+**Recursos gratuitos:**
+- **freeCodeCamp**: Responsive Web Design, JavaScript, React.
+- **MDN Web Docs**: Referencia HTML, CSS, JavaScript.
+- **Spring.io Guides** y **Baeldung**: Spring Boot y APIs.
+- **Postman Free**: Testing de APIs.
+- **Oracle Live SQL** y **Oracle XE 21c**: Base de datos.
+- **jwt.io**: JSON Web Tokens.
+- **GitHub**: Gestión de repositorios.
 
 
