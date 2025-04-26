@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto de Software: MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2ecc71">
+</head>
+<body>
+    <div class="slide flex flex-col items-center justify-center text-white p-12 relative overflow-hidden active">
+        <!-- Background decorative elements -->
+        <div class="bike-wheel" style="width: 500px; height: 500px; top: -150px; right: -100px; border-width: 10px; opacity: 0.2"></div>
+        <div class="bike-wheel" style="width: 300px; height: 300px; bottom: -50px; left: -50px; border-width: 8px; opacity: 0.15"></div>
+        
+        <div class="circle-pattern" style="width: 200px; height: 200px; top: 10%; left: 5%;"></div>
+        <div class="circle-pattern" style="width: 150px; height: 150px; bottom: 15%; right: 10%;"></div>
+        <div class="circle-pattern" style="width: 100px; height: 100px; top: 40%; right: 20%;"></div>
+        
+        <!-- Main content -->
+        <div class="z-10 text-center mb-10">
+            <div class="mb-2 text-sm tracking-widest uppercase opacity-80">Presentación de</div>
+            <h1 class="text-6xl font-bold mb-3">
+                <span class="text-green-400">Master</span><span class="text-white">Bikes</span>
+            </h1>
+            <p class="text-2xl opacity-90 mb-1">Proyecto de Software</p>
+            <div class="w-20 h-1 bg-green-400 mx-auto mt-4 mb-6"></div>
+            <p class="text-lg italic opacity-75">"Transformando la experiencia del ciclismo urbano"</p>
+        </div>
+
+        <div class="flex flex-col items-center z-10 bg-black bg-opacity-20 py-6 px-14 rounded-lg backdrop-filter backdrop-blur-sm">
+            <p class="mb-4 text-lg font-semibold">Equipo de Desarrollo</p>
+            <div class="grid grid-cols-3 gap-x-8 gap-y-3">
+                <div class="team-member flex items-center">
+                    <i class="fas fa-user-circle text-green-400 mr-3"></i>
+                    <span>Hector Águila</span>
+                </div>
+                <div class="team-member flex items-center">
+                    <i class="fas fa-user-circle text-green-400 mr-3"></i>
+                    <span>Vicente Barrera</span>
+                </div>
+                <div class="team-member flex items-center">
+                    <i class="fas fa-user-circle text-green-400 mr-3"></i>
+                    <span>Fabián Lecaros</span>
+                </div>
+                <div class="team-member flex items-center">
+                    <i class="fas fa-user-circle text-green-400 mr-3"></i>
+                    <span>Franco Ruz</span>
+                </div>
+                <div class="team-member flex items-center">
+                    <i class="fas fa-user-circle text-green-400 mr-3"></i>
+                    <span>Cesar Veliz</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom elements -->
+        <div class="absolute bottom-6 right-10 flex items-center z-10">
+            <i class="fas fa-bicycle text-4xl text-green-400 mr-3"></i>
+            <div class="text-sm">
+                <div>2025</div>
+                <div class="opacity-75">GitHub</div>
+            </div>
+        </div>
+
+        <!-- Decorative gear icons -->
+        <i class="fas fa-cog text-white opacity-10 absolute top-10 left-10 text-6xl" style="animation: rotate 15s infinite linear;"></i>
+        <i class="fas fa-cog text-white opacity-10 absolute bottom-20 right-20 text-5xl" style="animation: rotate 10s infinite linear reverse;"></i>
+
+        <!-- Navigation buttons -->
+        <nav>
+            <a href="slides/Slide1-indice.html" title="Índice">
+                <i class="fas fa-list"></i>
+            </a>
+            <a href="slides/Slide2-proyecto.html" title="Siguiente">
+                <i class="fas fa-arrow-down"></i>
+            </a>
+        </nav>
+    </div>
+    <script src="js/home.js"></script> <!-- Corregido enlace JS -->
+    <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            window.location.href = 'slides/Slide1-indice.html';
+        }
+        // No permitir retroceder desde el index
+    });
+    </script>
+</body>
+</html>

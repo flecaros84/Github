@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Próximos pasos / Plan inmediato</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../css/proyecciones.css">
+</head>
+<body>
+    <div class="slide flex flex-col text-white p-10 relative">
+        <!-- Background decorative elements -->
+        <div class="bike-wheel" style="width: 500px; height: 500px; top: -150px; right: -100px; border-width: 10px; opacity: 0.2"></div>
+        <div class="bike-wheel" style="width: 300px; height: 300px; bottom: -50px; left: -50px; border-width: 8px; opacity: 0.15"></div>
+        
+        <div class="circle-pattern" style="width: 200px; height: 200px; top: 10%; left: 5%;"></div>
+        <div class="circle-pattern" style="width: 100px; height: 100px; bottom: 15%; right: 10%;"></div>
+        
+        <!-- Header -->
+        <div class="mb-6 z-10">
+            <h2 class="text-4xl font-bold">Próximos pasos / Plan inmediato</h2>
+            <div class="w-20 h-1 bg-green-400 mt-2"></div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="flex flex-1 z-10">
+            <!-- Left column: Tasks for Sprint 1 -->
+            <div class="w-1/2 pr-4">
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm h-full">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-tasks text-green-400 mr-3 pulse"></i>
+                        Tareas para Sprint 1
+                    </h3>
+                    
+                    <div class="mb-4">
+                        <h4 class="text-base font-semibold flex items-center mb-2">
+                            <i class="fas fa-code text-blue-400 mr-2"></i>
+                            Desarrollo Backend/Frontend
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-user-plus text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold flex items-center">
+                                        <span>Registro y login de clientes</span>
+                                        <span class="ml-2 text-xs bg-blue-400 bg-opacity-30 py-0.5 px-2 rounded-full">US01</span>
+                                    </h4>
+                                    <p class="text-sm opacity-90">Implementar flujo completo de registro, autenticación y gestión de perfiles.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-green-400 rounded-full" style="width: 10%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: Héctor, Vicente</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-bicycle text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold flex items-center">
+                                        <span>Solicitud de arriendo</span>
+                                        <span class="ml-2 text-xs bg-blue-400 bg-opacity-30 py-0.5 px-2 rounded-full">US02</span>
+                                    </h4>
+                                    <p class="text-sm opacity-90">Desarrollar flujo para solicitar arriendo de bicicletas incluyendo validaciones.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: Fabián, César</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-cash-register text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold flex items-center">
+                                        <span>Registro de ventas/pedidos</span>
+                                        <span class="ml-2 text-xs bg-blue-400 bg-opacity-30 py-0.5 px-2 rounded-full">US13</span>
+                                    </h4>
+                                    <p class="text-sm opacity-90">Implementar módulo para registrar ventas y gestionar pedidos de productos.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: Franco, César</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-boxes text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold flex items-center">
+                                        <span>Consulta de stock</span>
+                                        <span class="ml-2 text-xs bg-blue-400 bg-opacity-30 py-0.5 px-2 rounded-full">US14</span>
+                                    </h4>
+                                    <p class="text-sm opacity-90">Crear funcionalidad para consultar disponibilidad de productos e inventario.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: Héctor, Fabián</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-base font-semibold flex items-center mb-2">
+                            <i class="fas fa-server text-purple-400 mr-2"></i>
+                            Infraestructura/Configuración
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-purple-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-database text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold">Configuración BD Oracle</h4>
+                                    <p class="text-sm opacity-90">Definición de las Entidades, Relaciones y tipo de Datos.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-green-400 rounded-full" style="width: 20%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: Fabián</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-purple-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-cloud-upload-alt text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold">Despliegue de microservicios</h4>
+                                    <p class="text-sm opacity-90">Configurar entornos iniciales en AWS EC2 para microservicios base.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: Héctor, Vicente</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card pl-3 py-2 rounded flex items-start">
+                                <div class="icon-container bg-purple-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                    <i class="fas fa-project-diagram text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-semibold">Configuración API Gateway</h4>
+                                    <p class="text-sm opacity-90">Implementar Spring Cloud Gateway como punto de entrada para servicios.</p>
+                                    <div class="mt-1 flex items-center">
+                                        <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                            <div class="h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-xs opacity-75">Asignado: César</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right column: Organization -->
+            <div class="w-1/2 pl-4 flex flex-col">
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm mb-4">
+                    <h3 class="text-xl font-semibold mb-3 flex items-center">
+                        <i class="fas fa-users-cog text-blue-400 mr-3"></i>
+                        Organización para avanzar
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="org-card pr-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-blue-500 bg-opacity-20 p-3 rounded-full mr-3 flex-shrink-0">
+                                <i class="fab fa-jira text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Metodología Scrum</h4>
+                                <p class="text-sm opacity-90">Continuaremos con reuniones diarias (15 min), planificación de sprint, revisión y retrospectiva cada 2 semanas.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="org-card pr-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-blue-500 bg-opacity-20 p-3 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-clipboard-list text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Gestión de tareas</h4>
+                                <p class="text-sm opacity-90">Product Backlog gestionado por Fabián (PO). Uso de tablero Kanban en GitHub Projects para visualizar el progreso.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="org-card pr-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-blue-500 bg-opacity-20 p-3 rounded-full mr-3 flex-shrink-0">
+                                <i class="fab fa-github text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Colaboración en código</h4>
+                                <p class="text-sm opacity-90">Trabajaremos con ramas por feature, revisiones de código obligatorias y mezclas mediante Pull Requests.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="org-card pr-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-blue-500 bg-opacity-20 p-3 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-user-tag text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Mantenimiento de roles</h4>
+                                <p class="text-sm opacity-90">Conservaremos los roles definidos para guiar responsabilidades, con rotación parcial en tareas de desarrollo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanban board visualization -->
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm flex-grow">
+                    <h4 class="text-base font-semibold mb-3 flex items-center">
+                        <i class="fas fa-columns text-green-400 mr-2"></i>
+                        Tablero Sprint 1
+                    </h4>
+                    
+                    <div class="flex space-x-2 h-48">
+                        <div class="kanban-column flex-1 p-2">
+                            <div class="text-xs font-semibold text-center pb-2 border-b border-white border-opacity-20">PENDIENTE</div>
+                            <div class="mt-2">
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">US02: Solicitud arriendo</span>
+                                        <span class="task-badge bg-blue-500 bg-opacity-50">Frontend</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Fabián, César</div>
+                                </div>
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">US13: Registro ventas</span>
+                                        <span class="task-badge bg-blue-500 bg-opacity-50">Backend</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Franco, César</div>
+                                </div>
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">US14: Consulta stock</span>
+                                        <span class="task-badge bg-blue-500 bg-opacity-50">API</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Héctor, Fabián</div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="kanban-column flex-1 p-2">
+                            <div class="text-xs font-semibold text-center pb-2 border-b border-white border-opacity-20">EN PROGRESO</div>
+                            <div class="mt-2">
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">Diseño Mockups</span>
+                                        <span class="task-badge bg-yellow-500 bg-opacity-50">Design</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Franco, César</div>
+                                </div>
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">Config BD Oracle</span>
+                                        <span class="task-badge bg-purple-500 bg-opacity-50">Infra</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Fabián</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="kanban-column flex-1 p-2">
+                            <div class="text-xs font-semibold text-center pb-2 border-b border-white border-opacity-20">COMPLETADO</div>
+                            <div class="mt-2">
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">Creación repositorio</span>
+                                        <span class="task-badge bg-green-500 bg-opacity-50">Setup</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Fabián</div>
+                                </div>
+                                <div class="kanban-card p-2 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-semibold">Planificación Sprint</span>
+                                        <span class="task-badge bg-green-500 bg-opacity-50">Scrum</span>
+                                    </div>
+                                    <div class="opacity-75 text-xs">Fabián (PO)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom decoration -->
+        <div class="absolute bottom-6 right-8 flex items-center opacity-80 z-10">
+            <div class="float">
+                <i class="fas fa-bicycle text-green-400 text-3xl"></i>
+            </div>
+        </div>
+        
+        <!-- Decorative gear icons -->
+        <i class="fas fa-cog text-white opacity-10 absolute top-20 right-20 text-5xl" style="animation: rotate 15s infinite linear;"></i>
+        <i class="fas fa-cog text-white opacity-10 absolute bottom-10 left-10 text-4xl" style="animation: rotate 10s infinite linear reverse;"></i>
+    </div>
+    
+    <nav>
+        <a href="Slide1-indice.html" title="Índice"><i class="fas fa-list"></i></a>
+        <a href="Slide5-avances.html" title="Anterior"><i class="fas fa-arrow-up"></i></a>
+        <a href="Slide7-aprendizaje.html" title="Siguiente"><i class="fas fa-arrow-down"></i></a>
+    </nav>
+    <script src="../js/proyecciones.js"></script>
+    <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            window.location.href = 'Slide7-aprendizaje.html';
+        } else if (event.key === 'ArrowLeft') {
+            window.location.href = 'Slide5-avances.html';
+        }
+    });
+    </script>
+</body>
+</html>

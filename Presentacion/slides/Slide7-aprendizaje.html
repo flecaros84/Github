@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendizajes / Dificultades enfrentadas</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../css/aprendizaje.css">
+</head>
+<body>
+    <div class="slide flex flex-col text-white p-10 relative active">
+        <!-- Background decorative elements -->
+        <div class="bike-wheel" style="width: 500px; height: 500px; top: -150px; right: -100px; border-width: 10px; opacity: 0.2"></div>
+        <div class="bike-wheel" style="width: 300px; height: 300px; bottom: -50px; left: -50px; border-width: 8px; opacity: 0.15"></div>
+        
+        <div class="circle-pattern" style="width: 200px; height: 200px; top: 10%; left: 5%;"></div>
+        <div class="circle-pattern" style="width: 100px; height: 100px; bottom: 15%; right: 10%;"></div>
+        
+        <!-- Header -->
+        <div class="mb-6 z-10">
+            <h2 class="text-4xl font-bold">Aprendizajes / Dificultades enfrentadas</h2>
+            <div class="w-20 h-1 bg-green-400 mt-2"></div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="flex flex-1 z-10">
+            <!-- Left column: Learnings -->
+            <div class="w-1/2 pr-4">
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm h-full">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-yellow-400 mr-3 glow"></i>
+                        <span>Aprendizajes del equipo</span>
+                    </h3>
+                    
+                    <div class="space-y-3 overflow-y-auto" style="max-height: 500px;">
+                        <div class="learning-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-search-dollar text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Análisis profundo del caso de negocio</h4>
+                                <p class="text-sm opacity-90">Aprendimos a realizar un análisis detallado de requerimientos y necesidades del cliente, conectando problemas con soluciones técnicas.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-project-diagram text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Diseño de arquitectura de microservicios</h4>
+                                <p class="text-sm opacity-90">Comprendimos las ventajas de un diseño modular y escalable, planificando la separación de responsabilidades en servicios independientes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-sync-alt text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Aplicación de metodología Scrum</h4>
+                                <p class="text-sm opacity-90">Implementamos exitosamente prácticas ágiles como sprints, dailies, y refinamiento del backlog para mantener una planificación adaptativa.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-tools text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Selección de tecnologías apropiadas</h4>
+                                <p class="text-sm opacity-90">Evaluamos y elegimos el stack tecnológico adecuado (Java, Spring, Oracle, AWS, JWT) en base a requerimientos y escalabilidad futura.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-book text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Definición clara de requisitos y reglas</h4>
+                                <p class="text-sm opacity-90">Reconocimos la importancia de documentar claramente requisitos, roles y reglas de negocio antes de comenzar el desarrollo.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-brain text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Autoaprendizaje y adaptación técnica</h4>
+                                <p class="text-sm opacity-90">Identificamos recursos clave para el autoaprendizaje y organizamos un plan de capacitación para cerrar brechas de conocimiento.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right column: Challenges and radar chart -->
+            <div class="w-1/2 pl-4 flex flex-col">
+                <!-- Challenges section -->
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm mb-4">
+                    <h3 class="text-xl font-semibold mb-3 flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
+                        Dificultades a superar
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="challenge-card pl-3 py-2 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="icon-container bg-red-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-sitemap text-red-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Complejidad de microservicios</h4>
+                                <p class="text-sm opacity-90">El diseño e implementación de una arquitectura de microservicios por primera vez representa un desafío de aprendizaje para el equipo.</p>
+                                <div class="mt-1 text-xs italic opacity-75">Estrategia: Estudiar patrones de diseño y casos de éxito</div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-card pl-3 py-2 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="icon-container bg-red-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-graduation-cap text-red-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Curva de aprendizaje tecnológica</h4>
+                                <p class="text-sm opacity-90">Familiarizarse con Spring Boot, AWS y JWT requiere tiempo de aprendizaje que podría afectar la velocidad inicial de desarrollo.</p>
+                                <div class="mt-1 text-xs italic opacity-75">Estrategia: Documentación Oficial, Cursos y Consultas a Docentes.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-card pl-3 py-2 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="icon-container bg-red-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-plug text-red-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Integración entre componentes</h4>
+                                <p class="text-sm opacity-90">Asegurar la correcta comunicación entre microservicios y con la base de datos requiere una planificación detallada.</p>
+                                <div class="mt-1 text-xs italic opacity-75">Estrategia: Definir contratos de API claros y pruebas automatizadas</div>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-card pl-3 py-2 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="icon-container bg-red-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-clock text-red-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Gestión del tiempo y alcance</h4>
+                                <p class="text-sm opacity-90">Mantenerse dentro de los plazos de dos semanas por sprint y evitar el scope creep es un desafío constante.</p>
+                                <div class="mt-1 text-xs italic opacity-75">Estrategia: Priorización estricta y refinamiento continuo del backlog</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Radar chart -->
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm flex-grow flex flex-col">
+                    <h4 class="text-base font-semibold mb-2">Nivel de confianza del equipo por área</h4>
+                    <div class="radar-chart-container flex-grow">
+                        <canvas id="skillRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom message -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center z-10 bg-black bg-opacity-30 px-6 py-2 rounded-full">
+            <div class="flex items-center">
+                <i class="fas fa-quote-left text-green-400 mr-2"></i>
+                <p class="text-sm italic">
+                    "Cada obstáculo es una oportunidad para aprender y mejorar nuestras habilidades como equipo."
+                </p>
+                <i class="fas fa-quote-right text-green-400 ml-2"></i>
+            </div>
+        </div>
+        
+        <!-- Decorative gear icons -->
+        <i class="fas fa-cog text-white opacity-10 absolute top-20 right-20 text-5xl" style="animation: rotate 15s infinite linear;"></i>
+        <i class="fas fa-cog text-white opacity-10 absolute bottom-10 left-10 text-4xl" style="animation: rotate 10s infinite linear reverse;"></i>
+        
+        <div class="float absolute right-6 bottom-20">
+            <i class="fas fa-bicycle text-green-400 text-3xl"></i>
+        </div>
+    </div>
+    
+    <nav>
+        <a href="Slide1-indice.html" title="Índice"><i class="fas fa-list"></i></a>
+        <a href="Slide6-proyecciones.html" title="Anterior"><i class="fas fa-arrow-up"></i></a>
+    </nav>
+    <script src="../js/aprendizaje.js"></script>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                window.location.href = 'Slide6-proyecciones.html';
+            }
+            // No permitir avanzar desde el último slide
+        });
+    </script>
+</body>
+</html>

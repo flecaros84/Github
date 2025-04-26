@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avances logrados hasta ahora</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/avances.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="slide flex flex-col text-white p-10 relative active">
+        <!-- Background decorative elements -->
+        <div class="bike-wheel" style="width: 500px; height: 500px; top: -150px; right: -100px; border-width: 10px; opacity: 0.2"></div>
+        <div class="bike-wheel" style="width: 300px; height: 300px; bottom: -50px; left: -50px; border-width: 8px; opacity: 0.15"></div>
+        
+        <div class="circle-pattern" style="width: 200px; height: 200px; top: 10%; left: 5%;"></div>
+        <div class="circle-pattern" style="width: 100px; height: 100px; bottom: 15%; right: 10%;"></div>
+        
+        <!-- Header -->
+        <div class="mb-6 z-10">
+            <h2 class="text-4xl font-bold">Avances logrados hasta ahora</h2>
+            <div class="w-20 h-1 bg-green-400 mt-2"></div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="flex flex-1 z-10">
+            <!-- Left column: Documented advances -->
+            <div class="w-1/2 pr-4">
+                <div class="bg-black bg-opacity-20 p-6 rounded-lg backdrop-filter backdrop-blur-sm h-full relative">
+                    <h3 class="text-xl font-semibold mb-5 flex items-center">
+                        <i class="fas fa-clipboard-list text-green-400 mr-3 pulse"></i>
+                        Avances Documentados
+                    </h3>
+                    
+                    <div class="progress-line"></div>
+                    
+                    <div class="ml-8 space-y-5">
+                        <div class="progress-item pl-3 py-2 rounded">
+                            <h4 class="text-base font-semibold">Análisis del contexto y modelo de negocio</h4>
+                            <p class="text-sm opacity-90">Identificación detallada de problemas actuales y oportunidades en el mercado de bicicletas.</p>
+                        </div>
+                        
+                        <div class="progress-item pl-3 py-2 rounded">
+                            <h4 class="text-base font-semibold">Definición de objetivos del proyecto</h4>
+                            <p class="text-sm opacity-90">Establecimiento de objetivos generales y específicos que guiarán el desarrollo.</p>
+                        </div>
+                        
+                        <div class="progress-item pl-3 py-2 rounded">
+                            <h4 class="text-base font-semibold">Levantamiento de requisitos</h4>
+                            <p class="text-sm opacity-90">Documentación de requisitos de alto nivel, funcionales y no funcionales para el sistema.</p>
+                        </div>
+                        
+                        <div class="progress-item pl-3 py-2 rounded">
+                            <h4 class="text-base font-semibold">Descripción del sistema</h4>
+                            <p class="text-sm opacity-90">Definición de usuarios, restricciones y características principales de la plataforma.</p>
+                        </div>
+                        
+                        <div class="progress-item pl-3 py-2 rounded">
+                            <h4 class="text-base font-semibold">Propuesta técnica</h4>
+                            <p class="text-sm opacity-90">Arquitectura detallada, tecnologías seleccionadas y justificación de las decisiones técnicas.</p>
+                        </div>
+                        
+                        <div class="progress-item pl-3 py-2 rounded">
+                            <h4 class="text-base font-semibold">Organización y metodología</h4>
+                            <p class="text-sm opacity-90">Definición de roles del equipo e implementación de Scrum como metodología ágil.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute bottom-4 right-4 flex items-center text-sm opacity-80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Documentación completa en el informe PDF</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right column: Practical advances -->
+            <div class="w-1/2 pl-4 flex flex-col">
+                <div class="bg-black bg-opacity-20 p-6 rounded-lg backdrop-filter backdrop-blur-sm flex-grow">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-code-branch text-red-400 mr-3"></i>
+                        Avances Prácticos
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="practical-advance pl-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-gray-700 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-file-alt text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Planificación del Proyecto</h4>
+                                <p class="text-sm opacity-90">Elaboración de Informe y planificación general del proyecto.</p>
+                                <div class="mt-1 flex items-center">
+                                    <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                        <div class="h-full bg-blue-400 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                    <span class="text-xs text-blue-400">Iniciado</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="practical-advance pl-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-gray-700 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fab fa-github text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Repositorio GitHub</h4>
+                                <p class="text-sm opacity-90">Creación del repositorio para control de versiones y colaboración del equipo.</p>
+                                <div class="mt-1 flex items-center">
+                                    <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                        <div class="h-full bg-green-400 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                    <span class="text-xs text-green-400">Completado</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="practical-advance pl-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-gray-700 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fab fa-java text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Configuración inicial Spring Boot</h4>
+                                <p class="text-sm opacity-90">Investigación Creación de proyectos base para microservicios con Spring Initializr.</p>
+                                <div class="mt-1 flex items-center">
+                                    <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 10%"></div>
+                                    </div>
+                                    <span class="text-xs text-yellow-400">En progreso</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="practical-advance pl-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-gray-700 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-database text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Diseño de base de datos</h4>
+                                <p class="text-sm opacity-90">Creación de esquemas iniciales y definición de relaciones entre entidades.</p>
+                                <div class="mt-1 flex items-center">
+                                    <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                        <div class="h-full bg-yellow-400 rounded-full" style="width: 10%"></div>
+                                    </div>
+                                    <span class="text-xs text-yellow-400">En progreso</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="practical-advance pl-3 py-3 rounded-lg bg-black bg-opacity-20 flex items-start">
+                            <div class="bg-gray-700 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-paint-brush text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Prototipos de interfaz</h4>
+                                <p class="text-sm opacity-90">Diseño de wireframes para las principales interfaces de usuario.</p>
+                                <div class="mt-1 flex items-center">
+                                    <div class="w-20 h-1.5 bg-gray-600 rounded-full mr-2">
+                                        <div class="h-full bg-blue-400 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                    <span class="text-xs text-blue-400">Iniciado</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                
+                <!-- Summary box -->
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm mt-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-base font-semibold flex items-center">
+                            <i class="fas fa-chart-pie text-green-400 mr-2"></i>
+                            Progreso general del proyecto
+                        </h4>
+                        
+                        <div class="flex items-center">
+                            <div class="w-32 h-2 bg-gray-600 rounded-full mr-3">
+                                <div class="h-full bg-green-400 rounded-full" style="width: 35%"></div>
+                            </div>
+                            <span class="text-green-400 font-semibold">19%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 flex justify-between text-xs opacity-80">
+                        <span>Fase de análisis y diseño</span>
+                        <span>Implementación</span>
+                        <span>Pruebas</span>
+                        <span>Despliegue</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="h-1 bg-green-400 flex-grow"></div>
+                        <div class="h-1 bg-gray-600 flex-grow"></div>
+                        <div class="h-1 bg-gray-600 flex-grow"></div>
+                        <div class="h-1 bg-gray-600 flex-grow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Decorative gear icons -->
+        <i class="fas fa-cog text-white opacity-10 absolute top-20 right-20 text-5xl" style="animation: rotate 15s infinite linear;"></i>
+        <i class="fas fa-cog text-white opacity-10 absolute bottom-10 left-10 text-4xl" style="animation: rotate 10s infinite linear reverse;"></i>
+    </div>
+    <nav>
+        <a href="Slide1-indice.html" title="Índice"><i class="fas fa-list"></i></a>
+        <a href="Slide4-stack.html" title="Anterior"><i class="fas fa-arrow-up"></i></a>
+        <a href="Slide6-proyecciones.html" title="Siguiente"><i class="fas fa-arrow-down"></i></a>
+    </nav>
+    <script src="../js/avances.js"></script>
+    <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            window.location.href = 'Slide6-proyecciones.html';
+        } else if (event.key === 'ArrowLeft') {
+            window.location.href = 'Slide4-stack.html';
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #2c3e50, #3498db); /* Restaurado el color de fondo */
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+.slide.active {
+    opacity: 1;
+}
+.bike-wheel {
+    position: absolute;
+    border: 6px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: rotate 20s infinite linear;
+}
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.circle-pattern {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+}
+.team-member {
+    transition: all 0.3s ease;
+}
+.team-member:hover {
+    transform: translateX(10px);
+    color: #2ecc71;
+}
+nav { /* Añadido estilo de navegación si no estaba global */
+    position: fixed;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+nav a:hover {
+    background: rgba(46, 204, 113, 0.8);
+}
+nav a i {
+    font-size: 1.2rem;
+}
+@media (max-width: 768px) {
+    .slide {
+        width: 100%;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    .text-6xl {
+        font-size: 2.5rem;
+    }
+    .text-2xl {
+        font-size: 1.25rem;
+    }
+    .text-lg {
+        font-size: 1rem;
+    }
+    .grid-cols-3 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    .gap-x-8 {
+        gap: 1rem;
+    }
+    .gap-y-3 {
+        gap: 0.75rem;
+    }
+    .bike-wheel {
+        display: none;
+    }
+    .circle-pattern {
+        display: none;
+    }
+    nav a { /* Ajuste para móvil si es necesario */
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+}

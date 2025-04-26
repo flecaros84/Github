@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto de Software: MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/indice.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Índice de Presentación</h1>
+        <p class="subtitle">Explora cada sección del proyecto MasterBikes</p>
+        <div class="links">
+            <a href="../index.html" class="link">Portada</a>
+            <a href="Slide2-proyecto.html" class="link">¿En qué consiste el proyecto?</a>
+            <a href="Slide3-problematica.html" class="link">Problemática que busca resolver</a>
+            <a href="Slide4-stack.html" class="link">Tecnologías que se utilizarán</a>
+            <a href="Slide5-avances.html" class="link">Avances logrados hasta ahora</a>
+            <a href="Slide6-proyecciones.html" class="link">Próximos pasos / Plan inmediato</a>
+            <a href="Slide7-aprendizaje.html" class="link">Aprendizajes / Dificultades</a>
+            <a href="https://www.figma.com/design/EpSws0LHrJkFfagjZGJry5/MasterBikes?node-id=32-2383&p=f&t=H0Pdj1W5U00e504b-0" class="link">Prototipo</a>
+        </div>
+        <!-- Navigation buttons -->
+        <nav>
+            <a href="Slide1-indice.html" title="Índice"><i class="fas fa-list"></i></a>
+            <a href="Slide1-indice.html" title="Anterior"><i class="fas fa-arrow-up"></i></a>
+            <a href="Slide2-proyecto.html" title="Siguiente"><i class="fas fa-arrow-down"></i></a>
+        </nav>
+    </div>
+    <script src="../js/index.js"></script>
+    <script src="../js/indice.js"></script>
+    <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            window.location.href = 'Slide2-proyecto.html';
+        } else if (event.key === 'ArrowLeft') {
+            window.location.href = '../index.html';
+        }
+    });
+    </script>
+</body>
+</html>
