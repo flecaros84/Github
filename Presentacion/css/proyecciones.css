@@ -61,7 +61,8 @@ body {
     transform: scale(1.1);
 }
 .kanban-column {
-    min-height: 160px;
+    min-height: 240px;
+    max-height: 400px;
     background-color: rgba(0, 0, 0, 0.15);
     border-radius: 8px;
 }
@@ -73,6 +74,7 @@ body {
 }
 .kanban-card:hover {
     transform: translateY(-2px);
+    max-height: 600px;
     background-color: rgba(255, 255, 255, 0.2);
 }
 .task-badge {
