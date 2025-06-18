@@ -364,6 +364,25 @@
         </div>
     </nav>
 
+    <!-- Offcanvas Carrito -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="cartOffcanvasLabel">Tu Carrito</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+        <!-- Items -->
+        <div id="cartItems" class="flex-grow-1 overflow-auto"></div>
+        <hr>
+        <!-- Resumen -->
+        <div class="d-flex justify-content-between mb-3">
+          <strong>Total</strong>
+          <span id="cartTotal">$0</span>
+        </div>
+        <button class="btn btn-success w-100">Proceder al pago</button>
+      </div>
+    </div>
+
     <!-- Contenido principal -->
     <div class="container mt-5">
         <!-- Breadcrumbs -->
@@ -939,8 +958,9 @@
                     // Renderizar items
                     let cartHTML = '';
                     let total = 0;
-                    
-                    cart.forEach((item, index) => {
+
+                    // Iterar en orden inverso para que lo último añadido aparezca primero
+                    cart.slice().reverse().forEach((item, index) => {
                         const itemTotal = item.price * item.quantity;
                         total += itemTotal;
                         
@@ -959,10 +979,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        `;
+                        </div>`;
                     });
-                    
+
                     cartItemsContainer.innerHTML = cartHTML;
                     cartTotalElement.textContent = formatPrice(total);
                     
@@ -973,6 +992,10 @@
                             removeFromCart(index);
                         });
                     });
+                    
+                    // Llevar scroll al inicio del offcanvas
+                    const offcanvasBody = document.querySelector('#cartOffcanvas .offcanvas-body');
+                    if (offcanvasBody) offcanvasBody.scrollTop = 0;
                 }
                 
                 // Función para eliminar item del carrito
@@ -985,27 +1008,41 @@
                 
                 // Manejar clic en botón "Agregar al carrito"
                 const addToCartBtn = document.getElementById('addToCartBtn');
-                addToCartBtn.addEventListener('click', function() {
+                addToCartBtn.addEventListener('click', handleAddToCart);
+
+                // Agregar al carrito automáticamente al seleccionar la tienda
+                const storeSelectElem = document.getElementById('storeSelect');
+                if (storeSelectElem) {
+                    storeSelectElem.addEventListener('change', () => {
+                        handleAddToCart();
+                    });
+                }
+
+                // Función para agregar al carrito
+                function handleAddToCart() {
                     const storeSelect = document.getElementById('storeSelect');
                     if (!storeSelect.value) {
-                        alert('Por favor selecciona una tienda');
-                        return;
+                        return; // No hacer nada si la tienda no está seleccionada
                     }
-                    
+
                     const sizeSelect = document.getElementById('sizeSelect');
+                    if (!sizeSelect.value) {
+                        return; // Debe haberse elegido talla
+                    }
+
                     const quantityInput = document.getElementById('quantityInput');
                     const productTitle = document.getElementById('productTitle').textContent;
-                    
+
                     // Verificar stock
                     const stockInfo = document.getElementById('stockInfo');
                     const availableStock = stockByStoreAndSize[sizeSelect.value][storeSelect.value];
                     const quantity = parseInt(quantityInput.value);
-                    
+
                     if (quantity > availableStock) {
                         alert(`Lo sentimos, solo hay ${availableStock} unidades disponibles.`);
                         return;
                     }
-                    
+
                     // Crear objeto de item
                     const item = {
                         id: 'orion-4-titanium',
@@ -1016,41 +1053,41 @@
                         image: '../images/ba2961-orion-4-29-titanio-2022-03.jpg',
                         store: storeSelect.options[storeSelect.selectedIndex].text
                     };
-                    
+
                     // Obtener carrito actual
                     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    
+
                     // Verificar si el item ya existe en el carrito
-                    const existingItemIndex = cart.findIndex(cartItem => 
+                    const existingItemIndex = cart.findIndex(cartItem =>
                         cartItem.id === item.id && cartItem.size === item.size && cartItem.store === item.store
                     );
-                    
+
                     if (existingItemIndex !== -1) {
                         // Actualizar cantidad si ya existe
                         cart[existingItemIndex].quantity += quantity;
                     } else {
-                        // Añadir nuevo item si no existe
-                        cart.push(item);
+                        // Añadir nuevo item al inicio para que quede arriba
+                        cart.unshift(item);
                     }
-                    
+
                     // Actualizar objeto de stock y UI
                     stockByStoreAndSize[sizeSelect.value][storeSelect.value] = availableStock - quantity;
                     updateQuantity(1);
 
                     // Guardar carrito actualizado
                     localStorage.setItem('cart', JSON.stringify(cart));
-                    
-                    // Actualizar stock
+
+                    // Actualizar stock disponible en el texto
                     const newStock = availableStock - quantity;
                     stockInfo.textContent = `${newStock} unidades disponibles`;
-                    
+
                     // Actualizar UI
                     renderCart();
                     cartOffcanvas.show();
-                    
+
                     // Resetear cantidad
                     quantityInput.value = 1;
-                });
+                }
                 
                 // Manejar clic en botón "Consultar disponibilidad en tiendas"
                 const checkStoreBtn = document.getElementById('checkStoreBtn');
@@ -1097,7 +1134,17 @@
                 }, { threshold: 0.1 });
                 specItems.forEach(el => specObserver.observe(el));
 
-
+                // --- NUEVO: añadir automáticamente al carrito al seleccionar la tienda ---
+                const storeSelectAuto = document.getElementById('storeSelect');
+                if (storeSelectAuto) {
+                    storeSelectAuto.addEventListener('change', function() {
+                        const tallaInput = document.getElementById('tallaSelect') || document.getElementById('sizeSelect');
+                        if (this.value && tallaInput && tallaInput.value) {
+                            addToCartBtn.click();
+                        }
+                    });
+                }
+                
                 // Eventos iniciales al cargar la página
                 renderCart();
                 updateQuantity(1);

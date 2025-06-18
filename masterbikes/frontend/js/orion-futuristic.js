@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     initProductImageEffects();
     initStarRatingAnimation();
     initScrollAnimations();
+    initStockControl();
+    
+    // Nuevas funcionalidades
+    initColorToggle();
+    initSpecsDropdown();
+    enhanceStockControl();
 });
 
 /**
@@ -161,6 +167,7 @@ function initScrollAnimations() {
         observer.observe(el);
     });
 }
+
 /**
  * Inicializa la funcionalidad de control de stock
  */
@@ -227,90 +234,119 @@ function initStockControl() {
     // Exponer la función updateStockInfo globalmente para que pueda ser llamada desde HTML
     window.updateStockInfo = updateStockInfo;
 
-    // Modificar el evento del botón Agregar al Carrito
-    document.getElementById('addToCartBtn').addEventListener('click', function() {
+    // Función para agregar al carrito
+    function handleAddToCart() {
         const storeSelect = document.getElementById('storeSelect');
         const stockError = document.getElementById('stockError');
         const quantityInput = document.getElementById('quantityInput');
-        
-        // Verificar si se ha seleccionado una tienda
-        if (!storeSelect.value) {
-            alert('Por favor, seleccione una tienda antes de agregar al carrito.');
-            return;
-        }
-        
+        const tallaSelect = document.getElementById('tallaSelect');
+        if (!storeSelect || !tallaSelect) return;
+
+        // Requisitos: tienda y talla seleccionadas
+        if (!storeSelect.value || !tallaSelect.value) return;
+
         const selectedStore = storeSelect.value;
+        const productSize = tallaSelect.value;
         const availableStock = storeStock[selectedStore];
         const requestedQuantity = parseInt(quantityInput.value) || 1;
-        
-        // Verificar si hay suficiente stock
+
         if (requestedQuantity > availableStock) {
             stockError.classList.remove('d-none');
-            return; // No continuar con la adición al carrito
+            return;
         }
-        
+
         const productNameElement = document.querySelector('h1.h2');
         const productPriceElement = document.querySelector('.price-final');
         const productSkuElement = document.querySelector('.product-sku');
-
-        const productName = productNameElement ? productNameElement.textContent.trim() : 'Nombre no encontrado';
-        const productPriceText = productPriceElement ? productPriceElement.textContent.replace(/CLP\$/g, '').replace(/\./g, '').trim() : '0'; // Adjusted for CLP
+        const productName = productNameElement ? productNameElement.textContent.trim() : 'Producto';
+        const productPriceText = productPriceElement ? productPriceElement.textContent.replace(/CLP\$/g, '').replace(/\./g, '').trim() : '0';
         const productPrice = parseFloat(productPriceText);
-        const productSize = document.getElementById('tallaSelect').value;
-        const productQuantity = requestedQuantity;
-        const productSKU = productSkuElement ? productSkuElement.textContent.replace('SKU: ', '').trim() : 'SKU_DESCONOCIDO';
-
+        const productSKU = productSkuElement ? productSkuElement.textContent.replace('SKU: ', '').trim() : 'SKU_GEN';
 
         const product = {
-            id: productSKU, // Using SKU as a unique ID for the product model
+            id: productSKU,
             name: productName,
             price: productPrice,
             size: productSize,
-            quantity: productQuantity,
-            store: selectedStore, // Guardar la tienda seleccionada
-            image: document.querySelector('.carousel-item.active img') ? document.querySelector('.carousel-item.active img').src : '' // Get current active image
+            quantity: requestedQuantity,
+            store: selectedStore,
+            image: document.querySelector('.carousel-item.active img') ? document.querySelector('.carousel-item.active img').src : ''
         };
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Check if product with same ID, size and store is already in cart
-        const existingProductIndex = cart.findIndex(item => 
-            item.id === product.id && 
-            item.size === product.size && 
-            item.store === product.store
-        );
-
-        if (existingProductIndex > -1) {
-            // Verificar que la cantidad total no exceda el stock disponible
-            const newTotalQuantity = cart[existingProductIndex].quantity + product.quantity;
-            
-            if (newTotalQuantity > availableStock) {
-                stockError.textContent = `No se puede agregar más unidades. El stock disponible en la tienda es de ${availableStock} unidades.`;
+        const existingIndex = cart.findIndex(it => it.id === product.id && it.size === product.size && it.store === product.store);
+        if (existingIndex > -1) {
+            const newQty = cart[existingIndex].quantity + product.quantity;
+            if (newQty > availableStock) {
+                stockError.textContent = `No se puede exceder stock (${availableStock}).`;
                 stockError.classList.remove('d-none');
                 return;
             }
-            
-            // Update quantity if product already exists
-            cart[existingProductIndex].quantity = newTotalQuantity;
+            cart[existingIndex].quantity = newQty;
         } else {
-            // Add new product
-            cart.push(product);
+            // Insertar al inicio para que aparezca arriba
+            cart.unshift(product);
         }
 
-        // Actualizar el stock disponible (simulación)
+        // Simular reducción de stock local
         storeStock[selectedStore] -= product.quantity;
-        updateStockInfo(); // Actualizar la información de stock mostrada
-
+        updateStockInfo();
         localStorage.setItem('cart', JSON.stringify(cart));
-        renderCartInOffcanvas(); // Update and show cart in offcanvas
-        cartOffcanvas.show(); // Programmatically open the offcanvas
-    });
+        renderCartInOffcanvas();
+        cartOffcanvas.show();
+        // Scroll al inicio
+        const offBody = document.querySelector('#cartOffcanvas .offcanvas-body');
+        if (offBody) offBody.scrollTop = 0;
+        quantityInput.value = 1;
+    }
 
-    // Evento para el botón de Ver Disponibilidad en Tiendas Físicas
-    document.getElementById('checkStoreBtn').addEventListener('click', function() {
-        // Mostrar un modal o expandir información de disponibilidad
-        alert('Disponibilidad en tiendas físicas:\n\nSantiago: ' + storeStock.santiago + ' unidades\nConcepción: ' + storeStock.concepcion + ' unidades');
-    });
+    // Renderizar carrito en offcanvas
+    function renderCartInOffcanvas() {
+        const cartItemsContainer = document.getElementById('cartItems');
+        const cartTotalElement = document.getElementById('cartTotal');
+        const cartBadge = document.querySelector('.cart-badge');
+        if (!cartItemsContainer || !cartTotalElement || !cartBadge) return;
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cartBadge.textContent = cart.reduce((t, it) => t + it.quantity, 0);
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="text-center my-5">Tu carrito está vacío</p>';
+            cartTotalElement.textContent = '$0';
+            return;
+        }
+
+        let total = 0;
+        let html = '';
+        cart.forEach((item, idx) => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            html += `
+            <div class="cart-item">
+                <div class="d-flex">
+                    <img src="${item.image}" class="cart-item-img me-3" alt="${item.name}">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">${item.name}</h6>
+                        <p class="text-muted mb-1">Talla: ${item.size}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>$${item.price.toLocaleString('es-CL')} x ${item.quantity}</span>
+                            <button class="btn btn-sm btn-outline-danger remove-item" data-index="${idx}"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        });
+        cartItemsContainer.innerHTML = html;
+        cartTotalElement.textContent = '$' + total.toLocaleString('es-CL');
+    }
+
+    // Eventos
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    if (addToCartBtn) addToCartBtn.addEventListener('click', handleAddToCart);
+
+    const storeSelectElem = document.getElementById('storeSelect');
+    if (storeSelectElem) storeSelectElem.addEventListener('change', handleAddToCart);
 }
 
 /**
@@ -633,17 +669,3 @@ function enhanceStockControl() {
         }, true); // Usar true para capturar el evento antes que otros listeners
     }
 }
-
-// Añadir las nuevas funciones al evento DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    initFuturisticReviews();
-    initProductImageEffects();
-    initStarRatingAnimation();
-    initScrollAnimations();
-    initStockControl();
-    
-    // Nuevas funcionalidades
-    initColorToggle();
-    initSpecsDropdown();
-    enhanceStockControl();
-});
