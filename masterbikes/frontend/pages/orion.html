@@ -328,6 +328,88 @@
             border-radius: 4px;
             background-color: #fff;
         }
+
+        /* Estilos para la tabla de especificaciones */
+        .specs-table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 40px;
+            overflow: hidden; /* Clave para mantener los bordes redondeados */
+        }
+        .specs-header {
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .specs-header:hover {
+            background-color: #f8f9fa;
+        }
+        .specs-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        .specs-header .fas {
+            transition: transform 0.3s ease;
+        }
+        .specs-header[aria-expanded="true"] .fas {
+            transform: rotate(180deg);
+        }
+        .specs-content {
+            padding: 0 30px 30px 30px;
+        }
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .specs-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .specs-table tr:last-child td {
+            border-bottom: none;
+        }
+        .specs-table tr td:first-child {
+            font-weight: 600;
+            color: #333;
+            width: 35%;
+        }
+        .specs-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Estilos para la navegación interna */
+        .section-nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 60px 0 20px;
+            font-weight: 500;
+        }
+        .section-nav a {
+            color: #555;
+            position: relative;
+            text-decoration: none;
+            padding-bottom: 4px;
+        }
+        .section-nav a.active,
+        .section-nav a:hover {
+            color: #000;
+        }
+        .section-nav a.active::after,
+        .section-nav a:hover::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: #000;
+        }
     </style>
 </head>
 <body class="futuristic-theme">
@@ -366,21 +448,46 @@
 
     <!-- Offcanvas Carrito -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="cartOffcanvasLabel">Tu Carrito</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
-      </div>
-      <div class="offcanvas-body d-flex flex-column">
-        <!-- Items -->
-        <div id="cartItems" class="flex-grow-1 overflow-auto"></div>
-        <hr>
-        <!-- Resumen -->
-        <div class="d-flex justify-content-between mb-3">
-          <strong>Total</strong>
-          <span id="cartTotal">$0</span>
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="cartOffcanvasLabel">Tu Carrito</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
         </div>
-        <button class="btn btn-success w-100">Proceder al pago</button>
-      </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <!-- Items -->
+            <div id="cartItems" class="flex-grow-1 overflow-auto"></div>
+            <hr>
+            <!-- Resumen -->
+            <div class="d-flex justify-content-between mb-3">
+                <strong>Total</strong>
+                <span id="cartTotal">$0</span>
+            </div>
+            <button class="btn btn-success w-100">Proceder al pago</button>
+        </div>
+    </div>
+
+    <!-- Modal de Producto Añadido -->
+    <div class="modal fade" id="addedToCartModal" tabindex="-1" aria-labelledby="addedToCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addedToCartModalLabel"><i class="fas fa-check-circle text-success me-2"></i>Producto añadido al carrito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center">
+                        <img id="modalProductImg" src="" alt="" class="me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h6 id="modalProductName" class="mb-1"></h6>
+                            <p id="modalProductDetails" class="text-muted small mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Seguir Comprando</button>
+                    <button type="button" class="btn btn-primary" id="viewCartBtn">Ver Carrito</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Contenido principal -->
@@ -479,8 +586,9 @@
                     <!-- Selector de talla -->
                     <div class="mb-3">
                         <label for="sizeSelect" class="form-label">Talla</label>
-                        <select class="form-select" id="sizeSelect">
-                            <option value="M" selected>M (17")</option>
+                        <select class="form-select" id="sizeSelect" required>
+                            <option value="" selected hidden>Seleccione talla</option>
+                            <option value="M">M (17")</option>
                             <option value="L">L (19")</option>
                         </select>
                     </div>
@@ -488,8 +596,8 @@
                     <!-- Selector de tienda -->
                     <div class="mb-3">
                         <label for="storeSelect" class="form-label">Tienda</label>
-                        <select class="form-select" id="storeSelect">
-                            <option value="">Seleccione una tienda</option>
+                        <select class="form-select" id="storeSelect" required>
+                            <option value="" selected hidden>Seleccione una tienda</option>
                             <option value="santiago">Santiago</option>
                             <option value="concepcion">Concepción</option>
                         </select>
@@ -507,7 +615,7 @@
 
                         <!-- Botones de acción -->
                         <div class="d-grid gap-2 d-md-block mt-3">
-                            <button class="btn btn-oxford me-md-2 mb-2 mb-md-0" id="addToCartBtn">
+                            <button class="btn btn-oxford me-md-2 mb-2 mb-md-0" id="addToCartButton">
                                 <i class="fas fa-shopping-cart me-2"></i>Agregar al carrito
                             </button>
                             <button class="btn btn-oxford-secondary" id="checkStoreBtn">
@@ -518,6 +626,13 @@
                 </div>
             </div>
         </div>
+
+        <!-- Navegación interna de secciones -->
+        <nav class="section-nav" id="sectionNav">
+            <a href="#descripcion" class="nav-link">Descripción</a>
+            <a href="#especificaciones" class="nav-link">Especificaciones</a>
+            <a href="#opiniones" class="nav-link">Opiniones</a>
+        </nav>
 
         <!-- Beneficios de tu compra -->
         <section class="py-5" id="beneficios-compra">
@@ -545,113 +660,68 @@
                     </div>
                 </div>
             </div>
-        <!-- Sección de Características del Producto -->
-        <div class="row mt-4">
-            <div class="col-12">
-                
-            </div>
-        </div>
+        </section>
 
-        <!-- Sección de Especificaciones (Collapsible) -->
-        <div class="row mt-4 mb-5">
-            <div class="col-12">
-                <div class="collapsible-section">
-                    <div class="collapsible-header" id="specsHeader">
-                        <h3>Especificaciones</h3>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="collapsible-content" id="specsContent">
-                        <div class="oxford-container">
-                            <div class="accordion specs-accordion" id="specsAccordion">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-                                            Cuadro y Geometría
-                                        </button>
-                                    </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#specsAccordion">
-                                        <div class="accordion-body">
-                                            <ul class="list-group list-group-flush specs-list">
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Material del cuadro</span>
-                                                    <span class="fw-bold">Aluminio 6061</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Tallas disponibles</span>
-                                                    <span class="fw-bold">S (15"), M (17"), L (19"), XL (21")</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Peso aproximado</span>
-                                                    <span class="fw-bold">13.5 kg (talla M)</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
-                                            Componentes
-                                        </button>
-                                    </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#specsAccordion">
-                                        <div class="accordion-body">
-                                            <ul class="list-group list-group-flush specs-list">
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Horquilla</span>
-                                                    <span class="fw-bold">Suntour XCE 100mm</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Cambio trasero</span>
-                                                    <span class="fw-bold">Shimano Tourney TY300</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Desviador</span>
-                                                    <span class="fw-bold">Shimano Tourney TY500</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Mandos de cambio</span>
-                                                    <span class="fw-bold">Shimano EF500 3x7</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Frenos</span>
-                                                    <span class="fw-bold">Disco mecánico 160mm</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingThree">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                                            Ruedas
-                                        </button>
-                                    </h2>
-                                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#specsAccordion">
-                                        <div class="accordion-body">
-                                            <ul class="list-group list-group-flush specs-list">
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Tamaño de rueda</span>
-                                                    <span class="fw-bold">29 pulgadas</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Llantas</span>
-                                                    <span class="fw-bold">Aluminio doble pared</span>
-                                                </li>
-                                                <li class="list-group-item d-flex justify-content-between">
-                                                    <span>Cubiertas</span>
-                                                    <span class="fw-bold">29 x 2.20" con diseño para todo terreno</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- DESCRIPCIÓN / UNITY FIT -->
+        <section id="descripcion">
+            <div class="row">
+                <div class="col-md-9">
+                    <p>Proyecta tus movimientos en la nueva colección Oxford Lumina, con una conducción suave, pero con potencial para dominar completamente la montaña. Como un traje hecho a la medida, la ergonomía Unity Fit dará una nueva potencia a tu cuerpo para alcanzar los objetivos más ambiciosos. Es otra forma de reinverte, permitiéndote reinventar tus capacidades y transformarte en uno con tu bicicleta.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Especificaciones Técnicas (Desplegable) -->
+        <section id="especificaciones">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="specs-table-container">
+                        <div class="specs-header" data-bs-toggle="collapse" data-bs-target="#specsCollapseContent" aria-expanded="false" aria-controls="specsCollapseContent">
+                            <h3 class="mb-0">Especificaciones Técnicas</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="collapse" id="specsCollapseContent">
+                            <div class="specs-content">
+                                <table class="specs-table mt-3">
+                                    <tbody>
+                                        <tr><td>Marca</td><td>OXFORD</td></tr>
+                                        <tr><td>Aro</td><td>29</td></tr>
+                                        <tr><td>Color</td><td>TITANIO</td></tr>
+                                        <tr><td>Género</td><td>HOMBRE</td></tr>
+                                        <tr><td>Marco</td><td>Marco de aluminio</td></tr>
+                                        <tr><td>Tallas Disponibles</td><td>M-L</td></tr>
+                                        <tr><td>Altura Recomendada</td><td>29 M: 1.70 a 1.82cm, 29 L: 1.75 a 1.90cm</td></tr>
+                                        <tr><td>Suspensión</td><td>Delantera</td></tr>
+                                        <tr><td>Detalle Suspensión</td><td>100mm Suntour XCE 28, Coil con ajuste de precarga</td></tr>
+                                        <tr><td>Recorrido Suspensión DEL</td><td>100mm</td></tr>
+                                        <tr><td>Shock Trasero</td><td>N/A</td></tr>
+                                        <tr><td>N° de Cambios</td><td>21 velocidades (3x7)</td></tr>
+                                        <tr><td>Cambio Delantero</td><td>Shimano Tourney 3V</td></tr>
+                                        <tr><td>Cambio Trasero</td><td>Shimano Tourney 7V</td></tr>
+                                        <tr><td>Volante / Biela</td><td>SHIMANO Tourney TY301, 24/34/42. Bielas Aluminio 170 mm.</td></tr>
+                                        <tr><td>Piñón</td><td>SHIMANO TZ500, 14-28T, 7 velocidades.</td></tr>
+                                        <tr><td>Frenos</td><td>Disco mecánico con rotor de 160 mm.</td></tr>
+                                        <tr><td>Rotor</td><td>160 mm adelante y atrás</td></tr>
+                                        <tr><td>Neumáticos</td><td>29x2.1". Dibujo mixto para diversos terrenos.</td></tr>
+                                        <tr><td>Llantas</td><td>Disco 29" Aluminio 32 H. Doble pared.</td></tr>
+                                        <tr><td>Maza delantera</td><td>Aluminio 32H anclaje para disco con bloqueo.</td></tr>
+                                        <tr><td>Maza Trasera</td><td>Aluminio 32H anclaje para disco con bloqueo.</td></tr>
+                                        <tr><td>Rayos (Material)</td><td>Acero con niple de bronce</td></tr>
+                                        <tr><td>Manubrio</td><td>Aluminio sobremedida. 720 mm ancho x 25 mm alto X 31,8 mm diámetro.</td></tr>
+                                        <tr><td>Puños</td><td>Puños genéricos</td></tr>
+                                        <tr><td>Asiento</td><td>Anatomico light.</td></tr>
+                                        <tr><td>Tubo Sillín</td><td>Aluminio 30.9 mm x 400 mm. Abrazadera Aluminio.</td></tr>
+                                        <tr><td>Pedal</td><td>Resina</td></tr>
+                                        <tr><td>Cadena</td><td>KMC HV500</td></tr>
+                                        <tr><td>Peso</td><td>15,48 KG</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ¿Cómo enviamos las bicicletas? -->
         <div class="row mt-5 mb-5">
@@ -755,784 +825,58 @@
             <div class="col-md-9">
                 <p>Proyecta tus movimientos en la nueva colección Oxford Lumina, con una conducción suave, pero con potencial para dominar completamente la montaña. Como un traje hecho a la medida, la ergonomía Unity Fit dará una nueva potencia a tu cuerpo para alcanzar los objetivos más ambiciosos. Es otra forma de reinverte, permitiéndote reinventar tus capacidades y transformarte en uno con tu bicicleta.</p>
             </div>
+        </div>
 
-
-        <!-- sección duplicada eliminada -->
-            <div class="container">
-                <h2 class="section-title text-center mb-4">Especificaciones Técnicas</h2>
-                <div class="collapsible-section">
-                    <div class="collapsible-header" id="specsHeader">
-                        <h3 class="mb-0">Especificaciones</h3>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="collapsible-content" id="specsContent" style="display:none;">
-                        <ul class="list-group list-group-flush specs-list">
-                            <li class="list-group-item spec-item"><strong>Marca:</strong> OXFORD</li>
-                            <li class="list-group-item spec-item"><strong>Aro:</strong> 29</li>
-                            <li class="list-group-item spec-item"><strong>Color:</strong> TITANIO</li>
-                            <li class="list-group-item spec-item"><strong>Género:</strong> HOMBRE</li>
-                            <li class="list-group-item spec-item"><strong>Marco:</strong> Marco de aluminio</li>
-                            <li class="list-group-item spec-item"><strong>Tallas Disponibles:</strong> M-L</li>
-                            <li class="list-group-item spec-item"><strong>Altura Recomendada:</strong> 29 M: 1.70 a 1.82 m, 29 L: 1.75 a 1.90 m</li>
-                            <li class="list-group-item spec-item"><strong>Suspensión:</strong> Delantera</li>
-                            <li class="list-group-item spec-item"><strong>Detalle Suspensión:</strong> 100 mm Suntour XCE 28, Coil con ajuste de precarga</li>
-                            <li class="list-group-item spec-item"><strong>Recorrido Suspensión DEL:</strong> 100 mm</li>
-                            <li class="list-group-item spec-item"><strong>Shock Trasero:</strong> N/A</li>
-                            <li class="list-group-item spec-item"><strong>N° de Cambios:</strong> 21 velocidades (3x7)</li>
-                            <li class="list-group-item spec-item"><strong>Cambio Delantero:</strong> Shimano Tourney 3V</li>
-                            <li class="list-group-item spec-item"><strong>Cambio Trasero:</strong> Shimano Tourney 7V</li>
-                            <li class="list-group-item spec-item"><strong>Volante / Biela:</strong> SHIMANO Tourney TY301, 24/34/42. Bielas Aluminio 170 mm</li>
-                            <li class="list-group-item spec-item"><strong>Piñón:</strong> SHIMANO TZ500, 14-28T, 7 velocidades</li>
-                            <li class="list-group-item spec-item"><strong>Frenos:</strong> Disco mecánico con rotor de 160 mm</li>
-                            <li class="list-group-item spec-item"><strong>Rotor:</strong> 160 mm adelante y atrás</li>
-                            <li class="list-group-item spec-item"><strong>Neumáticos:</strong> 29×2.1" dibujo mixto</li>
-                            <li class="list-group-item spec-item"><strong>Llantas:</strong> Disco 29" Aluminio 32 H doble pared</li>
-                            <li class="list-group-item spec-item"><strong>Maza delantera:</strong> Aluminio 32 H anclaje para disco con bloqueo</li>
-                            <li class="list-group-item spec-item"><strong>Maza trasera:</strong> Aluminio 32 H anclaje para disco con bloqueo</li>
-                            <li class="list-group-item spec-item"><strong>Rayos:</strong> Acero con niple de bronce</li>
-                            <li class="list-group-item spec-item"><strong>Manubrio:</strong> Aluminio sobremedida 720 mm × 25 mm × 31,8 mm</li>
-                            <li class="list-group-item spec-item"><strong>Puños:</strong> Genéricos</li>
-                            <li class="list-group-item spec-item"><strong>Asiento:</strong> Anatómico light</li>
-                            <li class="list-group-item spec-item"><strong>Tubo Sillín:</strong> Aluminio 30.9 mm × 400 mm (abrazadera aluminio)</li>
-                            <li class="list-group-item spec-item"><strong>Pedal:</strong> Resina</li>
-                            <li class="list-group-item spec-item"><strong>Cadena:</strong> KMC HV500</li>
-                            <li class="list-group-item spec-item"><strong>Peso:</strong> 15,48 kg</li>
-                        </ul>
-                    </div>
-                   
-        
-
-        <style>
-            #especificaciones-tecnicas {
-                background-color: #ADD8E6;
-                animation: fadeIn 2s;
-            }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
-            }
-
-            .spec-item {
-                background-color: #F7F7F7;
-                padding: 10px;
-                border-bottom: 1px solid #CCC;
-            }
-
-            .spec-item strong {
-                color: #337AB7;
-            }
-        </style>
+        <!-- Opiniones -->
+        <section id="opiniones" class="mt-5">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 class="mb-3">Opiniones</h3>
+                    <p class="text-muted">Próximamente sección de reseñas de nuestros clientes.</p>
+                </div>
+            </div>
+        </section>
 
         <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../js/orion-futuristic.js"></script>
-        <script>
-            // Datos de stock global (tallas M y L, tiendas Santiago y Concepción)
-            const stockByStoreAndSize = {
-                'M': { 'santiago': 10, 'concepcion': 7 },
-                'L': { 'santiago': 8, 'concepcion': 6 }
-            };
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-            // Inicializar el carrusel de Bootstrap
-            document.addEventListener('DOMContentLoaded', function() {
-                const carousel = new bootstrap.Carousel(document.getElementById('productCarousel'));
-                
-                // Actualizar cantidad
-                const decreaseBtn = document.getElementById('decreaseQuantity');
-                const increaseBtn = document.getElementById('increaseQuantity');
-                const quantityInput = document.getElementById('quantityInput');
-                
-                decreaseBtn.addEventListener('click', function() {
-                    const currentValue = parseInt(quantityInput.value);
-                    if (currentValue > 1) {
-                        quantityInput.value = currentValue - 1;
-                        updateQuantity(currentValue - 1);
-                    }
-                });
-                
-                increaseBtn.addEventListener('click', function() {
-                    const currentValue = parseInt(quantityInput.value);
-                    const maxStock = parseInt(document.getElementById('stockInfo').textContent.split(' ')[0]);
-                    if (currentValue < maxStock) {
-                        quantityInput.value = currentValue + 1;
-                        updateQuantity(currentValue + 1);
-                    }
-                });
-                
-                // Configurar estrellas de calificación
-                const ratingStars = document.querySelectorAll('.rating-stars i');
-                const ratingInput = document.getElementById('reviewRating');
-                
-                ratingStars.forEach(star => {
-                    star.addEventListener('mouseover', function() {
-                        const rating = this.getAttribute('data-rating');
-                        highlightStars(rating);
-                    });
-                    
-                    star.addEventListener('mouseout', function() {
-                        const currentRating = ratingInput.value;
-                        if (currentRating > 0) {
-                            highlightStars(currentRating);
-                        } else {
-                            resetStars();
-                        }
-                    });
-                    
-                    star.addEventListener('click', function() {
-                        const rating = this.getAttribute('data-rating');
-                        ratingInput.value = rating;
-                        highlightStars(rating);
-                        
-                        // Añadir animación de confirmación
-                        this.classList.add('star-confirm');
-                        setTimeout(() => {
-                            this.classList.remove('star-confirm');
-                        }, 500);
-                    });
-                });
-                
-                function highlightStars(rating) {
-                    resetStars();
-                    for (let i = 0; i < rating; i++) {
-                        ratingStars[i].classList.remove('far');
-                        ratingStars[i].classList.add('fas');
-                    }
+    <!-- Datos iniciales para scripts -->
+    <script>
+        window.stockByStoreAndSize = {
+            'M': { 'santiago': 10, 'concepcion': 7 },
+            'L': { 'santiago': 8,  'concepcion': 6 }
+        };
+    </script>
+
+    <!-- Scripts de la aplicación -->
+    <script src="../js/orion-futuristic.js"></script>
+    <script src="../js/cart.js" defer></script>
+
+    <script>
+        // ----------------- Navegación interna -----------------
+        const navLinks = document.querySelectorAll('#sectionNav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-                
-                function resetStars() {
-                    ratingStars.forEach(star => {
-                        star.classList.remove('fas');
-                        star.classList.add('far');
-                    });
-                }
-                
-                // Manejar clics en miniaturas
-                const thumbnails = document.querySelectorAll('.carousel-thumbnail');
-                thumbnails.forEach(thumbnail => {
-                    thumbnail.addEventListener('click', function() {
-                        thumbnails.forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                });
-                
-                // Actualizar miniaturas cuando cambia el carrusel
-                const carouselElement = document.getElementById('productCarousel');
-                carouselElement.addEventListener('slid.bs.carousel', function(event) {
-                    const slideIndex = event.to;
-                    thumbnails.forEach(t => t.classList.remove('active'));
-                    thumbnails[slideIndex].classList.add('active');
-                });
-                
-                // Inicializar offcanvas del carrito
-                const cartOffcanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
-                
-                // Función para formatear precio
-                function formatPrice(price) {
-                    return '$' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                }
-                
-                // Función para renderizar el carrito
-                function renderCart() {
-                    const cartItemsContainer = document.getElementById('cartItems');
-                    const cartTotalElement = document.getElementById('cartTotal');
-                    const cartBadge = document.querySelector('.cart-badge');
-                    
-                    // Obtener carrito del localStorage
-                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    
-                    // Actualizar badge del carrito
-                    cartBadge.textContent = cart.reduce((total, item) => total + item.quantity, 0);
-                    
-                    // Si el carrito está vacío
-                    if (cart.length === 0) {
-                        cartItemsContainer.innerHTML = '<p class="text-center my-5">Tu carrito está vacío</p>';
-                        cartTotalElement.textContent = formatPrice(0);
-                        return;
-                    }
-                    
-                    // Renderizar items
-                    let cartHTML = '';
-                    let total = 0;
-
-                    // Iterar en orden inverso para que lo último añadido aparezca primero
-                    cart.slice().reverse().forEach((item, index) => {
-                        const itemTotal = item.price * item.quantity;
-                        total += itemTotal;
-                        
-                        cartHTML += `
-                        <div class="cart-item">
-                            <div class="d-flex">
-                                <img src="${item.image}" class="cart-item-img me-3" alt="${item.name}">
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0">${item.name}</h6>
-                                    <p class="text-muted mb-1">Talla: ${item.size}</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>${formatPrice(item.price)} x ${item.quantity}</span>
-                                        <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-                    });
-
-                    cartItemsContainer.innerHTML = cartHTML;
-                    cartTotalElement.textContent = formatPrice(total);
-                    
-                    // Añadir event listeners para eliminar items
-                    document.querySelectorAll('.remove-item').forEach(button => {
-                        button.addEventListener('click', function() {
-                            const index = this.getAttribute('data-index');
-                            removeFromCart(index);
-                        });
-                    });
-                    
-                    // Llevar scroll al inicio del offcanvas
-                    const offcanvasBody = document.querySelector('#cartOffcanvas .offcanvas-body');
-                    if (offcanvasBody) offcanvasBody.scrollTop = 0;
-                }
-                
-                // Función para eliminar item del carrito
-                function removeFromCart(index) {
-                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    cart.splice(index, 1);
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    renderCart();
-                }
-                
-                // Manejar clic en botón "Agregar al carrito"
-                const addToCartBtn = document.getElementById('addToCartBtn');
-                addToCartBtn.addEventListener('click', handleAddToCart);
-
-                // Agregar al carrito automáticamente al seleccionar la tienda
-                const storeSelectElem = document.getElementById('storeSelect');
-                if (storeSelectElem) {
-                    storeSelectElem.addEventListener('change', () => {
-                        handleAddToCart();
-                    });
-                }
-
-                // Función para agregar al carrito
-                function handleAddToCart() {
-                    const storeSelect = document.getElementById('storeSelect');
-                    if (!storeSelect.value) {
-                        return; // No hacer nada si la tienda no está seleccionada
-                    }
-
-                    const sizeSelect = document.getElementById('sizeSelect');
-                    if (!sizeSelect.value) {
-                        return; // Debe haberse elegido talla
-                    }
-
-                    const quantityInput = document.getElementById('quantityInput');
-                    const productTitle = document.getElementById('productTitle').textContent;
-
-                    // Verificar stock
-                    const stockInfo = document.getElementById('stockInfo');
-                    const availableStock = stockByStoreAndSize[sizeSelect.value][storeSelect.value];
-                    const quantity = parseInt(quantityInput.value);
-
-                    if (quantity > availableStock) {
-                        alert(`Lo sentimos, solo hay ${availableStock} unidades disponibles.`);
-                        return;
-                    }
-
-                    // Crear objeto de item
-                    const item = {
-                        id: 'orion-4-titanium',
-                        name: productTitle,
-                        price: 599990,
-                        size: sizeSelect.value,
-                        quantity: quantity,
-                        image: '../images/ba2961-orion-4-29-titanio-2022-03.jpg',
-                        store: storeSelect.options[storeSelect.selectedIndex].text
-                    };
-
-                    // Obtener carrito actual
-                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-                    // Verificar si el item ya existe en el carrito
-                    const existingItemIndex = cart.findIndex(cartItem =>
-                        cartItem.id === item.id && cartItem.size === item.size && cartItem.store === item.store
-                    );
-
-                    if (existingItemIndex !== -1) {
-                        // Actualizar cantidad si ya existe
-                        cart[existingItemIndex].quantity += quantity;
-                    } else {
-                        // Añadir nuevo item al inicio para que quede arriba
-                        cart.unshift(item);
-                    }
-
-                    // Actualizar objeto de stock y UI
-                    stockByStoreAndSize[sizeSelect.value][storeSelect.value] = availableStock - quantity;
-                    updateQuantity(1);
-
-                    // Guardar carrito actualizado
-                    localStorage.setItem('cart', JSON.stringify(cart));
-
-                    // Actualizar stock disponible en el texto
-                    const newStock = availableStock - quantity;
-                    stockInfo.textContent = `${newStock} unidades disponibles`;
-
-                    // Actualizar UI
-                    renderCart();
-                    cartOffcanvas.show();
-
-                    // Resetear cantidad
-                    quantityInput.value = 1;
-                }
-                
-                // Manejar clic en botón "Consultar disponibilidad en tiendas"
-                const checkStoreBtn = document.getElementById('checkStoreBtn');
-                checkStoreBtn.addEventListener('click', function() {
-                    const sizeSelect = document.getElementById('sizeSelect');
-                    const size = sizeSelect.value;
-                    
-                    // Usar objeto global de stock
-                    const stockByStoreAndSizeCurrent = stockByStoreAndSize;
-                    
-                    let message = `Disponibilidad de talla ${size}:\n\n`;
-                    message += `Santiago: ${stockByStoreAndSize[size]['santiago']} unidades\n`;
-                    message += `Concepción: ${stockByStoreAndSize[size]['concepcion']} unidades`;
-                    
-                    alert(message);
-                });
-                
-                // Estilos y animación para especificaciones
-                document.head.insertAdjacentHTML('beforeend', `
-                <style>
-                    .specs-list .list-group-item { color:#0066cc; opacity:0; transition:opacity .6s ease, transform .6s ease; }
-                    .specs-list .list-group-item:nth-child(odd){ transform:translateX(-30px); }
-                    .specs-list .list-group-item:nth-child(even){ transform:translateX(30px); }
-                    .specs-list .list-group-item.show{ opacity:1; transform:translateX(0); }
-                    .collapsible-header{cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
-                    .collapsible-header i{transition:transform .3s;}
-                    .collapsible-header.active i{transform:rotate(180deg);}
-                    .spec-item:nth-child(odd) { transform:translateX(-30px); }
-                    .spec-item:nth-child(even) { transform:translateX(30px); }
-                    .spec-item.show { opacity:1; transform:translateX(0); }
-                </style>`);
-
-                const specItems = document.querySelectorAll('#specsContent .list-group-item');
-                specItems.forEach((el, idx) => {
-                    el.style.transitionDelay = `${idx * 0.1}s`;
-                });
-                const specObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('show');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                specItems.forEach(el => specObserver.observe(el));
-
-                // --- NUEVO: añadir automáticamente al carrito al seleccionar la tienda ---
-                const storeSelectAuto = document.getElementById('storeSelect');
-                if (storeSelectAuto) {
-                    storeSelectAuto.addEventListener('change', function() {
-                        const tallaInput = document.getElementById('tallaSelect') || document.getElementById('sizeSelect');
-                        if (this.value && tallaInput && tallaInput.value) {
-                            addToCartBtn.click();
-                        }
-                    });
-                }
-                
-                // Eventos iniciales al cargar la página
-                renderCart();
-                updateQuantity(1);
-                
-                // Manejar envío del formulario de reseña
-                const reviewForm = document.getElementById('reviewForm');
-                reviewForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const name = document.getElementById('reviewName').value;
-                    const rating = document.getElementById('reviewRating').value;
-                    const reviewText = document.getElementById('reviewText').value;
-                    
-                    if (rating === '0') {
-                        alert('Por favor selecciona una calificación');
-                        return;
-                    }
-                    
-                    // Simular envío de reseña
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
-                    
-                    setTimeout(() => {
-                        // Crear nueva reseña
-                        const today = new Date();
-                        const formattedDate = today.toLocaleDateString('es-ES', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                        });
-                        
-                        const starsHTML = Array(5).fill().map((_, i) => {
-                            return i < rating ? 
-                                '<i class="fas fa-star"></i>' : 
-                                '<i class="far fa-star"></i>';
-                        }).join('');
-                        
-                        const newReview = `
-                        <div class="review-futuristic mb-4" style="opacity: 0; transform: translateY(20px);">
-                            <div class="d-flex justify-content-between mb-2">
-                                <h5>${name}</h5>
-                                <div class="text-warning">
-                                    ${starsHTML}
-                                </div>
-                            </div>
-                            <p class="mb-1">${reviewText}</p>
-                            <small class="text-muted">Publicado el ${formattedDate}</small>
-                        </div>
-                        `;
-                        
-                        // Añadir la nueva reseña al principio de la lista
-                        const reviewsList = document.getElementById('reviewsList');
-                        reviewsList.insertAdjacentHTML('afterbegin', newReview);
-                        
-                        // Animar la entrada de la nueva reseña
-                        setTimeout(() => {
-                            const newReviewElement = reviewsList.firstElementChild;
-                            newReviewElement.style.transition = 'all 0.5s ease';
-                            newReviewElement.style.opacity = '1';
-                            newReviewElement.style.transform = 'translateY(0)';
-                        }, 100);
-                        
-                        // Mostrar mensaje de éxito
-                        const successMessage = document.createElement('div');
-                        successMessage.className = 'alert alert-success mt-3';
-                        successMessage.textContent = '¡Gracias por tu opinión!';
-                        reviewForm.insertAdjacentElement('beforebegin', successMessage);
-                        
-                        // Resetear formulario
-                        reviewForm.reset();
-                        resetStars();
-                        ratingInput.value = '0';
-                        
-                        // Restaurar botón
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = 'Enviar opinión';
-                        
-                        // Ocultar formulario después de un tiempo
-                        setTimeout(() => {
-                            const collapseElement = bootstrap.Collapse.getInstance(document.getElementById('writeReviewForm'));
-                            collapseElement.hide();
-                            
-                            // Eliminar mensaje de éxito después de un tiempo
-                            setTimeout(() => {
-                                successMessage.remove();
-                            }, 3000);
-                        }, 2000);
-                    }, 1500);
-                });
-
-                // Inicializar secciones colapsables
-                const opinionsHeader = document.getElementById('opinionsHeader');
-                const opinionsContent = document.getElementById('opinionsContent');
-                const specsHeader = document.getElementById('specsHeader');
-                const specsContent = document.getElementById('specsContent');
-
-                opinionsHeader.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    if (opinionsContent.style.display === 'block') {
-                        opinionsContent.style.display = 'none';
-                    } else {
-                        opinionsContent.style.display = 'block';
-                    }
-                });
-
-                specsHeader.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    if (specsContent.style.display === 'block') {
-                        specsContent.style.display = 'none';
-                    } else {
-                        specsContent.style.display = 'block';
-                    }
-                });
             });
-            
-            // Función para actualizar la cantidad
-            function updateQuantity(quantity) {
-                const stockInfo = document.getElementById('stockInfo');
-                const storeSelect = document.getElementById('storeSelect');
-                const sizeSelect = document.getElementById('sizeSelect');
-                
-                // Simular stock por tienda y talla
-                const stockByStoreAndSize = {
-                    'M': {
-                        'santiago': 10,
-                        'concepcion': 7
-                    },
-                    'L': {
-                        'santiago': 8,
-                        'concepcion': 6
-                    }
-                };
-                
-                const size = sizeSelect.value;
-                const store = storeSelect.value;
-                
-                if (store) {
-                    const availableStock = stockByStoreAndSize[size][store];
-                    stockInfo.textContent = `${availableStock} unidades disponibles`;
-                    
-                    // Actualizar max del input de cantidad
-                    document.getElementById('quantityInput').max = availableStock;
-                    
-                    // Si la cantidad actual es mayor que el stock disponible, ajustarla
-                    if (quantity > availableStock) {
-                        document.getElementById('quantityInput').value = availableStock;
-                    }
-                } else {
-                    stockInfo.textContent = 'Selecciona una tienda para ver disponibilidad';
+        });
+        // Highlight activo según scroll
+        const sectionIds = ['#descripcion','#especificaciones','#opiniones'];
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${entry.target.id}`));
                 }
-            }
-            
-            // Spinner CSS
-            document.head.insertAdjacentHTML('beforeend', `
-            <style>
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-                .spinner-border {
-                    display: inline-block;
-                    width: 1rem;
-                    height: 1rem;
-                    border: 0.2em solid currentColor;
-                    border-right-color: transparent;
-                    border-radius: 50%;
-                    animation: spin .75s linear infinite;
-                }
-            </style>
-            `);
-        </script>
-
-        <!-- Sección de Opiniones de Clientes (Collapsible) -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="collapsible-section">
-                    <div class="collapsible-header" id="opinionsHeader">
-                        <h3>Opiniones de Clientes</h3>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="collapsible-content" id="opinionsContent">
-                        <div class="oxford-container">
-                            <!-- Resumen de reseñas -->
-                            <div class="row mb-4">
-                                <div class="col-md-4 text-center">
-                                    <div class="review-summary p-4">
-                                        <h2 class="display-4 mb-3">4.7</h2>
-                                        <div class="text-warning mb-2">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                        </div>
-                                        <p class="mb-0">Basado en 23 opiniones</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="p-4">
-                                        <h4 class="mb-3">¿Qué dicen nuestros clientes?</h4>
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span>5 estrellas</span>
-                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
-                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
-                                                </div>
-                                                <span>75%</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span>4 estrellas</span>
-                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
-                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 20%"></div>
-                                                </div>
-                                                <span>20%</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span>3 estrellas</span>
-                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
-                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 5%"></div>
-                                                </div>
-                                                <span>5%</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span>2 estrellas</span>
-                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
-                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
-                                                </div>
-                                                <span>0%</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <span>1 estrella</span>
-                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
-                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
-                                                </div>
-                                                <span>0%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Lista de reseñas -->
-                            <div id="reviewsList">
-                                <div class="review-futuristic mb-4">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <h5>Carlos Rodríguez</h5>
-                                        <div class="text-warning">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                    </div>
-                                    <p class="mb-1">Excelente bicicleta para rutas de montaña. El marco de aluminio es muy ligero y la suspensión funciona perfectamente en terrenos difíciles. Muy satisfecho con mi compra.</p>
-                                    <small class="text-muted">Publicado el 15 de marzo de 2023</small>
-                                </div>
-
-                                <div class="review-futuristic mb-4">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <h5>Ana Martínez</h5>
-                                        <div class="text-warning">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        </div>
-                                    </div>
-                                    <p class="mb-1">Muy buena relación calidad-precio. Los cambios Shimano funcionan muy bien y el color titanio es precioso. Le quito una estrella porque los frenos podrían ser mejores.</p>
-                                    <small class="text-muted">Publicado el 2 de abril de 2023</small>
-                                </div>
-
-                                <div class="review-futuristic mb-4">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <h5>Miguel Ángel López</h5>
-                                        <div class="text-warning">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                        </div>
-                                    </div>
-                                    <p class="mb-1">Llevo un mes con esta bicicleta y estoy encantado. Es muy cómoda para rutas largas y el cambio de velocidades es suave. La recomiendo totalmente para ciclistas intermedios.</p>
-                                    <small class="text-muted">Publicado el 18 de abril de 2023</small>
-                                </div>
-                            </div>
-
-                            <!-- Botones para ver todas las opiniones y escribir una reseña -->
-                            <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-oxford-secondary" id="viewAllReviewsBtn">
-                                    <i class="fas fa-comments me-2"></i>Ver todas las opiniones
-                                </button>
-                                <button class="btn btn-oxford" id="writeReviewBtn" data-bs-toggle="collapse" data-bs-target="#writeReviewForm">
-                                    <i class="fas fa-pen me-2"></i>Escribir una opinión
-                                </button>
-                            </div>
-
-                            <!-- Formulario para escribir una reseña (colapsable) -->
-                            <div class="collapse mt-4" id="writeReviewForm">
-                                <div class="card card-body">
-                                    <h4 class="mb-3">Escribe tu opinión</h4>
-                                    <form id="reviewForm">
-                                        <div class="mb-3">
-                                            <label for="reviewName" class="form-label">Nombre</label>
-                                            <input type="text" class="form-control" id="reviewName" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="reviewEmail" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="reviewEmail" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Calificación</label>
-                                            <div class="rating-stars">
-                                                <i class="far fa-star" data-rating="1"></i>
-                                                <i class="far fa-star" data-rating="2"></i>
-                                                <i class="far fa-star" data-rating="3"></i>
-                                                <i class="far fa-star" data-rating="4"></i>
-                                                <i class="far fa-star" data-rating="5"></i>
-                                            </div>
-                                            <input type="hidden" id="reviewRating" value="0" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="reviewText" class="form-label">Tu opinión</label>
-                                            <textarea class="form-control" id="reviewText" rows="4" required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-oxford">Enviar opinión</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <ul class="list-unstyled small">
-              <li><a href="#" class="text-dark text-decoration-none">Tiendas y puntos de retiro</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Precios taller</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Servicios técnicos autorizados</a></li>
-              <li><a href="#" class="fw-bold text-dark text-decoration-none">Trabaja con nosotros</a></li>
-            </ul>
-          </div>
-          <div class="col-12 col-md-3 mb-4 mb-md-0">
-            <h6 class="fw-bold mb-3">SERVICIO CLIENTE</h6>
-            <ul class="list-unstyled small">
-              <li><a href="#" class="fw-bold text-dark text-decoration-none">Preguntas frecuentes</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Garantía MasterBikes</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Armados de bicicletas</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Registra tu bicicleta</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Términos y condiciones</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Políticas de devolución</a></li>
-              <li><a href="#" class="text-dark text-decoration-none">Métodos de envío</a></li>
-              <li><a href="#" class="fw-bold text-dark text-decoration-none">Seguimiento de pedidos</a></li>
-            </ul>
-          </div>
-          <div class="col-12 col-md-3 mb-4 mb-md-0">
-            <h6 class="fw-bold mb-3">MÉTODOS DE PAGO</h6>
-            <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
-              <img src="../images/icon-webpay.png" alt="Webpay" height="28">
-              <a href="https://www.visa.cl/" target="_blank">
-                <img src="../images/icon-visa.png" alt="Visa" height="28">
-              </a>
-              <img src="../images/icon-master.png" alt="Mastercard" height="28">
-              <img src="../images/icon-magna.png" alt="Magna" height="28">
-              <img src="../images/icon-cabal.png" alt="Cabal" height="28">
-            </div>
-          </div>
-          <div class="col-12 col-md-3">
-            <h6 class="fw-bold mb-3">SÍGUENOS EN NUESTRAS REDES</h6>
-            <div class="mb-2 d-flex align-items-center">
-              <a href="#" class="me-2"><img src="../images/facebook.png" alt="Facebook" height="28"></a>
-              <a href="#" class="me-2"><img src="../images/instagram.png" alt="Instagram" height="28"></a>
-              <a href="#" class="me-2"><img src="../images/youtube.png" alt="YouTube" height="28"></a>
-            </div>
-            <div class="mb-2">
-              <img src="../images/logo.png" alt="MasterBikes" height="28" class="me-2">
-              <img src="../images/shimano-logo.avif" alt="Shimano" height="28">
-            </div>
-            <a href="#" class="btn btn-dark btn-sm w-100 mt-2" style="border-radius:0;">
-              <i class="bi bi-envelope-fill me-2"></i>Formulario de contacto
-            </a>
-          </div>
-        </div>
-        <div class="text-center mt-4 small text-muted">
-          &copy; 2024 MasterBikes. Todos los derechos reservados.
-        </div>
-      </div>
-    </footer>
-    <!-- Fin Footer -->
-    </body>
+            });
+        },{ rootMargin: '-50% 0px -45% 0px' });
+        sectionIds.forEach(id => {
+            const el = document.querySelector(id);
+            if (el) observer.observe(el);
+        });
+    </script>
+</body>
 </html>

@@ -669,3 +669,18 @@ function enhanceStockControl() {
         }, true); // Usar true para capturar el evento antes que otros listeners
     }
 }
+
+// ============================================================
+//  NUEVAS UTILIDADES DE CARRITO SOLICITADAS (renderCart / clearCart)
+//  (Se han movido al script inline de orion.html para una versión completa)
+// ============================================================
+
+/* Se eliminó la implementación simplificada de renderCart/clearCart
+   para evitar duplicación y posibles conflictos. El script inline de
+   la página define versiones más completas y hace las funciones
+   globales.  Aquí solo comprobamos si ya existen y, de ser así,
+   ejecutamos renderCart al iniciar. */
+
+if (typeof window.renderCart === 'function') {
+    window.renderCart();
+}
