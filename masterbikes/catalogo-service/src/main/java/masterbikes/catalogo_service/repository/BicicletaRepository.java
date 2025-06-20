@@ -14,5 +14,5 @@ public interface BicicletaRepository extends JpaRepository<Bicicleta, Long> {
 
     List<Bicicleta> findByIdClienteAndEsPredefinidaFalse(String idCliente);
 
-    Optional<Bicicleta> findByNombreModelo(String nombreModelo);
+    Optional<Bicicleta> findByModelo(String modelo);
 }

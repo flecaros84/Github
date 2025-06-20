@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/componentes")
+@RequestMapping("api/v1/catalogo/componentes")
 public class ComponenteController {
 
     private final ComponenteService componenteService;

@@ -75,7 +75,7 @@ public class BicicletaService {
                 .manubrio(manubrio)
                 .sillin(sillin)
                 .esPredefinida(dto.isEsPredefinida())
-                .nombreModelo(dto.getNombreModelo())
+                .modelo(dto.getModelo())
                 .build();
 
         // Reutiliza la validación existente

@@ -13,6 +13,6 @@ public class BicicletaDTO {
     private Long idSillin;
 
     private boolean esPredefinida;
-    private String nombreModelo;
+    private String modelo;
 
 }

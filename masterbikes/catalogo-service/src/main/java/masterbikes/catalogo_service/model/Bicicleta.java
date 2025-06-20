@@ -55,7 +55,6 @@ public class Bicicleta {
     @Column(name = "es_predefinida", nullable = false)
     private boolean esPredefinida;
 
-    @Column(name = "nombre_modelo")
-    private String nombreModelo;
+    private String modelo;
 
 }
