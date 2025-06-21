@@ -1,0 +1,15 @@
+{
+  "name": "masterbikes",
+  "version": "1.0.0",
+  "description": "MasterBikes microservices",
+  "scripts": {
+    "start": "concurrently \"npm run catalogo\" \"npm run inventario\" \"npm run sucursal\" \"npm run venta\"",
+    "catalogo": "cd catalogo-service && npm start",
+    "inventario": "cd inventario-service && npm start",
+    "sucursal": "cd sucursal-service && npm start",
+    "venta": "cd venta-service && npm start"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

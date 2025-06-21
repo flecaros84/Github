@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalización de Bicicletas - MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Corporate navbar and top-bar colors -->
+    <link rel="stylesheet" href="../css/navbar-colors.css">
+    <script src="../js/session.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/cart.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+        }
+        #cartOffcanvas .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #cartOffcanvas .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-details h6 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        .cart-item-details .text-muted {
+            font-size: 0.9rem;
+        }
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .cart-item-remove {
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        #cart-total-container {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        body {
+            background-color: #f0f2f5;
+        }
+        .customizer-container {
+            padding-top: 80px;
+        }
+        .bike-preview-container {
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+        #bike-preview {
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .options-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+        .form-check-label img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid transparent;
+        }
+        .form-check-input:checked + .form-check-label img {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.2s;
+        }
+        .color-option:hover, .color-option.active {
+            border-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../images/Gemini_Generated_Image_jydrg5jydrg5jydr.png" alt="MasterBikes" height="30" class="d-inline-block align-text-top me-2">
+                MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Bicicletas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="orion.html">Orion</a></li>
+                            <li><a class="dropdown-item" href="merak1.html">Merak 1</a></li>
+                            <li><a class="dropdown-item" href="polux7.html">Polux 7</a></li>
+                            <li><a class="dropdown-item" href="Aura6.html">Aura 6</a></li>
+                            <li><a class="dropdown-item" href="halley.html">Halley</a></li>
+                            <li><a class="dropdown-item" href="luna20.html">Luna 20</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="formulario.html">Contacto</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <!-- Cart button -->
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart"></i> Carrito
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
+                        </button>
+                    </li>
+                    <!-- Login/Register buttons -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person"></i> Iniciar Sesión
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </button>
+                    </li>
+                    <!-- User menu (hidden by default) -->
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span class="user-name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="arriendo.html"><i class="bi bi-bicycle"></i> Mis Arriendos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+            <p class="text-center text-muted" id="cart-empty-msg">Tu carrito está vacío.</p>
+        </div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pago.html" class="btn btn-primary w-100" id="checkout-btn">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Proceder al Pago
+            </a>
+        </div>
+    </div>
+    
+    <div class="container customizer-container">
+    <!-- Encabezado -->
+    <header class="bg-dark text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Personaliza tu bicicleta</h1>
+            <p class="lead mb-0">Elige tu modelo favorito y comienza a configurarlo a tu medida.</p>
+        </div>
+    </header>
+
+    <!-- Catálogo de bicicletas personalizables -->
+    <section class="container my-5">
+        <h2 class="mb-4">Modelos personalizables</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+            <!-- Tarjeta 1 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img class="card-img-top" src="../images/bike1.webp" alt="Modelo A">
+                    <div class="card-body">
+                        <h5 class="card-title">Modelo Trail A</h5>
+                        <p class="card-text small">Cuadro aluminio, 12 velocidades, suspensión 120 mm.</p>
+                        <a href="#!" class="btn btn-primary w-100">Personalizar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img class="card-img-top" src="../images/bike2.webp" alt="Modelo B">
+                    <div class="card-body">
+                        <h5 class="card-title">Modelo Enduro B</h5>
+                        <p class="card-text small">Carbono, 160 mm, grupo X01 Eagle.</p>
+                        <a href="#!" class="btn btn-primary w-100">Personalizar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img class="card-img-top" src="../images/bike3.webp" alt="Modelo C">
+                    <div class="card-body">
+                        <h5 class="card-title">Modelo Gravel C</h5>
+                        <p class="card-text small">6000 aluminio, transmisión GRX.</p>
+                        <a href="#!" class="btn btn-primary w-100">Personalizar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- …duplica más tarjetas según necesites… -->
+
+        </div>
+    </section>
+
+    <!-- Bicicletas en Arriendo -->
+    <section id="arriendos-section" class="container my-5">
+        <h2 class="mb-4">Bicicletas en Arriendo</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            <!-- Tarjeta 1 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">20% OFF</span>
+                    <img src="../images/mtb_2.webp" alt="Bicicleta Oxford Aro 29" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Aro 29 Orion 4</h5>
+                    <div class="price">$15.990</div>
+                    <ul class="list-unstyled small component-details mb-2">
+                      <li><b>Uso:</b> Montaña</li>
+                      <li><b>Talla:</b> M</li>
+                      <li><b>Freno:</b> Disco hidráulico</li>
+                      <li><b>Diámetro rueda:</b> 29″</li>
+                    </ul>
+                    <button class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalOrion">Ver detalles</button>
+                </div>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">15% OFF</span>
+                    <img src="../images/mtb.webp" alt="Bicicleta Shimano Aro 27.5" class="bike-image">
+                    <div class="brand-name">Shimano</div>
+                    <h5>Bicicleta Aro 27.5 Halley</h5>
+                    <div class="price">$13.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 3 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">10% OFF</span>
+                    <img src="../images/mtb_2.webp" alt="Bicicleta Oxford Aro 29" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Aro 29 Merak 1</h5>
+                    <div class="price">$12.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 4 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">25% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Oxford Aro 27.5" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Aro 27.5 Aura 6</h5>
+                    <div class="price">$14.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 5 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">30% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Shimano Aro 29" class="bike-image">
+                    <div class="brand-name">Shimano</div>
+                    <h5>Bicicleta Aro 29 Pollux 7</h5>
+                    <div class="price">$16.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 6 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">18% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Oxford Aro 20" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Infantil Luna 20</h5>
+                    <div class="price">$9.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 7 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">22% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Urbana" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Urbana City</h5>
+                    <div class="price">$11.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 8 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">12% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Eléctrica" class="bike-image">
+                    <div class="brand-name">Shimano</div>
+                    <h5>Bicicleta Eléctrica E-Bike</h5>
+                    <div class="price">$19.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 9 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">17% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Infantil" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Infantil Mini</h5>
+                    <div class="price">$8.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 10 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">20% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Ruta" class="bike-image">
+                    <div class="brand-name">Shimano</div>
+                    <h5>Bicicleta Ruta Speed</h5>
+                    <div class="price">$17.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+            <!-- Tarjeta 11 -->
+            <div class="col">
+                <div class="bike-card position-relative">
+                    <span class="discount-badge">15% OFF</span>
+                    <img src="../images/pendiente.jpg" alt="Bicicleta Urbana 2" class="bike-image">
+                    <div class="brand-name">Oxford</div>
+                    <h5>Bicicleta Urbana Classic</h5>
+                    <div class="price">$10.990</div>
+                    <div class="text-muted"><small>Por día</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal detalles Orion -->
+    <div class="modal fade" id="modalOrion" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Bicicleta Aro 29 Orion 4 – Detalles</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-sm">
+              <tr><th>Tipo</th><td>Marco</td></tr>
+              <tr><th>Marca</th><td>Oxford</td></tr>
+              <tr><th>Modelo</th><td>Orion 4</td></tr>
+              <tr><th>Diámetro rueda</th><td>29″</td></tr>
+              <tr><th>Tipo freno</th><td>Disco hidráulico</td></tr>
+              <tr><th>Tipo uso</th><td>Montaña</td></tr>
+              <tr><th>Talla</th><td>M</td></tr>
+              <tr><th>Descripción</th><td>Cuadro aluminio, suspensión 120 mm, transmisión Deore 12v.</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configurador de bicicleta -->
+    <section id="configurador" class="container my-5">
+        <h2 class="mb-4">Configura tu bicicleta</h2>
+        <div class="row g-4">
+            <!-- Vista previa -->
+            <div class="col-md-6">
+                <img id="bikePreview" src="../images/builder-placeholder.webp" class="img-fluid border rounded w-100" alt="Vista previa de la bicicleta">
+            </div>
+            <!-- Panel de selección de componentes -->
+            <div class="col-md-6">
+                <div class="accordion" id="builderAccordion">
+                    <!-- Cuadro -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFrame">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFrame" aria-expanded="true" aria-controls="collapseFrame">
+                                Cuadro
+                            </button>
+                        </h2>
+                        <div id="collapseFrame" class="accordion-collapse collapse show" data-bs-parent="#builderAccordion">
+                            <div class="accordion-body">
+                                <select class="form-select builder-select" data-part="frame">
+                                    <option selected disabled>Selecciona un cuadro…</option>
+                                    <option value="frame-trail">Trail Aluminio</option>
+                                    <option value="frame-enduro">Enduro Carbono</option>
+                                    <option value="frame-gravel">Gravel 6000 Alu</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ruedas -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingWheels">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWheels" aria-expanded="false" aria-controls="collapseWheels">
+                                Ruedas
+                            </button>
+                        </h2>
+                        <div id="collapseWheels" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                            <div class="accordion-body">
+                                <select class="form-select builder-select" data-part="wheel">
+                                    <option selected disabled>Selecciona ruedas…</option>
+                                    <option value="wheel-29">29″ Trail</option>
+                                    <option value="wheel-enduro">29″ Enduro</option>
+                                    <option value="wheel-gravel">700c Gravel</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Grupo -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDrivetrain">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDrivetrain" aria-expanded="false" aria-controls="collapseDrivetrain">
+                                Transmisión
+                            </button>
+                        </h2>
+                        <div id="collapseDrivetrain" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                            <div class="accordion-body">
+                                <select class="form-select builder-select" data-part="drivetrain">
+                                    <option selected disabled>Selecciona transmisión…</option>
+                                    <option value="drivetrain-deore">Shimano Deore 12v</option>
+                                    <option value="drivetrain-gx">SRAM GX Eagle</option>
+                                    <option value="drivetrain-grx">Shimano GRX 1×11</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Frenos -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingBrakes">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrakes" aria-expanded="false" aria-controls="collapseBrakes">
+                                Frenos
+                            </button>
+                        </h2>
+                        <div id="collapseBrakes" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                            <div class="accordion-body">
+                                <select class="form-select builder-select" data-part="brakes">
+                                    <option selected disabled>Selecciona frenos…</option>
+                                    <option value="brakes-mt200">Shimano MT200</option>
+                                    <option value="brakes-code">SRAM Code R</option>
+                                    <option value="brakes-grx">Shimano GRX</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="addToCart" class="btn btn-warning w-100 mt-3">Añadir configuración</button>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <!-- Footer reutilizado -->
+    <footer class="bg-white border-top mt-5 pt-4 pb-3">
+        <!-- …puedes copiar el mismo bloque de footer de index.html… -->
+    </footer>
+
+    <!-- Script Configurador -->
+    <script>
+      const previewImg = document.getElementById('bikePreview');
+      document.querySelectorAll('.builder-select').forEach(sel => {
+        sel.addEventListener('change', e => {
+          // De momento sustituimos preview por imagen basada en value. Debe existir en images/.
+          const val = e.target.value;
+          if (val) {
+            previewImg.src = `../images/${val}.webp`;
+          }
+        });
+      });
+    </script>
+
+    <script>
+       // Cargar componentes desde el microservicio y poblar selects
+       document.addEventListener('DOMContentLoaded', async () => {
+         try {
+           const componentes = await API.getComponentes();
+           if (!Array.isArray(componentes)) return;
+           const mapTipoToPart = {
+             'Marco': 'frame',
+             'Cuadro': 'frame',
+             'Rueda': 'wheel',
+             'Ruedas': 'wheel',
+             'Transmisión': 'drivetrain',
+             'Grupo': 'drivetrain',
+             'Freno': 'brakes',
+             'Frenos': 'brakes'
+           };
+           componentes.forEach(c => {
+             const part = mapTipoToPart[c.tipo] || null;
+             if (!part) return;
+             const select = document.querySelector(`select[data-part="${part}"]`);
+             if (!select) return;
+             const opt = document.createElement('option');
+             opt.value = `${part}-${c.id}`; // value arbitrario
+             opt.textContent = `${c.marca} ${c.modelo || ''}`.trim();
+             select.appendChild(opt);
+           });
+         } catch (err) {
+           console.error('Error cargando componentes:', err);
+         }
+       });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

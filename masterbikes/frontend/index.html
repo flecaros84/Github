@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterBikes - Sistema de Gestión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/orion-futuristic.css">
+    <link rel="stylesheet" href="css/navbar-colors.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Session management script -->
+    <script src="js/session.js"></script>
+    <!-- Overlay captions on hero slider -->
+    <style>
+      .swiper-slide img{width:100%;height:auto;display:block;}
+      .slider-caption{
+        bottom:15%;
+        right:10%;
+        top:auto;
+        transform:none;
+        max-width:350px;
+        position:absolute;
+        color:#fff;
+        text-align:left;
+        background:rgba(0,0,0,0.45);
+        padding:1.25rem 2rem;
+        border-radius:12px;
+      }
+      .slider-caption h2{font-size:2rem;font-weight:700;margin-bottom:.5rem;}
+      .slider-caption p{margin-bottom:1rem;}
+      .slider-caption .btn{
+        position:absolute;
+        bottom:1rem;
+        right:1rem;background:#ffd600;color:#000;font-weight:600;padding:.5rem 1.25rem;border-radius:30px;border:none;}
+    </style>
+    <!-- Layout for cities grid -->
+    <style>
+      .cities-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+      .city-card {
+        width: 280px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: transform .3s;
+      }
+      .city-card:hover { transform: translateY(-6px); }
+      .city-image { width: 100%; height: 180px; object-fit: cover; }
+      .city-info { padding: 1rem; text-align: center; }
+      @media (min-width: 768px) {
+        .city-card { width: 260px; }
+      }
+    </style>
+</head>
+<body>
+    <!-- Barra superior de contacto -->
+    <div class="top-bar">
+        ¿Dudas? Llámanos al <b>+56232149673</b> | L-V: 8:30 a 18:15 - V: 8:30 a 16:00 | <a href="pages/formulario.html" class="contact-link">Formulario de contacto</a>
+    </div>
+
+    <!-- Menú de navegación fijo -->
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/Gemini_Generated_Image_jydrg5jydrg5jydr.png" alt="MasterBikes" height="32" class="me-2">MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Bicicletas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="pages/orion.html">Orion</a></li>
+                            <li><a class="dropdown-item" href="pages/merak1.html">Merak 1</a></li>
+                            <li><a class="dropdown-item" href="pages/polux7.html">Polux 7</a></li>
+                            <li><a class="dropdown-item" href="pages/Aura6.html">Aura 6</a></li>
+                            <li><a class="dropdown-item" href="pages/halley.html">Halley</a></li>
+                            <li><a class="dropdown-item" href="pages/luna20.html">Luna 20</a></li>
+                        </ul>
+                    </li>
+                                        <li class="nav-item">
+                        <a class="nav-link" href="pages/formulario.html">Contacto</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <!-- Login/Register buttons -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person"></i> Iniciar Sesión
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </button>
+                    </li>
+                    <!-- User menu (hidden by default) -->
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span class="user-name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="pages/arriendo.html"><i class="bi bi-bicycle"></i> Mis Arriendos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Swiper Hero Section -->
+    <div class="swiper position-relative">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide position-relative">
+                <img src="images/doble.webp" alt="Bicicletas Dobles">
+                <div class="slider-caption">
+                    <h2>Serie UNO X</h2>
+                    <p>Nueva Oxford Orion 5<br>Precio lanzamiento $549.990</p>
+                    <a href="#" class="btn">VER MÁS</a>
+                </div>
+            </div>
+            <div class="swiper-slide position-relative">
+                <img src="images/fox.webp" alt="Tecnología Fox">
+                <div class="slider-caption">
+                    <h2>Suspensión Fox</h2>
+                    <p>La mejor tecnología para tu aventura</p>
+                    <a href="#" class="btn">VER MÁS</a>
+                </div>
+            </div>
+            <div class="swiper-slide position-relative">
+                <img src="images/marin.webp" alt="Bicicletas Marin">
+                <div class="slider-caption">
+                    <h2>Marin Bikes</h2>
+                    <p>Explora la nueva colección</p>
+                    <a href="#" class="btn">VER MÁS</a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+<!-- Sección de Servicios -->
+<section id="servicios" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold">Nuestros Servicios</h2>
+    <div class="row g-4">
+      <!-- Arriendo -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <i class="fa-solid fa-bicycle fa-3x text-primary mb-3"></i>
+            <h3 class="card-title">Arriendo de Bicicletas</h3>
+            <p class="card-text">Explora la ciudad o la montaña con nuestra moderna flota. Planes diarios, semanales y mensuales a precios accesibles.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Venta -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <i class="fa-solid fa-cart-shopping fa-3x text-primary mb-3"></i>
+            <h3 class="card-title">Venta de Bicicletas y Accesorios</h3>
+            <p class="card-text">Encuentra la bicicleta ideal y complementa tu equipamiento con cascos, luces y repuestos de las mejores marcas.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Reparación -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <i class="fa-solid fa-screwdriver-wrench fa-3x text-primary mb-3"></i>
+            <h3 class="card-title">Servicio de Reparación</h3>
+            <p class="card-text">Taller certificado Shimano. Mantenimiento preventivo y reparaciones completas para que tu bici siempre rinda al máximo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    <!-- Sección de Ciudades -->
+    <section class="cities-section">
+        <div class="container">
+            <h2 class="explore-title">Nuestras Tiendas</h2>
+            <div class="cities-grid">
+                <div class="city-card">
+                    <img src="images/Santiago.jpg" alt="Santiago" class="city-image">
+                    <div class="city-info">
+                        <h3 class="city-name">Santiago</h3>
+                        <p class="city-description">Capital vibrante con múltiples rutas ciclistas</p>
+                    </div>
+                </div>
+                <div class="city-card">
+                    <img src="images/Santiago.jpg" alt="Las Condes" class="city-image">
+                    <div class="city-info">
+                        <h3 class="city-name">Las Condes</h3>
+                        <p class="city-description">Comuna moderna con ciclovías y parques urbanos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Iniciar Sesión -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+              </div>
+              <div class="mb-3 d-flex justify-content-center">
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registroModalLabel">Registrarse</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="registerName" class="form-label">Nombre y apellidos</label>
+                <input type="text" class="form-control" id="registerName" required>
+              </div>
+              <div class="mb-3">
+                <label for="registerEmail" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="registerEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="registerPassword" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="registerPassword" required>
+              </div>
+              <div class="mb-3">
+                <label for="registerPhone" class="form-label">Número de teléfono</label>
+                <input type="tel" class="form-control" id="registerPhone">
+              </div>
+              <div class="mb-3">
+                <label for="registerAddress" class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="registerAddress">
+              </div>
+              <div class="mb-3">
+                <label for="registerBirthdate" class="form-label">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="registerBirthdate">
+              </div>
+              <div class="mb-3 d-flex justify-content-center">
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: { delay: 5000, disableOnInteraction: false },
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            effect: 'fade',
+            fadeEffect: { crossFade: true }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- reCAPTCHA validation script -->
+    <script>
+        // Validar formulario de login
+        document.querySelector('#loginModal form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Validación básica del formulario
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                alert('Por favor, completa todos los campos requeridos.');
+                return false;
+            }
+            
+            // Validar reCAPTCHA
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert('Por favor, completa la verificación de robot antes de continuar.');
+                return false;
+            }
+            
+            // Simular login exitoso (aquí conectarías con tu backend)
+            const userData = {
+                name: email.split('@')[0], // Usar parte del email como nombre
+                email: email,
+                loginTime: new Date().toISOString()
+            };
+            
+            // Usar el session manager para manejar el login
+            sessionManager.handleLogin(userData);
+            
+            alert('Inicio de sesión exitoso. ¡Bienvenido!');
+            grecaptcha.reset();
+            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+        });
+
+        // Validar formulario de registro
+        document.querySelector('#registroModal form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Validación básica del formulario
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            if (!name || !email || !password) {
+                alert('Por favor, completa todos los campos requeridos.');
+                return false;
+            }
+            
+            // Validar reCAPTCHA
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert('Por favor, completa la verificación de robot antes de continuar.');
+                return false;
+            }
+            
+            // Simular registro exitoso (aquí conectarías con tu backend)
+            const userData = {
+                name: name,
+                email: email,
+                phone: document.getElementById('registerPhone').value,
+                address: document.getElementById('registerAddress').value,
+                birthdate: document.getElementById('registerBirthdate').value,
+                registerTime: new Date().toISOString()
+            };
+            
+            // Usar el session manager para manejar el registro
+            sessionManager.handleLogin(userData);
+            
+            alert('Registro exitoso. ¡Bienvenido a MasterBikes!');
+            grecaptcha.reset();
+            bootstrap.Modal.getInstance(document.getElementById('registroModal')).hide();
+        });
+    </script>
+
+    <!-- Footer estilo Oxford Store -->
+    <footer class="bg-white border-top mt-5 pt-4 pb-3">
+      <div class="container">
+        <div class="row text-center text-md-start">
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">SOBRE MASTERBIKES</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="text-dark text-decoration-none">Tiendas y puntos de retiro</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Precios taller</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Servicios técnicos autorizados</a></li>
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Trabaja con nosotros</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">SERVICIO CLIENTE</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Preguntas frecuentes</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Garantía MasterBikes</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Armados de bicicletas</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Registra tu bicicleta</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Términos y condiciones</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Políticas de devolución</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Métodos de envío</a></li>
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Seguimiento de pedidos</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">MÉTODOS DE PAGO</h6>
+            <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
+              <img src="images/icon-webpay.png" alt="Webpay" height="28">
+              <a href="https://www.visa.cl/soporte/consumidores/viajes.html?gad_source=1&gad_campaignid=22511339436&gbraid=0AAAAABKhpWFMuBKZKUYc8vP14kTHlbMMV&gclid=CjwKCAjw3MXBBhAzEiwA0vLXQQmHYinaaYDiJYLtpVYt0QRFNY907zvN1Hza1bCsQcu11XLVOpdSthoCOmcQAvD_BwE" target="_blank">
+                <img src="images/icon-visa.png" alt="Visa" height="28">
+              </a>
+              <img src="images/icon-master.png" alt="Mastercard" height="28">
+              <img src="images/icon-magna.png" alt="Magna" height="28">
+              <img src="images/icon-cabal.png" alt="Cabal" height="28">
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <h6 class="fw-bold mb-3">SÍGUENOS EN NUESTRAS REDES</h6>
+            <div class="mb-2 d-flex align-items-center">
+              <a href="#" class="me-2"><img src="images/facebook.png" alt="Facebook" height="28"></a>
+              <a href="#" class="me-2"><img src="images/instagram.png" alt="Instagram" height="28"></a>
+              <a href="#" class="me-2"><img src="images/youtube.png" alt="YouTube" height="28"></a>
+              <!-- Si tienes más redes, agrégalas aquí -->
+            </div>
+            <div class="mb-2">
+              <img src="images/Gemini_Generated_Image_jydrg5jydrg5jydr.png" alt="MasterBikes" height="28" class="me-2">
+              <img src="images/shimano-logo.avif" alt="Shimano" height="28">
+            </div>
+            <a href="pages/formulario.html" class="btn btn-dark btn-sm w-100 mt-2" style="border-radius:0;">
+              <i class="bi bi-envelope-fill me-2"></i>Formulario de contacto
+            </a>
+          </div>
+        </div>
+        <div class="text-center mt-4 small text-muted">
+          &copy; 2024 MasterBikes. Todos los derechos reservados.
+        </div>
+      </div>
+    </footer>
+    <!-- Fin Footer -->
+    <!-- Session management -->
+    <script src="js/session.js"></script>
+</body>
+</html>

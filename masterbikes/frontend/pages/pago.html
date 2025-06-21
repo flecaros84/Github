@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso de Pago - MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="../js/session.js"></script>
+    <script src="../js/cart.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+        }
+        body {
+            background-color: #f0f2f5;
+        }
+        .navbar {
+            background-color: var(--primary-color) !important;
+        }
+        .payment-container {
+            max-width: 900px;
+            margin: 50px auto;
+        }
+        .order-summary, .payment-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-item img {
+            width: 60px;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .summary-total {
+            border-top: 2px solid #333;
+            padding-top: 20px;
+            margin-top: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            border-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">MasterBikes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="arriendo.html">Arriendos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart"></i> Carrito
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
+                        </button>
+                    </li>
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-circle"></i> <span class="user-name"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
+        <div class="offcanvas-header bg-dark text-white">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body" id="cart-items-container"></div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pago.html" class="btn btn-primary w-100">Proceder al Pago</a>
+        </div>
+    </div>
+
+    <!-- Payment Page Content -->
+    <div class="container payment-container" id="checkoutSection">
+        <div class="text-center mb-5">
+            <h2><i class="bi bi-shield-lock-fill text-primary"></i> Pago Seguro</h2>
+            <p class="lead text-muted" id="paymentDescription">Completa los siguientes datos para finalizar tu compra.</p>
+        </div>
+        <div class="row g-5">
+            <!-- Order Summary -->
+            <div class="col-lg-5">
+                <div class="order-summary">
+                    <h4 class="mb-4">Resumen de tu Orden</h4>
+                    <div id="orderSummary">
+                        <!-- Summary items will be injected here -->
+                    </div>
+                    <div class="summary-total d-flex justify-content-between">
+                        <span>Total:</span>
+                        <span id="summaryTotal">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div class="col-lg-7">
+                <div class="payment-form">
+                    <h4 class="mb-4">Información de Pago</h4>
+                    <form id="paymentForm" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="nombre" class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu nombre completo.
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="correo" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="correo" name="correo" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un correo electrónico válido.
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <h5 class="mt-4">Información de Envío</h5>
+                            </div>
+                            <div class="col-12">
+                                <label for="direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu dirección.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ciudad" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="ciudad" name="ciudad" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu ciudad.
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="region" class="form-label">Región</label>
+                                <input type="text" class="form-control" id="region" name="region" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu región.
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="postal" class="form-label">Código Postal</label>
+                                <input type="text" class="form-control" id="postal" name="postal" required pattern="[0-9]{4,6}">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un código postal válido.
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="card-number" class="form-label">Número de Tarjeta</label>
+                                <input type="text" class="form-control" id="card-number" required pattern="[0-9]{16}">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un número de tarjeta válido (16 dígitos).
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="expiry-date" class="form-label">Fecha de Expiración</label>
+                                <input type="text" class="form-control" id="expiry-date" required pattern="(0[1-9]|1[0-2])\/([0-9]{2})">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa una fecha válida (MM/YY).
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" required pattern="[0-9]{3,4}">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un CVV válido.
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <button class="w-100 btn btn-primary btn-lg" type="submit">
+                            Pagar Ahora <i class="bi bi-arrow-right-circle-fill"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Section (Hidden by default) -->
+    <div class="container payment-container d-none" id="successSection">
+        <div class="text-center">
+            <h2 class="text-success"><i class="bi bi-check-circle-fill"></i> ¡Pago Exitoso!</h2>
+            <p class="lead" id="successMessage">Hemos recibido tu pago. ¡Gracias por tu compra!</p>
+            <p>Recibirás un correo de confirmación con los detalles de tu pedido.</p>
+            <a href="../index.html" class="btn btn-primary mt-3">Volver al Inicio</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/session.js"></script>
+    <script src="../js/pago.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Inicializar EmailJS
+        emailjs.init('dF-ZSyQCC3Jx91Pzh');
+
+        // Formatear precios en CLP
+        function formatPrice(price) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP'
+            }).format(price);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const orderSummary = document.getElementById('orderSummary');
+            const summaryTotal = document.getElementById('summaryTotal');
+            const paymentDescription = document.getElementById('paymentDescription');
+            const successMessage = document.getElementById('successMessage');
+            
+            if (cart.length === 0) {
+                document.querySelector('.payment-container').innerHTML = `
+                    <div class="text-center">
+                        <h2>Tu carrito está vacío</h2>
+                        <p class="lead">No tienes productos para pagar.</p>
+                        <a href="../index.html" class="btn btn-primary mt-3">Volver al Inicio</a>
+                    </div>
+                `;
+                return;
+            }
+
+            let total = 0;
+            let isRental = cart[0].hasOwnProperty('days');
+
+            // Actualizar descripción según el tipo de transacción
+            paymentDescription.textContent = isRental ? 
+                'Completa los siguientes datos para finalizar tu arriendo.' : 
+                'Completa los siguientes datos para finalizar tu compra.';
+
+            cart.forEach(item => {
+                const itemTotal = isRental ? item.price * item.days : item.price * item.quantity;
+                total += itemTotal;
+
+                const itemHtml = `
+                    <div class="summary-item">
+                        <div class="d-flex align-items-center">
+                            <img src="${item.img.replace('../', './')}" alt="${item.name}">
+                            <div>
+                                <strong>${item.name}</strong>
+                                <div class="text-muted small">
+                                    ${isRental ? 
+                                        `${item.days} día(s) x ${formatPrice(item.price)}` : 
+                                        `${item.quantity} unidad(es) x ${formatPrice(item.price)}`}
+                                </div>
+                            </div>
+                        </div>
+                        <strong>${formatPrice(itemTotal)}</strong>
+                    </div>
+                `;
+                orderSummary.innerHTML += itemHtml;
+            });
+
+            summaryTotal.textContent = formatPrice(total);
+
+            // Manejar envío del formulario
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                if (!paymentForm.checkValidity()) {
+                    e.stopPropagation();
+                    paymentForm.classList.add('was-validated');
+                    return;
+                }
+
+                const formData = new FormData(paymentForm);
+                const nombre = formData.get('nombre');
+                const correo = formData.get('correo');
+                const direccion = formData.get('direccion');
+                const ciudad = formData.get('ciudad');
+                const region = formData.get('region');
+                const postal = formData.get('postal');
+
+                // Generar HTML del pedido para el correo
+                const itemsHtml = cart.map(item => {
+                    const itemTotal = isRental ? item.price * item.days : item.price * item.quantity;
+                    return `
+                        <li>${isRental ? 
+                            `${item.name} - ${item.days} día(s) x ${formatPrice(item.price)} = ${formatPrice(itemTotal)}` : 
+                            `${item.name} - ${item.quantity} unidad(es) x ${formatPrice(item.price)} = ${formatPrice(itemTotal)}`}
+                        </li>
+                    `;
+                }).join('');
+
+                const message = `
+                    <p>Gracias por tu ${isRental ? 'arriendo' : 'compra'} en <strong>MasterBikes</strong>.</p>
+                    <p><strong>Dirección de envío:</strong> ${direccion}, ${ciudad}, ${region}, ${postal}</p>
+                    <p><strong>Detalle del pedido:</strong></p>
+                    <ul>${itemsHtml}</ul>
+                    <p><strong>Total: ${formatPrice(total)}</strong></p>
+                `;
+
+                // Simular procesamiento del pago
+                const payButton = paymentForm.querySelector('button[type="submit"]');
+                payButton.disabled = true;
+                payButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+
+                // Enviar correo y mostrar éxito
+                emailjs.send('service_90bp5de', 'template_y90jv2d', {
+                    to_name: nombre,
+                    to_email: correo,
+                    message: message
+                }).then(() => {
+                    localStorage.removeItem('cart');
+                    document.getElementById('checkoutSection').classList.add('d-none');
+                    document.getElementById('successSection').classList.remove('d-none');
+                    successMessage.textContent = `Hemos recibido tu ${isRental ? 'arriendo' : 'compra'}. ¡Gracias por tu preferencia!`;
+                }).catch(err => {
+                    console.error('Error al enviar correo:', err);
+                    alert('Hubo un error al procesar el pago. Por favor intenta nuevamente.');
+                    payButton.disabled = false;
+                    payButton.innerHTML = 'Pagar Ahora <i class="bi bi-arrow-right-circle-fill"></i>';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
