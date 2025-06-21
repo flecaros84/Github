@@ -3,306 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterBikes - Arriendo de Bicicletas</title>
+    <title>MasterBikes - Compra de Bicicletas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .sidebar {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #dee2e6;
-        }
-        .bike-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-            background: #fff;
-        }
-        .bike-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .bike-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            margin-bottom: 15px;
-        }
-        .price {
-            font-size: 1.25rem;
-            color: #0d6efd;
-            font-weight: bold;
-        }
-        .discount-badge {
-            background: #dc3545;
-            color: #fff;
-            font-size: 0.9rem;
-            padding: 4px 8px;
-            border-radius: 5px;
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-        .brand-name {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        .sort-section {
-            margin-bottom: 30px;
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                margin-bottom: 20px;
-            }
-        }
+        /* Navbar estilo Orion */
+        .custom-navbar{background:#0066cc!important;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+        .custom-navbar .navbar-brand,.custom-navbar .nav-link{color:#fff!important;font-weight:500}
+        .custom-navbar .nav-link:hover{color:#e0e0e0!important}
+        .cart-badge{background:#fff!important;color:#0066cc!important}
+        /* Página */
+        .sidebar{background:#f8f9fa;padding:20px;border-radius:10px;border:1px solid #dee2e6}
+        .bike-card{border:1px solid #dee2e6;border-radius:8px;padding:15px;margin-bottom:20px;transition:.2s;background:#fff;position:relative}
+        .bike-image{width:100%;height:180px;object-fit:cover;margin-bottom:15px;border-radius:6px}
+        .price{font-size:1.25rem;color:#0d6efd;font-weight:700}
+        .discount-badge{background:#dc3545;color:#fff;font-size:.9rem;padding:4px 8px;border-radius:5px;position:absolute;top:15px;left:15px}
+        .brand-name{color:#666;font-size:.9rem;margin-bottom:5px}
+        /* Diseño extra */
+        body{background:linear-gradient(135deg,#f0f4ff 0%,#ffffff 100%);min-height:100vh}
+        .bike-card{transition:transform .2s,box-shadow .2s}
+        .bike-card:hover{transform:translateY(-8px);box-shadow:0 8px 20px rgba(0,0,0,.15)}
+        .old-price{text-decoration:line-through;color:#888;font-size:.9rem;margin-right:6px}
+        .btn-buy{background:#0d6efd;color:#fff;border:none}
+        .btn-buy:hover{background:#0b5ed7;color:#fff}
+        /* Sidebar selects */
+        .sidebar .form-select{background:#fff;border-color:#ced4da}
+        /* Range slider estilos */
+        .form-range{height:8px!important;background:linear-gradient(to right,#0d6efd var(--value,0%),#dee2e6 var(--value,0%));border-radius:4px;transition:background 0.3s}
+        .form-range::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#0d6efd;border:2px solid #fff;box-shadow:0 0 3px rgba(0,0,0,0.3);cursor:pointer}
+        .form-range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#0d6efd;border:none;cursor:pointer}
+        .form-range:focus{outline:none}
     </style>
 </head>
 <body>
-    <div class="container-fluid py-4">
-        <div class="row">
-            <!-- Menú lateral de filtros -->
-            <div class="col-lg-3 mb-4">
-                <div class="sidebar">
-                    <h5 class="mb-3">Seleccionar Filtros</h5>
-                    <div class="mb-3">
-                        <strong>PRECIO</strong>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="precio1">
-                            <label class="form-check-label" for="precio1">$0 - $20.000</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="precio2">
-                            <label class="form-check-label" for="precio2">$20.000 y más</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>MARCA</strong>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="marca1">
-                            <label class="form-check-label" for="marca1">Oxford</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="marca2">
-                            <label class="form-check-label" for="marca2">Shimano</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>ARO</strong>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="aro1">
-                            <label class="form-check-label" for="aro1">29"</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="aro2">
-                            <label class="form-check-label" for="aro2">27.5"</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>TALLA</strong>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="talla1">
-                            <label class="form-check-label" for="talla1">S</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="talla2">
-                            <label class="form-check-label" for="talla2">M</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="talla3">
-                            <label class="form-check-label" for="talla3">L</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Contenido principal -->
-            <div class="col-lg-9">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h3 class="mb-0">Bicicletas en Arriendo</h3>
-                        <small class="text-muted">Catálogo de bicicletas disponibles para arriendo</small>
-                    </div>
-                    <div class="sort-section">
-                        <label for="sortSelect" class="form-label me-2">Ordenar por</label>
-                        <select id="sortSelect" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="posicion">Posición</option>
-                            <option value="precio">Precio</option>
-                            <option value="descuento">Descuento</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <!-- Tarjeta de bicicleta 1 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">20% OFF</span>
-                            <img src="../images/mtb_2.webp" alt="Bicicleta Oxford Aro 29" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Aro 29 Orion 4</h5>
-                            <div class="price">$15.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 2 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">15% OFF</span>
-                            <img src="images/mtb.webp" alt="Bicicleta Shimano Aro 27.5" class="bike-image">
-                            <div class="brand-name">Shimano</div>
-                            <h5>Bicicleta Aro 27.5 Halley</h5>
-                            <div class="price">$13.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 3 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">10% OFF</span>
-                            <img src="images/mtb_2.webp" alt="Bicicleta Oxford Aro 29" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Aro 29 Merak 1</h5>
-                            <div class="price">$12.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 4 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">25% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Oxford Aro 27.5" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Aro 27.5 Aura 6</h5>
-                            <div class="price">$14.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 5 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">30% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Shimano Aro 29" class="bike-image">
-                            <div class="brand-name">Shimano</div>
-                            <h5>Bicicleta Aro 29 Pollux 7</h5>
-                            <div class="price">$16.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 6 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">18% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Oxford Aro 20" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Infantil Luna 20</h5>
-                            <div class="price">$9.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 7 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">22% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Urbana" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Urbana City</h5>
-                            <div class="price">$11.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 8 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">12% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Eléctrica" class="bike-image">
-                            <div class="brand-name">Shimano</div>
-                            <h5>Bicicleta Eléctrica E-Bike</h5>
-                            <div class="price">$19.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 9 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">17% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Infantil" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Infantil Mini</h5>
-                            <div class="price">$8.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 10 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">20% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Ruta" class="bike-image">
-                            <div class="brand-name">Shimano</div>
-                            <h5>Bicicleta Ruta Speed</h5>
-                            <div class="price">$17.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
-                    <!-- Tarjeta de bicicleta 11 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="bike-card position-relative">
-                            <span class="discount-badge">15% OFF</span>
-                            <img src="images/pendiente.jpg" alt="Bicicleta Urbana 2" class="bike-image">
-                            <div class="brand-name">Oxford</div>
-                            <h5>Bicicleta Urbana Classic</h5>
-                            <div class="price">$10.990</div>
-                            <div class="text-muted"><small>Por día</small></div>
-                        </div>
-                    </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">MasterBikes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Ventas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <button class="btn position-relative me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas"><i class="fas fa-shopping-cart"></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">0</span></button>
+                    <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>
                 </div>
             </div>
         </div>
+    </nav>
+    <!-- Offcanvas Carrito -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header"><h5 class="offcanvas-title" id="cartOffcanvasLabel">Tu Carrito</h5><button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button></div>
+        <div class="offcanvas-body d-flex flex-column"><div id="cartItems" class="flex-grow-1 overflow-auto"></div><hr><div class="d-flex justify-content-between mb-3"><strong>Total:</strong><span id="cartTotal">$0</span></div><a href="pago.html" class="btn btn-primary w-100" id="checkoutBtn">Finalizar Compra</a></div>
     </div>
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Iniciar Sesión</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label class="form-label">Correo</label><input type="email" class="form-control" required></div><div class="mb-3"><label class="form-label">Contraseña</label><input type="password" class="form-control" required></div><button class="btn btn-primary w-100">Ingresar</button></form></div></div></div></div>
+
+    <div class="container my-5">
+        <div class="row g-4">
+            <!-- Sidebar filtros -->
+            <aside class="col-lg-3">
+                <div class="sidebar">
+                    <h5 class="mb-3">Filtros</h5>
+                    <div class="mb-3"><label class="form-label">Tipo de bicicleta</label><select id="typeFilter" class="form-select"><option value="">Todas</option><option>Mountain Bike</option><option>Ruta</option><option>Eléctrica</option></select></div>
+                    <div class="mb-3"><label class="form-label">Talla</label><select id="sizeFilter" class="form-select"><option value="">Todas</option><option>S</option><option>M</option><option>L</option></select></div>
+                    <div class="mb-3"><label class="form-label">Marca</label><select id="brandFilter" class="form-select"><option value="">Todas</option><option>Oxford</option><option>Shimano</option></select></div>
+                    <div class="mb-3"><label class="form-label">Rango de precio (CLP)</label><input type="range" class="form-range" min="10000" max="50000" step="5000" id="priceRange"></div>
+                    <p><span id="priceValue">$50000</span> máximo</p>
+                </div>
+            </aside>
+            <!-- Listado de bicicletas -->
+            <section class="col-lg-9">
+                <div id="bikeList" class="row"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal Reserva -->
+    <div class="modal fade" id="rentModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Agregar al carrito</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="rentForm"><input type="hidden" id="bikeId"><div class="mb-3"><label class="form-label">Cantidad</label><input type="number" class="form-control" id="quantity" min="1" value="1" required></div><button class="btn btn-primary w-100">Agregar al carrito</button></form></div></div></div></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Bicicletas de ejemplo
+        const bikes=[
+            {id:1,type:'Mountain Bike',name:'Orion 4',brand:'Oxford',size:'29',price:15990,img:'../images/mtb_2.webp',discount:20},
+            {id:2,type:'Mountain Bike',name:'Halley',brand:'Shimano',size:'27.5',price:13990,img:'images/mtb.webp',discount:15},
+            {id:3,type:'Mountain Bike',name:'Merak 1',brand:'Oxford',size:'29',price:12990,img:'images/mtb_2.webp',discount:10},
+            {id:4,type:'Mountain Bike',name:'Aura 6',brand:'Oxford',size:'27.5',price:14990,img:'images/pendiente.jpg',discount:25},
+            {id:5,type:'Mountain Bike',name:'Pollux 7',brand:'Shimano',size:'29',price:16990,img:'images/pendiente.jpg',discount:30},
+            {id:6,type:'Mountain Bike',name:'Luna 20',brand:'Oxford',size:'20',price:9990,img:'images/pendiente.jpg',discount:18},
+            {id:7,type:'Mountain Bike',name:'City',brand:'Oxford',size:'27',price:11990,img:'images/pendiente.jpg',discount:22},
+            {id:8,type:'Eléctrica',name:'E-Bike',brand:'Shimano',size:'-',price:19990,img:'images/pendiente.jpg',discount:12},
+            {id:9,type:'Mountain Bike',name:'Mini',brand:'Oxford',size:'-',price:8990,img:'images/pendiente.jpg',discount:17},
+            {id:10,type:'Ruta',name:'Speed',brand:'Shimano',size:'29',price:17990,img:'images/pendiente.jpg',discount:20},
+            {id:11,type:'Mountain Bike',name:'Classic',brand:'Oxford',size:'-',price:10990,img:'images/pendiente.jpg',discount:15}
+        ];
+
+        const listEl=document.getElementById('bikeList');
+        const typeFilter=document.getElementById('typeFilter');
+        const sizeFilter=document.getElementById('sizeFilter');
+        const brandFilter=document.getElementById('brandFilter');
+        const priceRange=document.getElementById('priceRange');
+        const priceValue=document.getElementById('priceValue');
+
+        // ===================== CARRITO =====================
+        const cartOffcanvasEl=document.getElementById('cartOffcanvas');
+        const cartOffcanvas=new bootstrap.Offcanvas(cartOffcanvasEl);
+        const cartItemsContainer=document.getElementById('cartItems');
+        const cartTotalEl=document.getElementById('cartTotal');
+        const cartBadge=document.querySelector('.cart-badge');
+
+        let cart=JSON.parse(localStorage.getItem('cart')||'[]');
+
+        function formatPrice(p){return new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(p);}
+
+        function saveCart(){localStorage.setItem('cart',JSON.stringify(cart));}
+
+        function updateBadge(){const t=cart.reduce((s,i)=>s+i.quantity,0);cartBadge.textContent=t;cartBadge.style.display=t?'block':'none';}
+
+        function renderCart(){cartItemsContainer.innerHTML='';let total=0;if(cart.length===0){cartItemsContainer.innerHTML='<p class="text-center text-muted">Tu carrito está vacío</p>';}
+            else{cart.forEach((item,idx)=>{const itemTot=item.price*item.quantity;total+=itemTot;cartItemsContainer.innerHTML+=`<div class="d-flex justify-content-between align-items-start mb-3"><div><strong>${item.name}</strong><br><small>${formatPrice(item.price)} x ${item.quantity}</small></div><div><small class="d-block mb-1 fw-bold">${formatPrice(itemTot)}</small><button class="btn btn-sm btn-outline-danger remove-item" data-index="${idx}"><i class="fas fa-trash"></i></button></div></div>`;});}
+            cartTotalEl.textContent=formatPrice(total);updateBadge();}
+
+        cartItemsContainer.addEventListener('click',e=>{const btn=e.target.closest('.remove-item');if(btn){const idx=parseInt(btn.dataset.index);cart.splice(idx,1);saveCart();renderCart();}});
+
+        function render(){
+            listEl.innerHTML='';
+            const maxPrice=+priceRange.value;
+            priceValue.textContent=`$${maxPrice}`;
+            const filtered=bikes.filter(b=>(!typeFilter.value||b.type===typeFilter.value)&&(!sizeFilter.value||b.size===sizeFilter.value)&&(!brandFilter.value||b.brand===brandFilter.value)&&b.price<=maxPrice);
+            filtered.forEach(b=>{
+                const originalPrice=b.discount?Math.round(b.price/(1-(b.discount/100))):null;
+                const col=document.createElement('div');col.className='col-md-6 col-lg-4';
+                col.innerHTML=`<div class="bike-card h-100 d-flex flex-column"><img src="${b.img}" class="bike-image" alt="${b.name}">${b.discount?`<span class='discount-badge'>-${b.discount}%</span>`:''}<div class="brand-name">${b.brand}</div><h5 class="mb-2">${b.name}</h5><p class="mb-2">${originalPrice?`<span class='old-price'>$${originalPrice}</span>`:''}<span class="price">$${b.price}</span></p><div class="mt-auto"><button class="btn btn-buy w-100" data-id="${b.id}">Agregar al carrito</button></div></div>`;
+                listEl.appendChild(col);
+            });
+            updateRangeStyle();
+        }
+        typeFilter.onchange=sizeFilter.onchange=brandFilter.onchange=priceRange.oninput=render;
+        priceRange.addEventListener('input',updateRangeStyle);
+        render();
+
+        let currentBike=null;
+        // Abrir modal para cantidad
+        listEl.addEventListener('click',e=>{
+            const btn=e.target.closest('.btn-buy');
+            if(!btn)return;
+            currentBike=bikes.find(b=>b.id==btn.dataset.id);
+            document.getElementById('bikeId').value=currentBike.id;
+            document.getElementById('quantity').value=1;
+            new bootstrap.Modal(document.getElementById('rentModal')).show();
+        });
+
+        // Añadir al carrito
+        document.getElementById('rentForm').addEventListener('submit',e=>{
+            e.preventDefault();
+            const qty=parseInt(document.getElementById('quantity').value);
+            const existing=cart.find(i=>i.id===currentBike.id);
+            if(existing) existing.quantity+=qty; else cart.push({id:currentBike.id,name:currentBike.name,price:currentBike.price,quantity:qty});
+            saveCart();renderCart();updateBadge();
+            bootstrap.Modal.getInstance(document.getElementById('rentModal')).hide();
+            cartOffcanvas.show();
+        });
+
+        // Inicializar badge y carrito
+        renderCart();
+
+        function updateRangeStyle(){
+            const percent=(priceRange.value-priceRange.min)/(priceRange.max-priceRange.min)*100;
+            priceRange.style.setProperty('--value',percent+'%');
+        }
+
+        updateRangeStyle();
+
+        // Cerrar offcanvas al ir a pagar
+        document.getElementById('checkoutBtn').addEventListener('click',()=>{
+            cartOffcanvas.hide();
+        });
+    </script>
 </body>
 </html>
-<table class="table table-bordered mt-4">
-  <tbody>
-    <tr>
-      <td>2 horas (mínimo)</td>
-      <td>$ 6.000</td>
-    </tr>
-    <tr>
-      <td>3 horas</td>
-      <td>$ 8.000</td>
-    </tr>
-    <tr>
-      <td>4 horas</td>
-      <td>$ 10.000</td>
-    </tr>
-    <tr>
-      <td>5 horas</td>
-      <td>$ 12.000</td>
-    </tr>
-    <tr>
-      <td>6 horas</td>
-      <td>$ 14.000</td>
-    </tr>
-    <tr>
-      <td>7 horas</td>
-      <td>$ 16.000</td>
-    </tr>
-    <tr>
-      <td>8 horas</td>
-      <td>$ 18.000</td>
-    </tr>
-    <tr>
-      <td>9 horas</td>
-      <td>$ 20.000</td>
-    </tr>
-    <tr>
-      <td>10 horas</td>
-      <td>$ 22.000</td>
-    </tr>
-    <tr>
-      <td>24 horas</td>
-      <td>$ 24.000</td>
-    </tr>
-  </tbody>
-</table>
