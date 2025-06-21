@@ -28,4 +28,7 @@ public class Componente {
 
     private String talla;             // Ajustar a talla del cliente. Solo para marco
     private String descripcion;       // Detalle en interfaz
+
+    @Column(name="precio_unitario")
+    private Double precioUnitario;
 }

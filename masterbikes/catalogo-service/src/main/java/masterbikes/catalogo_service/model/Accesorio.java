@@ -18,5 +18,10 @@ public class Accesorio {
     private String marca;
     private String descripcion;
     private String talla;
+
+    @Column(name="tipo_uso")
     private String tipoUso;         // "Montaña", "Ruta", etc.
+
+    @Column(name="precio_unitario")
+    private Double precioUnitario;
 }

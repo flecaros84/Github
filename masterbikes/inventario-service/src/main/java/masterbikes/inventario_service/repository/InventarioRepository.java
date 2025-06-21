@@ -9,4 +9,6 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
 
     /** Devuelve todos los inventarios de una sucursal dada */
     List<Inventario> findBySucursalId(Long sucursalId);
+
+    List<Inventario> findByProductoIdAndSucursalId(Long productoId, Long sucursalId);
 }
