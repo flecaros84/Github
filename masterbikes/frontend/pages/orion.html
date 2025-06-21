@@ -423,16 +423,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Inicio</a>
+                        <a class="nav-link" href="../index.html">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Bicicletas</a>
+                        <a class="nav-link" href="#">Catálogo</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Accesorios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="formulario.html">Contacto</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
@@ -440,7 +440,7 @@
                         <i class="fas fa-shopping-cart"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">0</span>
                     </button>
-                    <a href="#" class="btn btn-outline-primary">Iniciar Sesión</a>
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>
                 </div>
             </div>
         </div>
@@ -461,7 +461,7 @@
                 <strong>Total</strong>
                 <span id="cartTotal">$0</span>
             </div>
-            <button class="btn btn-success w-100">Proceder al pago</button>
+            <a href="pago.html" class="btn btn-success w-100" id="checkoutBtn">Proceder al pago</a>
         </div>
     </div>
 
@@ -490,6 +490,31 @@
         </div>
     </div>
 
+    <!-- Modal de Iniciar Sesión -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contenido principal -->
     <div class="container mt-5">
         <!-- Breadcrumbs -->
@@ -505,11 +530,6 @@
         </div>
 
         <div class="row">
-            <!-- Botón para cambiar color -->
-            <div class="col-12 mb-3">
-                <button id="toggleColorBtn" class="btn btn-danger">Ver color Rojo</button>
-            </div>
-
             <!-- Galería de imágenes -->
             <div class="col-md-6">
                 <div class="oxford-container">
@@ -599,7 +619,7 @@
                         <select class="form-select" id="storeSelect" required>
                             <option value="" selected hidden>Seleccione una tienda</option>
                             <option value="santiago">Santiago</option>
-                            <option value="concepcion">Concepción</option>
+                            <option value="lascondes">Las Condes</option>
                         </select>
                     </div>
 
@@ -843,8 +863,8 @@
     <!-- Datos iniciales para scripts -->
     <script>
         window.stockByStoreAndSize = {
-            'M': { 'santiago': 10, 'concepcion': 7 },
-            'L': { 'santiago': 8,  'concepcion': 6 }
+            'M': { 'santiago': 10, 'lascondes': 7 },
+            'L': { 'santiago': 8,  'lascondes': 6 }
         };
     </script>
 
@@ -876,6 +896,17 @@
         sectionIds.forEach(id => {
             const el = document.querySelector(id);
             if (el) observer.observe(el);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded',()=>{
+            const btn=document.getElementById('checkoutBtn');
+            const offcanvasEl=document.getElementById('cartOffcanvas');
+            if(btn && offcanvasEl){
+                const offcanvas=bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+                btn.addEventListener('click',()=>offcanvas.hide());
+            }
         });
     </script>
 </body>
