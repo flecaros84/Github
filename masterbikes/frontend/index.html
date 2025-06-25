@@ -3,41 +3,493 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterBikes - Sistema de Gestión</title>
+    <title>MasterBikes - Tu tienda de bicicletas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <!-- reCAPTCHA script -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- Session management script -->
     <script src="js/session.js"></script>
+    <!-- Cart script -->
+    <script src="js/cart.js" defer></script>
     <!-- Add custom navbar styles -->
     <style>
-        /* Custom Navbar styles copied from Orion page */
-        .custom-navbar {
-            background-color: #0066cc !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        /* Futuristic theme styles - Optimized for professional look */
+        :root {
+            --primary-color: #0b132b;
+            --secondary-color: #3a86ff;
+            --accent-color: #3a86ff;
+            --success-color: #38b000;
+            --light-gray: #f8f9fa;
+            --dark-gray: #1c2541;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --border-radius: 8px;
         }
-        .custom-navbar .navbar-brand {
-            color: white !important;
-            font-weight: bold;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .custom-navbar .nav-link {
-            color: white !important;
+        
+        .navbar {
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 12px 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .navbar-light .navbar-nav .nav-link {
+            color: var(--primary-color);
             font-weight: 500;
-            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
         }
-        .custom-navbar .nav-link:hover {
-            color: #e0e0e0 !important;
+        
+        .navbar-light .navbar-nav .nav-link:hover,
+        .navbar-light .navbar-nav .nav-link.active {
+            color: var(--secondary-color);
         }
-        .custom-navbar .btn-outline-primary {
-            color: white !important;
-            border-color: white !important;
+        
+        .top-bar {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            text-align: center;
         }
-        .custom-navbar .btn-outline-primary:hover {
-            background-color: #004c99 !important;
-            color: white !important;
+        
+        .contact-link {
+            color: #8dd0ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .contact-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        
+        /* Swiper styles - REDUCED HEIGHT */
+        .swiper {
+            height: 400px; /* Reduced height */
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .swiper-slide {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .swiper-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(11, 19, 43, 0.7), rgba(28, 37, 65, 0.3));
+            z-index: 1;
+        }
+        
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slider-caption {
+            position: absolute;
+            bottom: 15%;
+            left: 5%;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            z-index: 2;
+            background: rgba(0,0,0,0.5);
+            padding: 1.2rem 1.5rem;
+            border-radius: var(--border-radius);
+        }
+        
+        .slider-caption h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .slider-caption p {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .slider-caption .btn {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 4px;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-caption .btn:hover {
+            background: #2a75e8;
+            transform: translateY(-2px);
+        }
+        
+        /* Swiper navigation and pagination */
+        .swiper-button-next, .swiper-button-prev {
+            color: white;
+            background: rgba(0, 0, 0, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .swiper-button-next:hover, .swiper-button-prev:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .swiper-button-next::after, .swiper-button-prev::after {
+            font-size: 1.2rem;
+        }
+        
+        .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 1;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: white;
+        }
+        
+        /* Services section */
+        #servicios {
+            padding: 60px 0;
+            background-color: #ffffff;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+        
+        .service-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            height: 100%;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .service-card .card-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .service-card .card-text {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-card .btn-outline-primary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .service-card .btn-outline-primary:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Stores section */
+        .stores-section {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .store-card {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: white;
+            height: 100%;
+        }
+        
+        .store-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .store-img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .store-info {
+            padding: 20px;
+        }
+        
+        .store-name {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .store-description {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        
+        /* Cart offcanvas */
+        #cartOffcanvas .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        #cartOffcanvas .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        
+        .cart-item-details h6 {
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .cart-item-details .text-muted {
+            font-size: 0.85rem;
+        }
+        
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .cart-item-remove {
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        
+        #checkout-btn {
+            background: linear-gradient(145deg, var(--accent-color), #2980b9);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        #checkout-btn:hover {
+            background: linear-gradient(145deg, #2980b9, #1f5f8b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .swiper {
+                height: 300px;
+            }
+            
+            .slider-caption {
+                bottom: 10%;
+                left: 5%;
+                max-width: 80%;
+            }
+            
+            .slider-caption h2 {
+                font-size: 1.8rem;
+            }
+            
+            .slider-caption p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .swiper {
+                height: 250px;
+            }
+            
+            .slider-caption {
+                padding: 1rem 1.5rem;
+            }
+            
+            .slider-caption h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Additional styles for services section */
+        .service-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        
+        /* Additional styles for stores section */
+        .store-card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .store-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .store-img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        /* Estilos para la navbar oscura */
+        .navbar.navbar-dark.bg-dark {
+            background-color: #212529 !important; /* Color de fondo oscuro estándar de Bootstrap */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .navbar-dark .navbar-brand {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover,
+        .navbar-dark .navbar-nav .nav-link.active {
+            color: #3a86ff; /* Color secundario para resaltar */
+        }
+
+        /* Estilos para el dropdown en navbar oscura */
+        .navbar-dark .dropdown-menu {
+            background-color: #343a40;
+            border: 1px solid #495057;
+        }
+
+        .navbar-dark .dropdown-item {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .navbar-dark .dropdown-item:hover, 
+        .navbar-dark .dropdown-item:focus {
+            background-color: #495057;
+            color: #ffffff;
+        }
+
+        /* Estilos para los botones en la navbar */
+        .navbar-dark .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .navbar-dark .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-dark .btn-primary {
+            background-color: #3a86ff;
+            border-color: #3a86ff;
+        }
+
+        .navbar-dark .btn-primary:hover {
+            background-color: #2a75e8;
+            border-color: #2a75e8;
         }
     </style>
 </head>
@@ -48,133 +500,199 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="img/logo.png" alt="MasterBikes Logo" height="30" class="d-inline-block align-top me-2">
+                <img src="images/logo.png" alt="MasterBikes" height="30" class="d-inline-block align-text-top me-2">
                 MasterBikes
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="index.html">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/arriendo.html">Arriendo</a>
+                        <a class="nav-link" href="pages/arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/catalogo.html">Catálogo</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="pages/personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Bicicletas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="pages/orion.html">Orion</a></li>
+                            <li><a class="dropdown-item" href="pages/merak1.html">Merak 1</a></li>
+                            <li><a class="dropdown-item" href="pages/polux7.html">Polux 7</a></li>
+                            <li><a class="dropdown-item" href="pages/Aura6.html">Aura 6</a></li>
+                            <li><a class="dropdown-item" href="pages/halley.html">Halley</a></li>
+                            <li><a class="dropdown-item" href="pages/luna20.html">Luna 20</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="pages/formulario.html">Contacto</a>
                     </li>
                 </ul>
-                <div class="d-flex">
-                    <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        Iniciar Sesión
-                    </button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#registroModal">
-                        Registrarse
-                    </button>
-                    <button class="btn btn-outline-light ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-                        <i class="bi bi-cart"></i>
-                        <span class="badge bg-danger cart-counter">0</span>
-                    </button>
-                </div>
+                <ul class="navbar-nav align-items-center">
+                    <!-- Cart button -->
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart"></i> Carrito
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
+                        </button>
+                    </li>
+                    <!-- Login/Register buttons -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person"></i> Iniciar Sesión
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </button>
+                    </li>
+                    <!-- User menu (hidden by default) -->
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span class="user-name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="pages/arriendo.html"><i class="bi bi-bicycle"></i> Mis Arriendos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Swiper Hero Section -->
-    <div class="swiper position-relative">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide position-relative">
-                <img src="images/doble.webp" alt="Bicicletas Dobles">
-                <div class="slider-caption">
-                    <h2>Serie UNO X</h2>
-                    <p>Nueva Oxford Orion 5<br>Precio lanzamiento $549.990</p>
-                    <a href="#" class="btn">VER MÁS</a>
-                </div>
-            </div>
-            <div class="swiper-slide position-relative">
-                <img src="images/fox.webp" alt="Tecnología Fox">
-                <div class="slider-caption">
-                    <h2>Suspensión Fox</h2>
-                    <p>La mejor tecnología para tu aventura</p>
-                    <a href="#" class="btn">VER MÁS</a>
-                </div>
-            </div>
-            <div class="swiper-slide position-relative">
-                <img src="images/marin.webp" alt="Bicicletas Marin">
-                <div class="slider-caption">
-                    <h2>Marin Bikes</h2>
-                    <p>Explora la nueva colección</p>
-                    <a href="#" class="btn">VER MÁS</a>
-                </div>
-            </div>
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
+        <div class="offcanvas-body" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+            <p class="text-center text-muted" id="cart-empty-msg">Tu carrito está vacío.</p>
+        </div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pages/pago.html" class="btn btn-primary w-100" id="checkout-btn">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Proceder al Pago
+            </a>
+        </div>
     </div>
-<!-- Sección de Servicios -->
-<section id="servicios" class="py-5 bg-light">
-  <div class="container">
-    <h2 class="text-center mb-5 fw-bold">Nuestros Servicios</h2>
-    <div class="row g-4">
-      <!-- Arriendo -->
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body text-center">
-            <i class="fa-solid fa-bicycle fa-3x text-primary mb-3"></i>
-            <h3 class="card-title">Arriendo de Bicicletas</h3>
-            <p class="card-text">Explora la ciudad o la montaña con nuestra moderna flota. Planes diarios, semanales y mensuales a precios accesibles.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Venta -->
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body text-center">
-            <i class="fa-solid fa-cart-shopping fa-3x text-primary mb-3"></i>
-            <h3 class="card-title">Venta de Bicicletas y Accesorios</h3>
-            <p class="card-text">Encuentra la bicicleta ideal y complementa tu equipamiento con cascos, luces y repuestos de las mejores marcas.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Reparación -->
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body text-center">
-            <i class="fa-solid fa-screwdriver-wrench fa-3x text-primary mb-3"></i>
-            <h3 class="card-title">Servicio de Reparación</h3>
-            <p class="card-text">Taller certificado Shimano. Mantenimiento preventivo y reparaciones completas para que tu bici siempre rinda al máximo.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-    <!-- Sección de Ciudades -->
-    <section class="cities-section">
-        <div class="container">
-            <h2 class="explore-title">Nuestras Tiendas</h2>
-            <div class="cities-grid">
-                <div class="city-card">
-                    <img src="images/Santiago.jpg" alt="Santiago" class="city-image">
-                    <div class="city-info">
-                        <h3 class="city-name">Santiago</h3>
-                        <p class="city-description">Capital vibrante con múltiples rutas ciclistas</p>
+
+    <!-- Swiper Hero Section - TAMAÑO REDUCIDO -->
+    <div class="container mt-4">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide position-relative">
+                    <img src="images/doble.webp" alt="Bicicletas Dobles">
+                    <div class="slider-caption">
+                        <h2>Serie UNO X</h2>
+                        <p>Nueva Oxford Orion 5<br>Precio lanzamiento $549.990</p>
+                        <a href="#" class="btn">VER MÁS</a>
                     </div>
                 </div>
-                <div class="city-card">
-                    <img src="images/Santiago.jpg" alt="Las Condes" class="city-image">
-                    <div class="city-info">
-                        <h3 class="city-name">Las Condes</h3>
-                        <p class="city-description">Comuna moderna con ciclovías y parques urbanos</p>
+                <div class="swiper-slide position-relative">
+                    <img src="images/fox.webp" alt="Tecnología Fox">
+                    <div class="slider-caption">
+                        <h2>Suspensión Fox</h2>
+                        <p>La mejor tecnología para tu aventura</p>
+                        <a href="#" class="btn">VER MÁS</a>
+                    </div>
+                </div>
+                <div class="swiper-slide position-relative">
+                    <img src="images/marin.webp" alt="Bicicletas Marin">
+                    <div class="slider-caption">
+                        <h2>Marin Bikes</h2>
+                        <p>Explora la nueva colección</p>
+                        <a href="#" class="btn">VER MÁS</a>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+
+    <!-- Sección de Servicios -->
+    <section id="servicios" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <div class="row g-4">
+                <!-- Arriendo -->
+                <div class="col-md-4">
+                    <div class="card service-card h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fa-solid fa-bicycle service-icon"></i>
+                            <h3 class="card-title h4">Arriendo de Bicicletas</h3>
+                            <p class="card-text">Explora la ciudad o la montaña con nuestra moderna flota. Planes diarios, semanales y mensuales a precios accesibles.</p>
+                            <a href="pages/arriendo.html" class="btn btn-outline-primary mt-3">Ver opciones</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Venta -->
+                <div class="col-md-4">
+                    <div class="card service-card h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fa-solid fa-cart-shopping service-icon"></i>
+                            <h3 class="card-title h4">Venta de Bicicletas</h3>
+                            <p class="card-text">Encuentra la bicicleta ideal y complementa tu equipamiento con cascos, luces y repuestos de las mejores marcas.</p>
+                            <a href="pages/catalogo.html" class="btn btn-outline-primary mt-3">Ver catálogo</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Reparación -->
+                <div class="col-md-4">
+                    <div class="card service-card h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fa-solid fa-wrench service-icon"></i>
+                            <h3 class="card-title h4">Servicio de Reparación</h3>
+                            <p class="card-text">Taller certificado Shimano. Mantenimiento preventivo y reparaciones completas para que tu bici siempre rinda al máximo.</p>
+                            <a href="#" class="btn btn-outline-primary mt-3">Más información</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Tiendas -->
+    <section class="stores-section">
+        <div class="container">
+            <h2 class="section-title">Nuestras Tiendas</h2>
+            <div class="cities-grid">
+                <div class="city-card store-card">
+                    <img src="images/Santiago.jpg" alt="Santiago" class="city-image store-img">
+                    <div class="store-info">
+                        <h3 class="store-name">Santiago</h3>
+                        <p class="store-description">Capital vibrante con múltiples rutas ciclistas</p>
+                    </div>
+                </div>
+                <div class="city-card store-card">
+                    <img src="images/Santiago.jpg" alt="Las Condes" class="city-image store-img">
+                    <div class="store-info">
+                        <h3 class="store-name">Las Condes</h3>
+                        <p class="store-description">Comuna moderna con ciclovías y parques urbanos</p>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SucursalServiceApplication<sucursal-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "masterbikes.sucursal_service.SucursalServiceApplication",
+            "projectName": "sucursal-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
