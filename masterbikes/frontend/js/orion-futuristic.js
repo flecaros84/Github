@@ -171,15 +171,19 @@ function initScrollAnimations() {
 /**
  * Inicializa la funcionalidad de control de stock
  */
-function initStockControl() {
-    // Configuración de stock por tienda
-    const storeStock = {
-        santiago: 7,
-        concepcion: 5
-    };
+async function initStockControl() {
+    // Obtener stock desde el servicio de inventario
+    async function getStockInfo(productId) {
+        try {
+            return await API.getStockBicicleta(productId);
+        } catch (error) {
+            console.error('Error obteniendo stock:', error);
+            return null;
+        }
+    }
 
     // Función para actualizar la información de stock
-    function updateStockInfo() {
+    async function updateStockInfo() {
         const storeSelect = document.getElementById('storeSelect');
         const stockInfo = document.getElementById('stockInfo');
         const stockAmount = document.getElementById('stockAmount');
@@ -190,21 +194,29 @@ function initStockControl() {
         
         if (storeSelect.value) {
             const selectedStore = storeSelect.value;
-            const availableStock = storeStock[selectedStore];
-            const storeName = selectedStore.charAt(0).toUpperCase() + selectedStore.slice(1);
+            const productId = document.querySelector('[data-product-id]')?.dataset.productId;
             
-            stockAmount.innerHTML = `<i class="bi bi-check-circle-fill text-success me-1"></i>Stock disponible en ${storeName}: <strong>${availableStock} unidades</strong>`;
-            stockInfo.classList.remove('d-none');
+            if (productId) {
+                const stockData = await getStockInfo(productId);
+                if (stockData) {
+                    const availableStock = stockData.sucursales[selectedStore] || 0;
+                    const storeName = selectedStore.charAt(0).toUpperCase() + selectedStore.slice(1);
+                    
+                    stockAmount.innerHTML = `<i class="bi bi-check-circle-fill text-success me-1"></i>Stock disponible en ${storeName}: <strong>${availableStock} unidades</strong>`;
+                    stockInfo.classList.remove('d-none');
+                }
+            }
         } else {
             stockInfo.classList.add('d-none');
         }
     }
 
     // Función para actualizar la cantidad
-    function updateQuantity(change) {
+    async function updateQuantity(change) {
         const quantityInput = document.getElementById('quantityInput');
         const storeSelect = document.getElementById('storeSelect');
         const stockError = document.getElementById('stockError');
+        const productId = document.querySelector('[data-product-id]')?.dataset.productId;
         
         let currentQuantity = parseInt(quantityInput.value) || 1;
         let newQuantity = currentQuantity + change;
@@ -213,140 +225,53 @@ function initStockControl() {
         if (newQuantity < 1) newQuantity = 1;
         
         // Verificar stock si hay una tienda seleccionada
-        if (storeSelect.value) {
-            const availableStock = storeStock[storeSelect.value];
-            
-            // Mostrar error si la cantidad excede el stock
-            if (newQuantity > availableStock) {
-                stockError.classList.remove('d-none');
-                newQuantity = availableStock; // Limitar a stock disponible
-            } else {
-                stockError.classList.add('d-none');
+        if (storeSelect.value && productId) {
+            const stockData = await getStockInfo(productId);
+            if (stockData) {
+                const availableStock = stockData.sucursales[storeSelect.value] || 0;
+                
+                // Mostrar error si la cantidad excede el stock
+                if (newQuantity > availableStock) {
+                    stockError.classList.remove('d-none');
+                    newQuantity = availableStock; // Limitar a stock disponible
+                } else {
+                    stockError.classList.add('d-none');
+                }
             }
         }
         
         quantityInput.value = newQuantity;
     }
 
-    // Exponer la función updateQuantity globalmente para que pueda ser llamada desde HTML
+    // Exponer funciones globalmente
     window.updateQuantity = updateQuantity;
-    
-    // Exponer la función updateStockInfo globalmente para que pueda ser llamada desde HTML
     window.updateStockInfo = updateStockInfo;
 
-    // Función para agregar al carrito
-    function handleAddToCart() {
-        const storeSelect = document.getElementById('storeSelect');
-        const stockError = document.getElementById('stockError');
-        const quantityInput = document.getElementById('quantityInput');
-        const tallaSelect = document.getElementById('tallaSelect');
-        if (!storeSelect || !tallaSelect) return;
+    // Inicializar eventos
+    const storeSelect = document.getElementById('storeSelect');
+    if (storeSelect) {
+        storeSelect.addEventListener('change', updateStockInfo);
+    }
 
-        // Requisitos: tienda y talla seleccionadas
-        if (!storeSelect.value || !tallaSelect.value) return;
-
-        const selectedStore = storeSelect.value;
-        const productSize = tallaSelect.value;
-        const availableStock = storeStock[selectedStore];
-        const requestedQuantity = parseInt(quantityInput.value) || 1;
-
-        if (requestedQuantity > availableStock) {
-            stockError.classList.remove('d-none');
-            return;
-        }
-
-        const productNameElement = document.querySelector('h1.h2');
-        const productPriceElement = document.querySelector('.price-final');
-        const productSkuElement = document.querySelector('.product-sku');
-        const productName = productNameElement ? productNameElement.textContent.trim() : 'Producto';
-        const productPriceText = productPriceElement ? productPriceElement.textContent.replace(/CLP\$/g, '').replace(/\./g, '').trim() : '0';
-        const productPrice = parseFloat(productPriceText);
-        const productSKU = productSkuElement ? productSkuElement.textContent.replace('SKU: ', '').trim() : 'SKU_GEN';
-
-        const product = {
-            id: productSKU,
-            name: productName,
-            price: productPrice,
-            size: productSize,
-            quantity: requestedQuantity,
-            store: selectedStore,
-            image: document.querySelector('.carousel-item.active img') ? document.querySelector('.carousel-item.active img').src : ''
-        };
-
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        const existingIndex = cart.findIndex(it => it.id === product.id && it.size === product.size && it.store === product.store);
-        if (existingIndex > -1) {
-            const newQty = cart[existingIndex].quantity + product.quantity;
-            if (newQty > availableStock) {
-                stockError.textContent = `No se puede exceder stock (${availableStock}).`;
-                stockError.classList.remove('d-none');
-                return;
+    // Cargar sucursales
+    async function loadSucursales() {
+        try {
+            const sucursales = await API.getSucursales();
+            if (storeSelect && sucursales) {
+                storeSelect.innerHTML = '<option value="">Seleccione una tienda</option>';
+                sucursales.forEach(sucursal => {
+                    const option = document.createElement('option');
+                    option.value = sucursal.nombre.toLowerCase();
+                    option.textContent = sucursal.nombre;
+                    storeSelect.appendChild(option);
+                });
             }
-            cart[existingIndex].quantity = newQty;
-        } else {
-            // Insertar al inicio para que aparezca arriba
-            cart.unshift(product);
+        } catch (error) {
+            console.error('Error cargando sucursales:', error);
         }
-
-        // Simular reducción de stock local
-        storeStock[selectedStore] -= product.quantity;
-        updateStockInfo();
-        localStorage.setItem('cart', JSON.stringify(cart));
-        renderCartInOffcanvas();
-        cartOffcanvas.show();
-        // Scroll al inicio
-        const offBody = document.querySelector('#cartOffcanvas .offcanvas-body');
-        if (offBody) offBody.scrollTop = 0;
-        quantityInput.value = 1;
     }
 
-    // Renderizar carrito en offcanvas
-    function renderCartInOffcanvas() {
-        const cartItemsContainer = document.getElementById('cartItems');
-        const cartTotalElement = document.getElementById('cartTotal');
-        const cartBadge = document.querySelector('.cart-badge');
-        if (!cartItemsContainer || !cartTotalElement || !cartBadge) return;
-
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cartBadge.textContent = cart.reduce((t, it) => t + it.quantity, 0);
-
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p class="text-center my-5">Tu carrito está vacío</p>';
-            cartTotalElement.textContent = '$0';
-            return;
-        }
-
-        let total = 0;
-        let html = '';
-        cart.forEach((item, idx) => {
-            const itemTotal = item.price * item.quantity;
-            total += itemTotal;
-            html += `
-            <div class="cart-item">
-                <div class="d-flex">
-                    <img src="${item.image}" class="cart-item-img me-3" alt="${item.name}">
-                    <div class="flex-grow-1">
-                        <h6 class="mb-0">${item.name}</h6>
-                        <p class="text-muted mb-1">Talla: ${item.size}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span>$${item.price.toLocaleString('es-CL')} x ${item.quantity}</span>
-                            <button class="btn btn-sm btn-outline-danger remove-item" data-index="${idx}"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        });
-        cartItemsContainer.innerHTML = html;
-        cartTotalElement.textContent = '$' + total.toLocaleString('es-CL');
-    }
-
-    // Eventos
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    if (addToCartBtn) addToCartBtn.addEventListener('click', handleAddToCart);
-
-    const storeSelectElem = document.getElementById('storeSelect');
-    if (storeSelectElem) storeSelectElem.addEventListener('change', handleAddToCart);
+    await loadSucursales();
 }
 
 /**
