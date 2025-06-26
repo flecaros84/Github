@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <style>
+        .contact-section {
+            padding: 80px 0;
+        }
+        .contact-info-card {
+            height: 100%;
+            transition: transform 0.3s;
+        }
+        .contact-info-card:hover {
+            transform: translateY(-5px);
+        }
+        .contact-icon {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+        .map-container {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .form-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+        }
+        .service-type-btn {
+            border: 2px solid #dee2e6;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        .service-type-btn:hover {
+            border-color: #0d6efd;
+        }
+        .service-type-btn.active {
+            border-color: #0d6efd;
+            background-color: #e7f1ff;
+        }
+        .service-type-btn i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #0d6efd;
+        }
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .location-tabs .nav-link {
+            padding: 10px 15px;
+            border-radius: 0;
+            border: 1px solid #dee2e6;
+            margin-right: 5px;
+            color: #495057;
+        }
+        .location-tabs .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+        .store-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .store-info h4 {
+            color: #0d6efd;
+            margin-bottom: 10px;
+        }
+        .store-info p {
+            margin-bottom: 5px;
+        }
+        .store-info .badge {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra superior de contacto -->
+    <div class="top-bar">
+        ¿Dudas? Llámanos al <b>+56232149673</b> | L-V: 8:30 a 18:15 - V: 8:30 a 16:00 | <a href="formulario.html" class="contact-link">Formulario de contacto</a>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../img/logo.png" alt="MasterBikes Logo" height="30" class="d-inline-block align-top me-2">
+                MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="arriendo.html">Arriendo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contacto.html">Contacto</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Iniciar Sesión
+                    </button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#registroModal">
+                        Registrarse
+                    </button>
+                    <button class="btn btn-outline-light ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                        <i class="bi bi-cart"></i>
+                        <span class="badge bg-danger cart-counter">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Contáctanos</h1>
+                    <p class="lead mb-4">Estamos aquí para ayudarte con cualquier consulta, solicitud de reparación o información que necesites sobre nuestros productos y servicios.</p>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-telephone-fill me-2 text-white"></i>
+                        <span class="fs-5">+56 2 3214 9673</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="../images/contact-hero.jpg" alt="Servicio al cliente MasterBikes" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Info Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card contact-info-card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="contact-icon">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <h3 class="h5">Visítanos</h3>
+                            <p class="mb-0">Av. Providencia 1208, Santiago</p>
+                            <p class="mb-0">Av. Las Condes 12340, Las Condes</p>
+                            <p class="mb-0">Lunes a Viernes: 9:00 - 19:00</p>
+                            <p>Sábados: 10:00 - 14:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card contact-info-card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="contact-icon">
+                                <i class="bi bi-telephone-fill"></i>
+                            </div>
+                            <h3 class="h5">Llámanos</h3>
+                            <p class="mb-0">Ventas: +56 2 3214 9673</p>
+                            <p class="mb-0">Servicio Técnico: +56 2 3214 9674</p>
+                            <p class="mb-0">Arriendo: +56 2 3214 9675</p>
+                            <p>WhatsApp: +56 9 5432 1098</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card contact-info-card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="contact-icon">
+                                <i class="bi bi-envelope-fill"></i>
+                            </div>
+                            <h3 class="h5">Escríbenos</h3>
+                            <p class="mb-0">Ventas: ventas@masterbikes.cl</p>
+                            <p class="mb-0">Soporte: soporte@masterbikes.cl</p>
+                            <p class="mb-0">Reparaciones: taller@masterbikes.cl</p>
+                            <p>Arriendo: arriendo@masterbikes.cl</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form Section -->
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="form-section shadow-sm">
+                        <h2 class="mb-4">Envíanos un mensaje</h2>
+                        <p class="text-muted mb-4">Completa el formulario y nos pondremos en contacto contigo lo antes posible.</p>
+                        
+                        <!-- Service Type Selection -->
+                        <div class="mb-4">
+                            <label class="form-label">¿En qué podemos ayudarte?</label>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="service-type-btn" data-service="consulta">
+                                        <i class="bi bi-question-circle"></i>
+                                        <p class="mb-0">Consulta</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="service-type-btn" data-service="reparacion">
+                                        <i class="bi bi-tools"></i>
+                                        <p class="mb-0">Reparación</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="service-type-btn" data-service="compra">
+                                        <i class="bi bi-cart"></i>
+                                        <p class="mb-0">Compra</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="service-type-btn" data-service="otro">
+                                        <i class="bi bi-chat-dots"></i>
+                                        <p class="mb-0">Otro</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form id="contactForm">
+                            <input type="hidden" id="serviceType" name="serviceType" value="consulta">
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName" class="form-label">Apellido</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="+56 9 XXXX XXXX">
+                            </div>
+                            
+                            <!-- Campos específicos para reparaciones (se mostrarán/ocultarán según la selección) -->
+                            <div id="repairFields" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="bikeModel" class="form-label">Modelo de bicicleta</label>
+                                    <input type="text" class="form-control" id="bikeModel" name="bikeModel" placeholder="Ej: MasterBikes Orion 5">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="purchaseDate" class="form-label">Fecha aproximada de compra</label>
+                                    <input type="date" class="form-control" id="purchaseDate" name="purchaseDate">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Tipo de servicio requerido</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="serviceTuneUp" name="serviceType[]" value="tune-up">
+                                        <label class="form-check-label" for="serviceTuneUp">Mantenimiento general</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="serviceBrakes" name="serviceType[]" value="brakes">
+                                        <label class="form-check-label" for="serviceBrakes">Reparación de frenos</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="serviceGears" name="serviceType[]" value="gears">
+                                        <label class="form-check-label" for="serviceGears">Ajuste de cambios</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="serviceWheels" name="serviceType[]" value="wheels">
+                                        <label class="form-check-label" for="serviceWheels">Reparación de ruedas</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="serviceOther" name="serviceType[]" value="other">
+                                        <label class="form-check-label" for="serviceOther">Otro (especificar en el mensaje)</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="preferredDate" class="form-label">Fecha preferida para el servicio</label>
+                                    <input type="date" class="form-control" id="preferredDate" name="preferredDate">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Mensaje</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="g-recaptcha" data-sitekey="6LcXXXXXXXXXXXXXXXXXXXXX"></div>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="privacyPolicy" required>
+                                <label class="form-check-label" for="privacyPolicy">
+                                    He leído y acepto la <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">política de privacidad</a>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Enviar mensaje</button>
+                        </form>
+                        
+                        <div class="success-message" id="successMessage">
+                            <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+                            <h4>¡Mensaje enviado con éxito!</h4>
+                            <p>Gracias por contactarnos. Nos pondremos en contacto contigo lo antes posible.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="mb-4">
+                        <h2 class="mb-4">Nuestras ubicaciones</h2>
+                        
+                        <!-- Tabs para seleccionar ubicación -->
+                        <ul class="nav nav-tabs location-tabs mb-3" id="locationTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="casa-matriz-tab" data-bs-toggle="tab" data-bs-target="#casa-matriz" type="button" role="tab" aria-controls="casa-matriz" aria-selected="true">
+                                    <i class="bi bi-building"></i> Casa Matriz
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="sucursal-tab" data-bs-toggle="tab" data-bs-target="#sucursal" type="button" role="tab" aria-controls="sucursal" aria-selected="false">
+                                    <i class="bi bi-shop"></i> Sucursal Las Condes
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Contenido de las tabs -->
+                        <div class="tab-content" id="locationTabsContent">
+                            <!-- Casa Matriz -->
+                            <div class="tab-pane fade show active" id="casa-matriz" role="tabpanel" aria-labelledby="casa-matriz-tab">
+                                <div class="map-container">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3330.2456789012345!2d-70.5800000!3d-33.4000000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf69995fb2a5%3A0x8ccd0035894d19fe!2sAv.%20Pdte.%20Kennedy%20Lateral%208548%2C%207650487%20Vitacura%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1652345678901!5m2!1ses!2scl" 
+                                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                                <div class="store-info">
+                                    <h4>Casa Matriz - Vitacura</h4>
+                                    <span class="badge bg-success mb-2">Abierto ahora</span>
+                                    <p><i class="bi bi-geo-alt-fill me-2"></i>Av. Pdte. Kennedy Lateral 8548, 7650487 Vitacura, Región Metropolitana</p>
+                                    <p><i class="bi bi-telephone-fill me-2"></i>+56 2 3214 9673</p>
+                                    <p><i class="bi bi-clock-fill me-2"></i>Lunes a Viernes: 9:00 - 19:00 | Sábados: 10:00 - 14:00</p>
+                                    <p><i class="bi bi-info-circle-fill me-2"></i>Tienda principal con taller de servicio completo, showroom y centro de pruebas</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Sucursal Las Condes -->
+                            <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
+                                <div class="map-container">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3330.0123456789012!2d-70.5700000!3d-33.4100000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf69995fb2a5%3A0x8ccd0035894d19fe!2sAv.%20Las%20Condes%201293%2C%20Las%20Condes%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1652345678901!5m2!1ses!2scl" 
+                                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                                <div class="store-info">
+                                    <h4>Sucursal Las Condes</h4>
+                                    <span class="badge bg-success mb-2">Abierto ahora</span>
+                                    <p><i class="bi bi-geo-alt-fill me-2"></i>Av. Las Condes 1293, Las Condes, Región Metropolitana</p>
+                                    <p><i class="bi bi-telephone-fill me-2"></i>+56 2 3214 9675</p>
+                                    <p><i class="bi bi-clock-fill me-2"></i>Lunes a Viernes: 9:00 - 19:00 | Sábados: 10:00 - 14:00</p>
+                                    <p><i class="bi bi-info-circle-fill me-2"></i>Tienda especializada en bicicletas de montaña y servicio técnico express</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h3 class="h5 mb-4">Preguntas frecuentes</h3>
+                            
+                            <div class="accordion" id="faqAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            ¿Cuánto tiempo tarda una reparación?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            El tiempo de reparación depende del tipo de servicio. Un mantenimiento básico puede estar listo en 24-48 horas, mientras que reparaciones más complejas pueden tomar hasta una semana. Te informaremos del tiempo estimado cuando recibamos tu bicicleta.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            ¿Ofrecen garantía en las reparaciones?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            Sí, todas nuestras reparaciones tienen una garantía de 30 días. Si experimentas algún problema relacionado con el servicio realizado, trae tu bicicleta y lo solucionaremos sin costo adicional.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            ¿Puedo solicitar un presupuesto antes de la reparación?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            Por supuesto. Realizamos un diagnóstico gratuito y te proporcionamos un presupuesto detallado antes de comenzar cualquier trabajo. Solo procederemos con tu autorización.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Política de Privacidad -->
+    <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="privacyModalLabel">Política de Privacidad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Información que recopilamos</h5>
+                    <p>Recopilamos información personal como tu nombre, dirección de correo electrónico, número de teléfono y detalles sobre tu bicicleta cuando nos contactas a través de nuestro formulario.</p>
+                    
+                    <h5>Cómo utilizamos tu información</h5>
+                    <p>Utilizamos la información proporcionada para:</p>
+                    <ul>
+                        <li>Responder a tus consultas y solicitudes</li>
+                        <li>Procesar y gestionar servicios de reparación</li>
+                        <li>Enviarte información relevante sobre nuestros productos y servicios</li>
+                        <li>Mejorar nuestros servicios y experiencia del cliente</li>
+                    </ul>
+                    
+                    <h5>Protección de datos</h5>
+                    <p>Implementamos medidas de seguridad para proteger</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script para manejar las pestañas de ubicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Actualizar el estado de "Abierto/Cerrado" basado en la hora actual
+            function updateStoreStatus() {
+                const now = new Date();
+                const day = now.getDay(); // 0 = domingo, 1 = lunes, etc.
+                const hour = now.getHours();
+                
+                // Verificar si la tienda está abierta (Lun-Vie: 9-19, Sáb: 10-14)
+                let isOpen = false;
+                if (day >= 1 && day <= 5) { // Lunes a Viernes
+                    isOpen = hour >= 9 && hour < 19;
+                } else if (day === 6) { // Sábado
+                    isOpen = hour >= 10 && hour < 14;
+                }
+                
+                // Actualizar los badges
+                const badges = document.querySelectorAll('.store-info .badge');
+                badges.forEach(badge => {
+                    if (isOpen) {
+                        badge.textContent = 'Abierto ahora';
+                        badge.classList.remove('bg-danger');
+                        badge.classList.add('bg-success');
+                    } else {
+                        badge.textContent = 'Cerrado ahora';
+                        badge.classList.remove('bg-success');
+                        badge.classList.add('bg-danger');
+                    }
+                });
+            }
+            
+            // Actualizar el estado al cargar la página
+            updateStoreStatus();
+            
+            // Actualizar cada minuto
+            setInterval(updateStoreStatus, 60000);
+        });
+    </script>
+</body>
+</html>

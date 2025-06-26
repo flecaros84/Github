@@ -13,7 +13,7 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .navbar {
             background-color: #fff;
@@ -26,14 +26,27 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 2rem;
+            position: relative;
+        }
+        .progress-container::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 0;
         }
         .progress-step {
             flex: 1;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
         .progress-step-number {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background-color: #ccc;
             color: #fff;
@@ -41,29 +54,71 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 0.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #ccc;
         }
         .progress-step.active .progress-step-number {
             background-color: #28a745;
+            box-shadow: 0 0 0 2px #28a745;
+            transform: scale(1.1);
+        }
+        .progress-step.completed .progress-step-number {
+            background-color: #28a745;
+            box-shadow: 0 0 0 2px #28a745;
+        }
+        .progress-step-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6c757d;
+        }
+        .progress-step.active .progress-step-label {
+            color: #28a745;
+            font-weight: 600;
         }
         .form-control {
-            border-radius: 0;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
         }
         .btn-primary {
             background-color: #28a745;
             border-color: #28a745;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
         .btn-primary:hover {
             background-color: #218838;
             border-color: #1e7e34;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
         }
         .card {
             border: none;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
         }
         .summary-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
         }
         .card-type {
             display: none;
@@ -89,47 +144,216 @@
             background-position: right calc(0.375em + 0.1875rem) center;
             background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
+        .section-title {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #28a745;
+        }
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            transition: background-color 0.2s ease;
+        }
+        .cart-item:hover {
+            background-color: #f8f9fa;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .cart-item-details {
+            padding-left: 15px;
+        }
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .cart-item-price {
+            font-weight: 500;
+            color: #28a745;
+        }
+        .cart-item-quantity {
+            width: 60px;
+            text-align: center;
+        }
+        .order-summary-card {
+            position: sticky;
+            top: 20px;
+        }
+        .confirmation-icon {
+            font-size: 5rem;
+            color: #28a745;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        }
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: #212529;
+            display: flex;
+            align-items: center;
+        }
+        .form-section-title i {
+            margin-right: 0.5rem;
+            color: #28a745;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="../index.html">
-                <img src="../img/logo.png" alt="MasterBikes" height="30">
+                <img src="../images/logo.png" alt="MasterBikes" height="40">
+                <span class="ms-2 fw-bold text-success">MasterBikes</span>
             </a>
         </div>
     </nav>
 
     <div class="container my-5">
-        <div class="progress-container">
-            <div class="progress-step active">
+        <div class="progress-container mb-5">
+            <div class="progress-step active" id="step-1">
                 <div class="progress-step-number">1</div>
-                <div>CARRITO</div>
+                <div class="progress-step-label">INFORMACIÓN</div>
             </div>
-            <div class="progress-step">
+            <div class="progress-step" id="step-2">
                 <div class="progress-step-number">2</div>
-                <div>PAGO</div>
+                <div class="progress-step-label">PAGO</div>
             </div>
-            <div class="progress-step">
+            <div class="progress-step" id="step-3">
                 <div class="progress-step-number">3</div>
-                <div>CONFIRMACIÓN</div>
+                <div class="progress-step-label">CONFIRMACIÓN</div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-8">
+                <!-- Sección de información del cliente -->
+                <div id="customer-info-section">
+                    <h2 class="section-title">Información del Cliente</h2>
+                    <form id="customer-info-form" class="needs-validation" novalidate>
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="bi bi-person-circle"></i>
+                                Detalles Personales
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerName" class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" id="customerName" name="customerName" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu nombre completo.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerEmail" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un correo electrónico válido.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerPhone" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="customerPhone" name="customerPhone" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu número de teléfono.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="bi bi-house-door"></i>
+                                Dirección de Envío
+                            </div>
+                            <div class="mb-3">
+                                <label for="addressLine1" class="form-label">Dirección Línea 1</label>
+                                <input type="text" class="form-control" id="addressLine1" name="addressLine1" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu dirección.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addressLine2" class="form-label">Dirección Línea 2 (opcional)</label>
+                                <input type="text" class="form-control" id="addressLine2" name="addressLine2">
+                            </div>
+                            <div class="mb-3">
+                                <label for="city" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu ciudad.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="region" class="form-label">Región</label>
+                                <input type="text" class="form-control" id="region" name="region" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu región.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="postalCode" class="form-label">Código Postal</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu código postal.
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="proceed-to-payment">
+                            Continuar al Pago
+                        </button>
+                    </form>
+                </div>
+
                 <!-- Sección de carrito -->
-                <div id="cart-section">
-                    <h2 class="mb-4">Tu Carrito</h2>
-                    <div id="cart-summary" class="mb-4">
-                        <!-- El contenido del carrito se generará dinámicamente -->
-                    </div>
-                    <button id="proceed-to-payment" class="btn btn-primary">Proceder al Pago</button>
+                <div id="cart-section" style="display: none;">
+                        <!-- Aquí se generan los items del carrito -->
+                    </>
                 </div>
 
                 <!-- Sección de pago -->
                 <div id="payment-section" style="display: none;">
-                    <h2 class="mb-4">Información de Pago</h2>
+                    <h2 class="section-title">Información de Pago</h2>
                     <div class="card mb-4">
                         <div class="card-body">
                             <form id="payment-form" class="needs-validation" novalidate>
@@ -175,6 +399,7 @@
                                         Por favor ingresa un email válido.
                                     </div>
                                 </div>
+                                <input type="hidden" id="admin-email" value="tu_correo@ejemplo.com">
                                 <button type="submit" class="btn btn-primary w-100" id="submit-payment">
                                     Pagar Ahora
                                 </button>
@@ -187,7 +412,7 @@
                 <div id="confirmation-section" style="display: none;">
                     <div class="card">
                         <div class="card-body text-center">
-                            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                            <i class="bi bi-check-circle-fill confirmation-icon"></i>
                             <h2 class="mt-3">¡Pago Completado!</h2>
                             <p class="lead">Tu pedido ha sido procesado correctamente.</p>
                             <p>Hemos enviado un correo electrónico con los detalles de tu compra.</p>
@@ -199,9 +424,9 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card">
+                <div class="card order-summary-card">
                     <div class="card-body">
-                        <h5 class="card-title">Resumen del Pedido</h5>
+                        <h5 class="card-title section-title">Resumen del Pedido</h5>
                         <div id="order-summary" class="mb-3">
                             <!-- Aquí se generan los items del carrito -->
                         </div>
@@ -225,422 +450,9 @@
         </div>
     </div>
 
-    <script>
-        // Configuración de EmailJS
-        (function() {
-            emailjs.init({
-                publicKey: 'dF-ZSyQCC3Jx91Pzh',
-                blockHeadless: true,
-                limitRate: {
-                    throttle: 5000,
-                },
-            });
-        })();
-
-        // Variables globales
-        let cart = [];
-        let total = 0;
-
-        // Formatear precios en CLP
-        function formatPrice(price) {
-            return new Intl.NumberFormat('es-CL', {
-                style: 'currency',
-                currency: 'CLP'
-            }).format(price);
-        }
-
-        // Cargar el carrito desde localStorage
-        function loadCart() {
-            cart = JSON.parse(localStorage.getItem('masterBikesCart') || '[]');
-            total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
-        }
-
-        // Mostrar el resumen del carrito
-        function displayCartSummary() {
-            const cartSummaryContainer = document.getElementById('cart-summary');
-            if (!cartSummaryContainer) return;
-            
-            // Limpiar el contenedor
-            cartSummaryContainer.innerHTML = '';
-            
-            // Verificar si el carrito está vacío
-            if (cart.length === 0) {
-                cartSummaryContainer.innerHTML = `
-                    <div class="alert alert-info">
-                        Tu carrito está vacío. <a href="../index.html" class="alert-link">Volver a la tienda</a>
-                    </div>
-                `;
-                
-                // Deshabilitar el botón de proceder al pago
-                const proceedButton = document.getElementById('proceed-to-payment');
-                if (proceedButton) {
-                    proceedButton.disabled = true;
-                }
-                
-                return;
-            }
-            
-            // Crear tabla de resumen
-            const table = document.createElement('table');
-            table.className = 'table';
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th class="text-end">Precio</th>
-                    </tr>
-                </thead>
-                <tbody id="cart-items">
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">Total</th>
-                        <th class="text-end">${formatPrice(total)}</th>
-                    </tr>
-                </tfoot>
-            `;
-            
-            cartSummaryContainer.appendChild(table);
-            
-            // Agregar los items a la tabla
-            const cartItemsContainer = document.getElementById('cart-items');
-            cart.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <strong>${item.name}</strong>
-                        ${item.isCustom ? `<br><small>Modelo base: ${item.baseModel}</small>` : ''}
-                    </td>
-                    <td>${item.quantity || 1}</td>
-                    <td class="text-end">${formatPrice(item.price * (item.quantity || 1))}</td>
-                `;
-                cartItemsContainer.appendChild(row);
-            });
-        }
-
-        // Actualizar el resumen del pedido
-        function updateOrderSummary() {
-            const orderSummary = document.getElementById('order-summary');
-            const summarySubtotal = document.getElementById('summary-subtotal');
-            const summaryTotal = document.getElementById('summary-total');
-            
-            if (!orderSummary || !summarySubtotal || !summaryTotal) return;
-            
-            // Limpiar el contenedor
-            orderSummary.innerHTML = '';
-            
-            // Agregar cada item al resumen
-            cart.forEach(item => {
-                const itemTotal = item.price * (item.quantity || 1);
-                const itemHtml = `
-                    <div class="summary-item">
-                        <div>
-                            <strong>${item.name}</strong>
-                            <div class="text-muted small">
-                                ${item.quantity || 1} x ${formatPrice(item.price)}
-                            </div>
-                        </div>
-                        <strong>${formatPrice(itemTotal)}</strong>
-                    </div>
-                `;
-                orderSummary.innerHTML += itemHtml;
-            });
-            
-            // Actualizar subtotal y total
-            summarySubtotal.textContent = formatPrice(total);
-            summaryTotal.textContent = formatPrice(total);
-        }
-
-        // Validar el formulario de pago
-        function validateForm() {
-            const form = document.getElementById('payment-form');
-            if (!form) return false;
-            
-            // Verificar si todos los campos requeridos están completos
-            const requiredFields = form.querySelectorAll('[required]');
-            let allFieldsCompleted = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    allFieldsCompleted = false;
-                    showError(field, 'Este campo es obligatorio');
-                } else {
-                    clearError(field);
-                }
-            });
-            
-            // Validar número de tarjeta
-            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
-            if (!/^\d{16}$/.test(cardNumber)) {
-                showError(document.getElementById('cardNumber'), 'Ingresa un número de tarjeta válido de 16 dígitos');
-                allFieldsCompleted = false;
-            }
-            
-            // Validar fecha de expiración
-            const expiryDate = document.getElementById('expiryDate').value;
-            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
-                showError(document.getElementById('expiryDate'), 'Formato inválido. Usa MM/AA');
-                allFieldsCompleted = false;
-            } else {
-                const [month, year] = expiryDate.split('/');
-                const now = new Date();
-                const currentYear = now.getFullYear() % 100;
-                const currentMonth = now.getMonth() + 1;
-                
-                if (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
-                    showError(document.getElementById('expiryDate'), 'La tarjeta ha expirado');
-                    allFieldsCompleted = false;
-                }
-            }
-            
-            // Validar CVV
-            const cvv = document.getElementById('cvv').value;
-            if (!/^\d{3}$/.test(cvv)) {
-                showError(document.getElementById('cvv'), 'El CVV debe tener 3 dígitos');
-                allFieldsCompleted = false;
-            }
-            
-            // Validar email
-            const email = document.getElementById('email').value;
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showError(document.getElementById('email'), 'Ingresa un email válido');
-                allFieldsCompleted = false;
-            }
-            
-            return allFieldsCompleted;
-        }
-
-        // Mostrar mensaje de error
-        function showError(input, message) {
-            input.classList.add('is-invalid');
-            const errorDiv = input.nextElementSibling;
-            if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
-                errorDiv.textContent = message;
-            }
-        }
-
-        // Eliminar mensaje de error
-        function clearError(input) {
-            input.classList.remove('is-invalid');
-            const errorDiv = input.nextElementSibling;
-            if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
-                errorDiv.textContent = '';
-            }
-        }
-
-        // Procesar el pago
-        async function procesarPago(event) {
-            event.preventDefault();
-            
-            if (!validateForm()) {
-                return;
-            }
-            
-            const submitButton = document.getElementById('submit-payment');
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
-            
-            try {
-                // Simulación de procesamiento de pago (esperar 2 segundos)
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Datos para el email
-                const nombre = document.getElementById('cardName').value;
-                const correo = document.getElementById('email').value;
-                const orderNumber = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-                
-                // Enviar email de confirmación
-                await emailjs.send('service_masterb', 'template_compra', {
-                    to_name: nombre,
-                    to_email: correo,
-                    order_id: orderNumber,
-                    total: formatPrice(total)
-                });
-                
-                // Limpiar carrito
-                localStorage.removeItem('masterBikesCart');
-                
-                // Mostrar sección de confirmación
-                document.getElementById('payment-section').style.display = 'none';
-                document.getElementById('confirmation-section').style.display = 'block';
-                document.getElementById('order-number').textContent = orderNumber;
-                
-                // Actualizar indicador de progreso
-                document.querySelectorAll('.progress-step')[1].classList.remove('active');
-                document.querySelectorAll('.progress-step')[2].classList.add('active');
-                
-            } catch (error) {
-                console.error('Error al procesar el pago:', error);
-                alert('Ha ocurrido un error al procesar el pago. Por favor, inténtalo de nuevo.');
-                
-                submitButton.disabled = false;
-                submitButton.textContent = 'Pagar Ahora';
-            }
-        }
-
-        // Formatear automáticamente el número de tarjeta
-        function formatCardNumber(input) {
-            let value = input.value.replace(/\D/g, '');
-            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-            input.value = value;
-        }
-
-        // Formatear automáticamente la fecha de expiración
-        function formatExpiryDate(input) {
-            let value = input.value.replace(/\D/g, '');
-            if (value.length > 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            input.value = value;
-        }
-
-        // Ejecutar al cargar el DOM
-        document.addEventListener('DOMContentLoaded', () => {
-            // Cargar el carrito
-            loadCart();
-            
-            // Mostrar el resumen del carrito
-            displayCartSummary();
-            
-            // Actualizar el resumen del pedido
-            updateOrderSummary();
-            
-            // Configurar el botón de proceder al pago
-            const proceedButton = document.getElementById('proceed-to-payment');
-            if (proceedButton) {
-                proceedButton.addEventListener('click', () => {
-                    // Ocultar sección de carrito
-                    document.getElementById('cart-section').style.display = 'none';
-                    
-                    // Mostrar sección de pago
-                    document.getElementById('payment-section').style.display = 'block';
-                });
-            }
-
-            // Configurar eventos de entrada para campos de tarjeta
-            const cardNumberInput = document.getElementById('cardNumber');
-            if (cardNumberInput) {
-                cardNumberInput.addEventListener('input', () => formatCardNumber(cardNumberInput));
-            }
-
-            const expiryDateInput = document.getElementById('expiryDate');
-            if (expiryDateInput) {
-                expiryDateInput.addEventListener('input', () => formatExpiryDate(expiryDateInput));
-            }
-
-            // Configurar el formulario de pago
-            const paymentForm = document.getElementById('payment-form');
-            if (paymentForm) {
-                paymentForm.addEventListener('submit', procesarPago);
-            }
-        });
-    </script>
-    <script>
-describe('Catalog Page Tests', () => {
-  beforeEach(() => {
-    // Set up our document body
-    document.body.innerHTML = `
-      <div id="priceDisplay">$3.000.000</div>
-      <input type="range" id="priceRange" value="3000000">
-      <select id="typeFilter"><option selected>Todas las bicicletas</option></select>
-      <select id="sizeFilter"><option selected>Todas las tallas</option></select>
-      <select id="brandFilter"><option selected>Todas las marcas</option></select>
-      <select id="ratingFilter"><option value="0" selected>Todas las valoraciones</option></select>
-      <select id="sortOrder"><option value="featured" selected>Destacados</option></select>
-      <button id="clearFilters"></button>
-      <button id="gridView" class="active"></button>
-      <button id="listView"></button>
-      <div id="resultsCount">Mostrando 6 resultados</div>
-      <div id="productContainer"></div>
-    `;
-
-    // Mock the Bootstrap classes
-    global.bootstrap = {
-      Toast: jest.fn().mockImplementation(() => {
-        return { show: jest.fn() };
-      })
-    };
-    
-    // Mock the addToCart function
-    global.addToCart = jest.fn();
-
-    // Re-run the script to attach event listeners
-    eval(document.querySelector('script:not([src])').textContent);
-  });
-
-  test('should filter products based on selected criteria', () => {
-    // Set up filter values
-    document.getElementById('priceRange').value = '600000';
-    document.getElementById('typeFilter').value = 'Montaña';
-    
-    // Trigger filter application
-    applyFilters();
-    
-    // Check that only mountain bikes under 600,000 are shown
-    const filteredProducts = Array.from(document.querySelectorAll('.product-item'))
-      .filter(item => {
-        const price = parseInt(item.getAttribute('data-price'));
-        const type = item.getAttribute('data-type');
-        return price <= 600000 && type === 'Montaña';
-      });
-      
-    expect(filteredProducts.length).toBe(1); // Only Orion 5 should match
-    expect(document.getElementById('resultsCount').textContent).toContain('1 resultados');
-  });
-});
-
-// Test: Catalog page functionality
-test('Catalog page should load products, filter them and add to cart', async () => {
-  // Arrange
-  await page.goto('http://localhost:3000/pages/catalogo.html');
-  await page.waitForSelector('#productContainer');
-  
-  // Act & Assert - Check initial product loading
-  const initialProductCount = await page.$$eval('.product-item', items => items.length);
-  expect(initialProductCount).toBe(6);
-  
-  // Test filtering by price
-  await page.$eval('#priceRange', el => el.value = '500000');
-  await page.dispatchEvent('#priceRange', 'input');
-  await page.waitForTimeout(500); // Wait for filters to apply
-  
-  const filteredByPriceCount = await page.$$eval('.product-item', items => items.length);
-  expect(filteredByPriceCount).toBeLessThan(initialProductCount);
-  
-  // Test filtering by type
-  await page.select('#typeFilter', 'Montaña');
-  await page.waitForTimeout(500);
-  
-  const mountainBikesText = await page.$eval('#resultsCount', el => el.textContent);
-  expect(mountainBikesText).toContain('Mostrando');
-  
-  // Test switching to list view
-  await page.click('#listView');
-  const hasListViewClass = await page.$eval('#productContainer', el => el.classList.contains('list-view'));
-  expect(hasListViewClass).toBeTruthy();
-  
-  // Test clearing filters
-  await page.click('#clearFilters');
-  await page.waitForTimeout(500);
-  
-  const afterClearFiltersCount = await page.$$eval('.product-item', items => items.length);
-  expect(afterClearFiltersCount).toBe(initialProductCount);
-  
-  // Test adding product to cart
-  await page.click('.add-to-cart');
-  await page.waitForSelector('.toast');
-  
-  const cartBadgeVisible = await page.$eval('#cart-badge', el => el.style.display !== 'none');
-  expect(cartBadgeVisible).toBeTruthy();
-  
-  // Test cart content
-  await page.click('[data-bs-target="#cartOffcanvas"]');
-  await page.waitForSelector('.offcanvas.show');
-  
-  const cartItemCount = await page.$$eval('#cartItems .cart-item', items => items.length);
-  expect(cartItemCount).toBe(1);
-});
-    </script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.6.4/email.min.js"></script>
+    <!-- Script de pago -->
+    <script src="../js/pago.js"></script>
 </body>
 </html>

@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Referencias a elementos del DOM
+document.addEventListener('DOMContentLoaded', function() {    // Referencias a elementos del DOM
     const productContainer = document.getElementById('productContainer');
     const resultsCount = document.getElementById('resultsCount');
     const priceRange = document.getElementById('priceRange');
@@ -134,25 +133,77 @@ function initCatalog() {
     
     // Configurar los filtros y ordenamiento
     setupFilters();
+    
+    // Inicializar información de stock
+    initializeStockInfo();
+}
+
+/**
+ * Configura los botones de vista (cuadrícula/lista)
+ */
+function setupViewButtons() {
+    if (gridView && listView && productContainer) {
+        // Grid view button click handler
+        gridView.addEventListener('click', function() {
+            productContainer.classList.remove('list-view');
+            productContainer.classList.add('grid-view');
+            
+            // Update active button state
+            gridView.classList.add('active');
+            listView.classList.remove('active');
+            
+            // Save preference to localStorage
+            localStorage.setItem('preferredView', 'grid');
+            
+            // Update view mode
+            viewMode = 'grid';
+            applyFilters();
+        });
+        
+        // List view button click handler
+        listView.addEventListener('click', function() {
+            productContainer.classList.remove('grid-view');
+            productContainer.classList.add('list-view');
+            
+            // Update active button state
+            listView.classList.add('active');
+            gridView.classList.remove('active');
+            
+            // Save preference to localStorage
+            localStorage.setItem('preferredView', 'list');
+            
+            // Update view mode
+            viewMode = 'list';
+            applyFilters();
+        });
+        
+        // Load saved preference or default to grid view
+        const preferredView = localStorage.getItem('preferredView') || 'grid';
+        if (preferredView === 'list') {
+            listView.click();
+        } else {
+            gridView.click();
+        }
+    }
 }
 
 /**
  * Configura los botones de agregar al carrito en la página de catálogo
  */
 function setupAddToCartButtons() {
-    // Seleccionar todos los botones de agregar al carrito (ambas clases)
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn, .add-to-cart');
-    
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
+    // Esta función se llamará después de renderizar los productos
+    document.addEventListener('click', function(event) {
+        // Usar delegación de eventos para manejar botones de agregar al carrito
+        if (event.target.closest('.add-to-cart-btn')) {
             event.preventDefault();
+            const button = event.target.closest('.add-to-cart-btn');
             
             // Obtener información del producto
-            const productCard = this.closest('.product-card, .card');
+            const productCard = button.closest('.product-card, .card');
             if (!productCard) return;
             
-            // Obtener ID del producto (puede estar en data-product-id o data-id)
-            const productId = this.getAttribute('data-product-id') || this.getAttribute('data-id');
+            // Obtener ID del producto
+            const productId = button.getAttribute('data-product-id');
             
             // Buscar el nombre del producto
             let productName = '';
@@ -163,22 +214,22 @@ function setupAddToCartButtons() {
             
             // Buscar el precio del producto
             let productPrice = 0;
-            const priceElement = productCard.querySelector('.product-price, [data-price]');
+            const priceElement = productCard.querySelector('.product-price');
             if (priceElement) {
                 productPrice = parseFloat(priceElement.getAttribute('data-price') || 
-                                         priceElement.textContent.replace(/[^\d]/g, ''));
+priceElement.textContent.replace(/[^\d]/g, ''));
             }
             
             // Buscar la imagen del producto
             let productImage = '';
-            const imageElement = productCard.querySelector('.product-img, .card-img-top');
+            const imageElement = productCard.querySelector('.card-img-top');
             if (imageElement) {
                 productImage = imageElement.src;
             }
             
             // Verificar stock antes de agregar al carrito
             checkStockAndAddToCart(productId, productName, productPrice, productImage);
-        });
+        }
     });
 }
 
@@ -190,22 +241,23 @@ async function checkStockAndAddToCart(productId, productName, productPrice, prod
         // Mostrar indicador de carga
         showLoadingIndicator(productId);
         
-        // Verificar stock (si la API está disponible)
+        // Verificar stock usando la API
         let stockAvailable = true;
-        let stockQuantity = 999; // Valor por defecto alto
+        let stockQuantity = 0;
         
-        if (window.API && typeof API.getStockBicicleta === 'function') {
-            try {
-                const stockData = await API.getStockBicicleta(productId);
-                if (stockData) {
-                    // Sumar el stock de todas las sucursales
-                    stockQuantity = Object.values(stockData.sucursales).reduce((total, qty) => total + qty, 0);
-                    stockAvailable = stockQuantity > 0;
-                }
-            } catch (error) {
-                console.warn('No se pudo verificar el stock:', error);
-                // Continuamos con el valor por defecto
+        try {
+            const stockData = await API.getStockBicicleta(productId);
+            if (stockData) {
+                // Sumar el stock de todas las sucursales
+                stockQuantity = Object.values(stockData.sucursales).reduce((total, qty) => total + qty, 0);
+                stockAvailable = stockQuantity > 0;
+                
+                console.log(`Stock para ${productName}: ${stockQuantity} unidades`);
             }
+        } catch (error) {
+            console.warn('No se pudo verificar el stock:', error);
+            // Si hay un error al verificar el stock, asumimos que hay stock disponible
+            stockAvailable = true;
         }
         
         // Ocultar indicador de carga
@@ -218,27 +270,28 @@ async function checkStockAndAddToCart(productId, productName, productPrice, prod
                 name: productName,
                 price: productPrice,
                 image: productImage,
-                quantity: 1
+                quantity: 1,
+                maxStock: stockQuantity // Guardar el stock máximo disponible
             };
             
             // Agregar al carrito
-            if (typeof window.addToCart === 'function') {
-                window.addToCart(productId, 1, {}, product);
+            const added = addToCart(productId, 1, {}, product);
+            
+            if (added) {
+                // Actualizar el stock mostrado (restar 1 unidad)
+                updateProductStock(productId);
                 
                 // Mostrar notificación de éxito
                 showSuccessNotification(productName);
-            } else {
-                console.error('La función addToCart no está disponible');
-                showErrorNotification('Error al agregar al carrito');
             }
         } else {
             // Mostrar notificación de falta de stock
-            showErrorNotification('Lo sentimos, no hay stock disponible');
+            showErrorNotification('Lo sentimos, no hay stock disponible para este producto.');
         }
     } catch (error) {
         console.error('Error al verificar stock:', error);
         hideLoadingIndicator(productId);
-        showErrorNotification('Error al verificar disponibilidad');
+        showErrorNotification('Error al verificar disponibilidad del producto.');
     }
 }
 
@@ -246,7 +299,7 @@ async function checkStockAndAddToCart(productId, productName, productPrice, prod
  * Muestra un indicador de carga en el botón
  */
 function showLoadingIndicator(productId) {
-    const button = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"], .add-to-cart[data-id="${productId}"]`);
+    const button = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"]`);
     if (button) {
         button.disabled = true;
         button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agregando...';
@@ -257,7 +310,7 @@ function showLoadingIndicator(productId) {
  * Oculta el indicador de carga del botón
  */
 function hideLoadingIndicator(productId) {
-    const button = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"], .add-to-cart[data-id="${productId}"]`);
+    const button = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"]`);
     if (button) {
         button.disabled = false;
         button.innerHTML = '<i class="bi bi-cart-plus"></i> Agregar al carrito';
@@ -265,74 +318,53 @@ function hideLoadingIndicator(productId) {
 }
 
 /**
- * Muestra una notificación de éxito
+ * Muestra una notificación de éxito cuando se agrega un producto al carrito
  */
 function showSuccessNotification(productName) {
-    if (typeof window.showCartNotification === 'function') {
-        window.showCartNotification(productName);
-    } else {
-        // Implementación alternativa si la función global no está disponible
-        const notification = document.createElement('div');
-        notification.className = 'alert alert-success position-fixed top-0 end-0 m-3';
-        notification.style.zIndex = '1050';
-        notification.innerHTML = `
-            <i class="bi bi-check-circle-fill me-2"></i>
-            ${productName} ha sido agregado al carrito.
-            <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-        document.body.appendChild(notification);
-        
-        // Eliminar después de 3 segundos
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
+    const toastEl = document.getElementById('notificationToast');
+    const toastBody = toastEl.querySelector('.toast-body');
+    
+    // Actualizar el contenido del toast
+    toastBody.textContent = `${productName} agregado al carrito correctamente.`;
+    
+    // Mostrar el toast
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
 }
 
 /**
  * Muestra una notificación de error
  */
 function showErrorNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'alert alert-danger position-fixed top-0 end-0 m-3';
-    notification.style.zIndex = '1050';
-    notification.innerHTML = `
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        ${message}
-        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-    document.body.appendChild(notification);
+    const toastEl = document.getElementById('notificationToast');
+    const toastHeader = toastEl.querySelector('.toast-header i');
+    const toastBody = toastEl.querySelector('.toast-body');
     
-    // Eliminar después de 3 segundos
+    // Cambiar el ícono a error
+    toastHeader.className = 'bi bi-exclamation-circle-fill text-danger me-2';
+    
+    // Actualizar el contenido del toast
+    toastBody.textContent = message;
+    
+    // Mostrar el toast
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+    
+    // Restaurar el ícono después de un tiempo
     setTimeout(() => {
-        notification.remove();
-    }, 3000);
+        toastHeader.className = 'bi bi-check-circle-fill text-success me-2';
+    }, 5000);
 }
 
 /**
  * Configura los filtros y ordenamiento del catálogo
  */
 function setupFilters() {
-    // Implementar según sea necesario
-    // Esta función se puede expandir para manejar filtros de precio, marca, etc.
-}
-
-// Función para inicializar el catálogo
-function initCatalog() {
-    // Cargar productos
-    loadProducts();
-    
-    // Configurar eventos
-    setupEventListeners();
-}
-
-// Configurar listeners de eventos
-function setupEventListeners() {
     // Evento para el rango de precio
     if (priceRange) {
         priceRange.addEventListener('input', function() {
             const value = this.value;
-            priceDisplay.textContent = `Hasta ${formatPrice(value)}`;
+            priceDisplay.textContent = formatPrice(value);
             filters.maxPrice = parseInt(value);
             applyFilters();
         });
@@ -362,7 +394,7 @@ function setupEventListeners() {
     
     if (ratingFilter) {
         ratingFilter.addEventListener('change', function() {
-            filters.minRating = parseInt(this.value);
+            filters.minRating = parseFloat(this.value);
             applyFilters();
         });
     }
@@ -379,22 +411,11 @@ function setupEventListeners() {
     if (clearFilters) {
         clearFilters.addEventListener('click', resetFilters);
     }
-    
-    // Eventos para cambiar vista
-    if (gridView) {
-        gridView.addEventListener('click', function() {
-            setViewMode('grid');
-        });
-    }
-    
-    if (listView) {
-        listView.addEventListener('click', function() {
-            setViewMode('list');
-        });
-    }
 }
 
-// Función para cargar productos
+/**
+ * Función para cargar productos
+ */
 function loadProducts() {
     // Mostrar spinner de carga
     if (productContainer) {
@@ -530,6 +551,7 @@ function renderProducts(products) {
                     <p class="card-text"><strong>Marca:</strong> ${product.brand}</p>
                     <p class="card-text"><strong>Talla:</strong> ${product.size}</p>
                     <p class="card-text"><strong>Valoración:</strong> ${product.rating} <i class="bi bi-star-fill"></i></p>
+                    <p class="card-text"><strong>Stock:</strong> ${product.stock || 0}</p>
                     <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}"><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
                     <a href="${product.detailPage}" class="btn btn-secondary mt-2">Ver detalles</a>
                 </div>
@@ -555,7 +577,7 @@ function resetFilters() {
     };
     currentSort = 'featured';
     priceRange.value = filters.maxPrice;
-    priceDisplay.textContent = `Hasta ${formatPrice(filters.maxPrice)}`;
+    priceDisplay.textContent = formatPrice(filters.maxPrice);
     typeFilter.value = filters.type;
     sizeFilter.value = filters.size;
     brandFilter.value = filters.brand;
@@ -572,4 +594,17 @@ function setViewMode(mode) {
     productContainer.classList.toggle('row-cols-md-4', viewMode === 'grid');
     productContainer.classList.toggle('row-cols-md-1', viewMode === 'list');
     applyFilters();
+}
+
+// Función para inicializar la información de stock
+function initializeStockInfo() {
+    // Aquí se podría agregar lógica para inicializar o actualizar la información de stock
+    // Por ejemplo, hacer una llamada a una API para obtener la cantidad de stock disponible
+    // y actualizar los objetos en window.bikeData con esta información.
+    // Para este ejemplo, asumiremos que cada producto tiene un stock predeterminado.
+    window.bikeData.forEach(product => {
+        if (!product.stock) {
+            product.stock = Math.floor(Math.random() * 10) + 1; // Stock aleatorio entre 1 y 10
+        }
+    });
 }
