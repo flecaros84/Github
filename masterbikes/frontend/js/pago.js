@@ -49,676 +49,646 @@
     }, 300);
 })();
 
-/**
- * Script para manejar la funcionalidad de la página de pago
- * Permite visualizar el resumen del carrito y procesar el pago
- */
-
-// Inicializar EmailJS
-emailjs.init('dF-ZSyQCC3Jx91Pzh');
-
-// Variables globales
 let cart = [];
 let total = 0;
+let customerInfo = {};
 
-// Referencias a elementos del DOM
-const orderSummary = document.getElementById('orderSummary');
-const summaryTotal = document.getElementById('summaryTotal');
-const cartBadge = document.querySelector('.cart-badge');
-const paymentForm = document.getElementById('paymentForm');
+// Inicializar EmailJS (si está disponible)
+if (typeof emailjs !== 'undefined') {
+    emailjs.init("dF-ZSyQCC3Jx91Pzh"); // Reemplaza con tu clave pública real
+}
+
+// Función para depurar el carrito
+function debugCart() {
+    console.group('Depuración del carrito');
+    console.log('Carrito completo:', cart);
+    
+    if (cart.length === 0) {
+        console.log('El carrito está vacío');
+    } else {
+        cart.forEach((item, index) => {
+            console.group(`Item ${index + 1}: ${item.name}`);
+            console.log('ID:', item.id);
+            console.log('Precio:', item.price, typeof item.price);
+            console.log('Cantidad:', item.quantity, typeof item.quantity);
+            console.log('Total item:', item.price * item.quantity);
+            console.groupEnd();
+        });
+    }
+    
+    console.log('Total del carrito:', total);
+    console.groupEnd();
+}
+
+// Cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Página de pago cargada');
+    
+    // Cargar el carrito
+    loadCart();
+    
+    // Depurar el carrito para ver qué está pasando
+    debugCart();
+    
+    // Mostrar el resumen del carrito
+    displayCartSummary();
+    
+    // Actualizar el resumen del pedido
+    updateOrderSummary();
+    
+    // Configurar el formulario de información del cliente
+    setupCustomerInfoForm();
+    
+    // Configurar el formulario de pago
+    setupPaymentForm();
+    
+    // Configurar los pasos del proceso de pago
+    setupCheckoutSteps();
+});
+
+// Función para verificar y crear elementos necesarios si no existen
+function ensureRequiredElements() {
+    console.log('Verificando elementos necesarios');
+    
+    // Verificar si existe el botón para volver al carrito
+    let backToCartBtn = document.getElementById('back-to-cart');
+    if (!backToCartBtn) {
+        console.log('Creando botón para volver al carrito');
+        
+        // Buscar el contenedor donde debería estar el botón
+        const paymentSection = document.getElementById('payment-section');
+        if (paymentSection) {
+            // Crear el botón
+            backToCartBtn = document.createElement('button');
+            backToCartBtn.id = 'back-to-cart';
+            backToCartBtn.className = 'btn btn-outline-secondary mb-3';
+            backToCartBtn.innerHTML = '<i class="bi bi-arrow-left"></i> Volver al carrito';
+            
+            // Insertar al principio de la sección de pago
+            paymentSection.insertBefore(backToCartBtn, paymentSection.firstChild);
+        }
+    }
+    
+    // Verificar si existen los indicadores de progreso
+    const progressContainer = document.querySelector('.checkout-progress');
+    if (!progressContainer) {
+        console.log('Creando indicadores de progreso');
+        
+        // Buscar el contenedor principal
+        const mainContainer = document.querySelector('.container');
+        if (mainContainer) {
+            // Crear el contenedor de progreso
+            const progressDiv = document.createElement('div');
+            progressDiv.className = 'checkout-progress mb-4';
+            
+            // Crear los pasos
+            progressDiv.innerHTML = `
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Carrito</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Pago</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmación</div>
+                </div>
+            `;
+            
+            // Insertar al principio del contenedor principal
+            mainContainer.insertBefore(progressDiv, mainContainer.firstChild);
+        }
+    }
+}
 
 // Formatear precios en CLP
 function formatPrice(price) {
-  return new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP'
-  }).format(price);
-}
-
-// Renderizar resumen de la orden
-function renderSummary() {
-  if (!orderSummary || !summaryTotal) return;
-
-  total = 0;
-  let html = '';
-
-  cart.forEach(item => {
-    const itemTotal = item.price * item.quantity;
-    total += itemTotal;
-    html += `
-      <div class="d-flex justify-content-between mb-3">
-        <span>${item.name} (x${item.quantity})</span>
-        <span>${formatPrice(itemTotal)}</span>
-      </div>`;
-  });
-
-  orderSummary.innerHTML = html;
-  summaryTotal.textContent = formatPrice(total);
-}
-
-// Actualizar badge del carrito
-function renderBadge() {
-  if (cartBadge) {
-    cartBadge.textContent = cart.reduce((t, it) => t + it.quantity, 0);
-  }
-}
-
-// Procesar el pago usando Web3Forms
-async function procesarPago(event) {
-  event.preventDefault();
-  
-  // Validar el formulario
-  if (!validateForm()) {
-    return;
-  }
-  
-  // Obtener el botón de submit para mostrar el estado de carga
-  const submitButton = document.getElementById('submit-payment');
-  submitButton.disabled = true;
-  submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
-  
-  try {
-    // Generar número de orden
-    const orderNumber = generateOrderNumber();
-    
-    // Obtener datos del formulario
-    const form = document.getElementById('payment-form');
-    const formData = new FormData(form);
-    
-    // Asegurarse de que los campos ocultos estén presentes
-    prepareWeb3FormsData();
-    
-    // Agregar datos adicionales para Web3Forms
-    formData.append('order_number', orderNumber);
-    formData.append('order_date', new Date().toLocaleDateString());
-    formData.append('total', formatPrice(total));
-    
-    // Obtener el email del cliente
-    const customerEmail = document.getElementById('email').value || 
-                         document.getElementById('customerEmail')?.value || '';
-    
-    // Obtener el nombre del cliente
-    const customerName = document.getElementById('cardName').value || 
-                        document.getElementById('customerName')?.value || '';
-    
-    // Asegurarse de que estos campos estén en el formulario
-    if (!formData.has('email')) {
-      formData.append('email', customerEmail);
+    // Asegurarse de que el precio sea un número
+    if (typeof price !== 'number' || isNaN(price)) {
+        console.error('Precio inválido para formatear:', price);
+        price = 0;
     }
     
-    if (!formData.has('name')) {
-      formData.append('name', customerName);
-    }
-    
-    // Simular procesamiento de pago (esperar 2 segundos)
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Enviar el formulario a Web3Forms
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: formData
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      console.log('Email enviado con éxito:', data);
-      
-      // Limpiar el carrito
-      localStorage.removeItem('masterBikesCart');
-      
-      // Mostrar sección de confirmación
-      document.getElementById('payment-section').style.display = 'none';
-      document.getElementById('confirmation-section').style.display = 'block';
-      
-      // Actualizar número de orden en la confirmación
-      document.getElementById('order-number').textContent = orderNumber;
-      
-      // Actualizar los pasos del progreso
-      document.getElementById('step-2').classList.remove('active');
-      document.getElementById('step-3').classList.add('active');
-    } else {
-      throw new Error(data.message || 'Error al enviar el email');
-    }
-  } catch (error) {
-    console.error('Error al procesar el pago:', error);
-    alert('Hubo un error al procesar el pago. Por favor, inténtalo de nuevo.');
-    
-    // Restaurar el botón
-    submitButton.disabled = false;
-    submitButton.innerHTML = 'Pagar Ahora';
-  }
-}
-
-// Función para generar un número de orden aleatorio
-function generateOrderNumber() {
-  const prefix = 'MB';
-  const timestamp = new Date().getTime().toString().slice(-6);
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  return `${prefix}-${timestamp}-${random}`;
-}
-
-// Función para enviar email de confirmación
-async function sendConfirmationEmail(orderDetails) {
-    try {
-        // Preparar los datos para el email
-        const emailParams = {
-            to_name: orderDetails.customerName,
-            to_email: orderDetails.customerEmail,
-            order_number: orderDetails.orderNumber,
-            order_date: orderDetails.date,
-            total: formatPrice(orderDetails.total),
-            items: orderDetails.cart.map(item => 
-                `${item.name} (${item.quantity || 1} x ${formatPrice(item.price)})`
-            ).join(', ')
-        };
-        
-        // Enviar email usando EmailJS
-        const response = await emailjs.send(
-            'service_masterb',  // Reemplaza con tu Service ID
-            'template_compra',  // Reemplaza con tu Template ID
-            emailParams
-        );
-        
-        console.log('Email enviado con éxito:', response);
-        return response;
-    } catch (error) {
-        console.error('Error al enviar email:', error);
-        throw error;
-    }
+    return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(price);
 }
 
 // Cargar el carrito desde localStorage
 function loadCart() {
-  cart = JSON.parse(localStorage.getItem('masterBikesCart') || '[]');
-  total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
-  
-  // Si el carrito está vacío, mostrar mensaje y deshabilitar botón
-  if (cart.length === 0) {
-    const proceedButton = document.getElementById('proceed-to-payment');
-    if (proceedButton) {
-      proceedButton.disabled = true;
+    // Intentar cargar desde localStorage
+    const cartData = localStorage.getItem('masterbikes_cart');
+    if (cartData) {
+        try {
+            cart = JSON.parse(cartData);
+            console.log('Carrito cargado:', cart);
+            
+            // Verificar que cada item tenga precio y cantidad válidos
+            cart = cart.map(item => {
+                // Asegurarse de que el precio sea un número
+                if (typeof item.price !== 'number' || isNaN(item.price)) {
+                    console.warn(`Precio inválido para ${item.name}:`, item.price);
+                    // Intentar convertir el precio a número si es una cadena
+                    if (typeof item.price === 'string') {
+                        const numericPrice = parseInt(item.price.replace(/[^\d]/g, ''));
+                        item.price = isNaN(numericPrice) ? 0 : numericPrice;
+                    } else {
+                        item.price = 0;
+                    }
+                }
+                
+                // Asegurarse de que la cantidad sea un número
+                if (!item.quantity || typeof item.quantity !== 'number' || isNaN(item.quantity)) {
+                    console.warn(`Cantidad inválida para ${item.name}:`, item.quantity);
+                    item.quantity = 1;
+                }
+                
+                return item;
+            });
+            
+            // Calcular el total
+            total = cart.reduce((sum, item) => {
+                const itemPrice = typeof item.price === 'number' ? item.price : 0;
+                const itemQuantity = typeof item.quantity === 'number' ? item.quantity : 1;
+                return sum + (itemPrice * itemQuantity);
+            }, 0);
+            
+            console.log('Total calculado:', total);
+            
+        } catch (error) {
+            console.error('Error al parsear el carrito:', error);
+            cart = [];
+            total = 0;
+        }
+    } else {
+        console.warn('No se encontró ningún carrito en localStorage');
+        cart = [];
+        total = 0;
     }
-    
-    // Mostrar mensaje en el resumen del pedido
-    const orderSummary = document.getElementById('order-summary');
-    if (orderSummary) {
-      orderSummary.innerHTML = `
-        <div class="alert alert-info">
-          Tu carrito está vacío. <a href="../index.html" class="alert-link">Volver a la tienda</a>
-        </div>
-      `;
-    }
-  }
 }
 
-// Mostrar el resumen del carrito (una sola vez)
+// Mostrar el resumen del carrito
 function displayCartSummary() {
-    const orderSummary = document.getElementById('order-summary');
-    const subtotalElement = document.getElementById('summary-subtotal');
-    const totalElement = document.getElementById('summary-total');
+    const cartSummaryContainer = document.getElementById('cart-summary');
+    if (!cartSummaryContainer) {
+        console.warn('No se encontró el contenedor del resumen del carrito');
+        return;
+    }
     
-    if (!orderSummary) return;
-    
-    // Limpiar el contenido anterior
-    orderSummary.innerHTML = '';
+    // Limpiar el contenedor
+    cartSummaryContainer.innerHTML = '';
     
     // Verificar si el carrito está vacío
-    if (cart.length === 0) {
-        orderSummary.innerHTML = '<p class="text-center">Tu carrito está vacío</p>';
+    if (!cart || cart.length === 0) {
+        cartSummaryContainer.innerHTML = `
+            <div class="alert alert-info">
+                Tu carrito está vacío. <a href="../index.html" class="alert-link">Volver a la tienda</a>
+            </div>
+        `;
+        
+        // Deshabilitar el formulario de pago
+        const paymentForm = document.getElementById('payment-form');
+        if (paymentForm) {
+            const inputs = paymentForm.querySelectorAll('input, select, button[type="submit"]');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+        }
+        
+        // Deshabilitar el botón de proceder al pago
+        const proceedButton = document.getElementById('proceed-to-payment');
+        if (proceedButton) {
+            proceedButton.disabled = true;
+        }
+        
         return;
+    }
+    
+    // Crear tabla de resumen
+    const table = document.createElement('table');
+    table.className = 'table';
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th class="text-end">Precio</th>
+            </tr>
+        </thead>
+        <tbody id="cart-items">
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2">Total</th>
+                <th class="text-end">${formatPrice(total)}</th>
+            </tr>
+        </tfoot>
+    `;
+    
+    cartSummaryContainer.appendChild(table);
+    
+    // Agregar los items a la tabla
+    const cartItemsContainer = document.getElementById('cart-items');
+    if (cartItemsContainer) {
+        cart.forEach(item => {
+            const row = document.createElement('tr');
+            const itemTotal = item.price * (item.quantity || 1);
+            row.innerHTML = `
+                <td>
+                    <strong>${item.name}</strong>
+                    ${item.isCustom ? `<br><small>Modelo base: ${item.baseModel}</small>` : ''}
+                </td>
+                <td>${item.quantity || 1}</td>
+                <td class="text-end">${formatPrice(itemTotal)}</td>
+            `;
+            cartItemsContainer.appendChild(row);
+        });
+    }
+}
+
+// Actualizar el resumen del pedido
+function updateOrderSummary() {
+    const orderSummaryContainer = document.getElementById('order-summary');
+    if (!orderSummaryContainer) {
+        console.warn('No se encontró el contenedor del resumen del pedido');
+        return;
+    }
+    
+    // Verificar que el total sea un número válido
+    if (typeof total !== 'number' || isNaN(total)) {
+        console.error('Total inválido:', total);
+        total = 0;
     }
     
     // Calcular subtotal
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
-    total = subtotal;
+    const subtotal = total;
     
-    // Mostrar cada producto en el resumen
-    cart.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'cart-item d-flex align-items-center mb-3';
-        itemElement.innerHTML = `
-            <div class="cart-item-details flex-grow-1">
-                <div class="cart-item-name fw-bold">${item.name}</div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="cart-item-price">${formatPrice(item.price)}</div>
-                    <div>Cantidad: ${item.quantity || 1}</div>
-                </div>
-            </div>
-        `;
-        orderSummary.appendChild(itemElement);
+    // Calcular impuestos (19% IVA en Chile)
+    const taxRate = 0.19;
+    const taxes = subtotal * taxRate;
+    
+    // Calcular envío (gratis por ahora)
+    const shipping = 0;
+    
+    // Calcular total final
+    const finalTotal = subtotal + taxes + shipping;
+    
+    console.log('Resumen del pedido:');
+    console.log('- Subtotal:', subtotal);
+    console.log('- Impuestos:', taxes);
+    console.log('- Envío:', shipping);
+    console.log('- Total final:', finalTotal);
+    
+    // Actualizar el resumen
+    orderSummaryContainer.innerHTML = `
+        <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal:</span>
+            <span>${formatPrice(subtotal)}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+            <span>IVA (19%):</span>
+            <span>${formatPrice(taxes)}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+            <span>Envío:</span>
+            <span>${shipping === 0 ? 'Gratis' : formatPrice(shipping)}</span>
+        </div>
+        <div class="d-flex justify-content-between fw-bold">
+            <span>Total:</span>
+            <span>${formatPrice(finalTotal)}</span>
+        </div>
+    `;
+}
+
+// Configurar los pasos del proceso de pago
+function setupCheckoutSteps() {
+    console.log('Configurando pasos del checkout');
+    
+    // Obtener referencias a las secciones
+    const customerInfoSection = document.getElementById('customer-info-section');
+    const cartSection = document.getElementById('cart-section');
+    const paymentSection = document.getElementById('payment-section');
+    const confirmationSection = document.getElementById('confirmation-section');
+    
+    // Verificar si las secciones existen
+    if (!customerInfoSection) console.warn('No se encontró la sección de información del cliente');
+    if (!cartSection) console.warn('No se encontró la sección del carrito');
+    if (!paymentSection) console.warn('No se encontró la sección de pago');
+    if (!confirmationSection) console.warn('No se encontró la sección de confirmación');
+    
+    // Configurar estado inicial
+    if (customerInfoSection) customerInfoSection.style.display = 'block';
+    if (cartSection) cartSection.style.display = 'none';
+    if (paymentSection) paymentSection.style.display = 'none';
+    if (confirmationSection) confirmationSection.style.display = 'none';
+    
+    // Obtener referencias a los indicadores de progreso
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+    
+    console.log('Pasos de progreso encontrados:', {
+        step1: !!step1,
+        step2: !!step2,
+        step3: !!step3
     });
-    
-    // Actualizar los totales
-    if (subtotalElement) subtotalElement.textContent = formatPrice(subtotal);
-    if (totalElement) totalElement.textContent = formatPrice(total);
-}
-
-// Inicializar el formulario de pago
-function initPaymentForm() {
-  const paymentForm = document.getElementById('payment-form');
-  if (!paymentForm) return;
-  
-  paymentForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    // Validar el formulario
-    if (validateForm()) {
-      // Procesar el pago
-      procesarPago();
-    }
-  });
-  
-  // Actualizar el total en el botón de pago
-  const payButton = document.querySelector('#payment-form button[type="submit"]');
-  if (payButton) {
-    payButton.textContent = `Pagar ${formatPrice(total)}`;
-  }
-}
-
-// Validar el formulario de pago
-function validateForm() {
-  // Obtener los campos del formulario
-  const cardName = document.getElementById('cardName');
-  const cardNumber = document.getElementById('cardNumber');
-  const expiryDate = document.getElementById('expiryDate');
-  const cvv = document.getElementById('cvv');
-  
-  // Validar que los campos no estén vacíos
-  let isValid = true;
-  
-  if (!cardName || !cardName.value.trim()) {
-    showError(cardName, 'El nombre del titular es obligatorio');
-    isValid = false;
-  } else {
-    clearError(cardName);
-  }
-  
-  if (!cardNumber || !cardNumber.value.trim()) {
-    showError(cardNumber, 'El número de tarjeta es obligatorio');
-    isValid = false;
-  } else if (!/^\d{16}$/.test(cardNumber.value.replace(/\s/g, ''))) {
-    showError(cardNumber, 'El número de tarjeta debe tener 16 dígitos');
-    isValid = false;
-  } else {
-    clearError(cardNumber);
-  }
-  
-  if (!expiryDate || !expiryDate.value.trim()) {
-    showError(expiryDate, 'La fecha de expiración es obligatoria');
-    isValid = false;
-  } else if (!/^\d{2}\/\d{2}$/.test(expiryDate.value)) {
-    showError(expiryDate, 'Formato inválido. Use MM/AA');
-    isValid = false;
-  } else {
-    clearError(expiryDate);
-  }
-  
-  if (!cvv || !cvv.value.trim()) {
-    showError(cvv, 'El código de seguridad es obligatorio');
-    isValid = false;
-  } else if (!/^\d{3,4}$/.test(cvv.value)) {
-    showError(cvv, 'El código debe tener 3 o 4 dígitos');
-    isValid = false;
-  } else {
-    clearError(cvv);
-  }
-  
-  return isValid;
-}
-
-// Mostrar mensaje de error
-function showError(input, message) {
-  // Obtener el elemento padre del input
-  const formGroup = input.closest('.mb-3');
-  
-  // Eliminar cualquier mensaje de error existente
-  clearError(input);
-  
-  // Agregar la clase de error
-  input.classList.add('is-invalid');
-  
-  // Crear el mensaje de error
-  const errorDiv = document.createElement('div');
-  errorDiv.className = 'invalid-feedback';
-  errorDiv.textContent = message;
-  
-  // Agregar el mensaje después del input
-  formGroup.appendChild(errorDiv);
-}
-
-// Eliminar mensaje de error
-function clearError(input) {
-  input.classList.remove('is-invalid');
-  
-  // Obtener el elemento padre del input
-  const formGroup = input.closest('.mb-3');
-  
-  // Eliminar el mensaje de error si existe
-  const errorDiv = formGroup.querySelector('.invalid-feedback');
-  if (errorDiv) {
-    errorDiv.remove();
-  }
-}
-
-// Función para eliminar la tabla duplicada del carrito y mostrar solo el resumen
-function cleanupCartDisplay() {
-  // 1. Ocultar la sección completa del carrito si existe
-  const cartSection = document.getElementById('cart-section');
-  if (cartSection) {
-    cartSection.style.display = 'none';
-  }
-  
-  // 2. Asegurarse de que solo se muestre el resumen del pedido
-  const paymentSection = document.getElementById('payment-section');
-  if (paymentSection) {
-    paymentSection.style.display = 'block';
-  }
-  
-  // 3. Actualizar la barra de progreso para mostrar que estamos en el paso de pago
-  const progressSteps = document.querySelectorAll('.progress-step');
-  if (progressSteps.length >= 2) {
-    progressSteps[0].classList.remove('active'); // Desactivar paso 1 (Carrito)
-    progressSteps[1].classList.add('active');    // Activar paso 2 (Pago)
-  }
-}
-
-// Configurar validación de formularios
-function setupFormValidation() {
-  const customerInfoForm = document.getElementById('customer-info-form');
-  const paymentForm = document.getElementById('payment-form');
-  
-  if (customerInfoForm) {
-    customerInfoForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-      if (this.checkValidity()) {
-        // Avanzar al siguiente paso
-        document.getElementById('customer-info-section').style.display = 'none';
-        document.getElementById('payment-section').style.display = 'block';
-        document.getElementById('step-1').classList.remove('active');
-        document.getElementById('step-2').classList.add('active');
-      }
-      this.classList.add('was-validated');
-    });
-  }
-  
-  if (paymentForm) {
-    paymentForm.addEventListener('submit', procesarPago);
-  }
-}
-
-// Configurar los botones de navegación
-function setupNavigationButtons() {
-  const proceedToPaymentBtn = document.getElementById('proceed-to-payment');
-  if (proceedToPaymentBtn) {
-    proceedToPaymentBtn.addEventListener('click', function(event) {
-      // La validación se maneja en el evento submit del formulario
-    });
-  }
-}
-
-// Ejecutar al cargar el DOM
-document.addEventListener('DOMContentLoaded', function() {
-    // Cargar el carrito desde localStorage
-    loadCart();
-    
-    // Si el carrito está vacío, redirigir a la página principal
-    if (cart.length === 0) {
-        alert('Tu carrito está vacío. Serás redirigido a la página principal.');
-        window.location.href = '../index.html';
-        return;
-    }
-    
-    // Actualizar el resumen del pedido (esto ya existe y funciona)
-    displayCartSummary();
-    
-    // Configurar validación de formularios
-    setupFormValidation();
-    
-    // Configurar los botones de navegación entre pasos
-    setupNavigationButtons();
-    
-    // Configurar navegación entre secciones
-    setupSectionNavigation();
-    
-    // Configurar el botón de volver
-    const backButton = document.getElementById('back-button');
-    if (backButton) {
-        backButton.addEventListener('click', function() {
-            window.history.back();
-        });
-    }
-
-    renderSummary();
-    renderBadge();
-    
-    // Configurar el botón de pago
-    const paymentForm = document.getElementById('payment-form');
-    if (paymentForm) {
-        // Eliminar cualquier evento anterior
-        const newPaymentForm = paymentForm.cloneNode(true);
-        paymentForm.parentNode.replaceChild(newPaymentForm, paymentForm);
-        
-        // Añadir el nuevo evento
-        newPaymentForm.addEventListener('submit', procesarPago);
-    }
-    
-    // Actualizar la barra de progreso para mostrar que estamos en el paso de pago
-    const progressSteps = document.querySelectorAll('.progress-step');
-    if (progressSteps.length >= 2) {
-        progressSteps[0].classList.add('active'); // Paso 1 (Carrito)
-        progressSteps[1].classList.add('active'); // Paso 2 (Pago)
-    }
-    
-    // Agregar evento al botón de continuar
-    const continueButton = document.getElementById('continueToPayment');
-    if (continueButton) {
-        continueButton.addEventListener('click', function() {
-            // Aquí iría la lógica para continuar al siguiente paso
-            // Por ahora, simplemente activamos el paso 3 en la barra de progreso
-            if (progressSteps.length >= 3) {
-                progressSteps[2].classList.add('active'); // Paso 3 (Confirmación)
-            }
-        });
-    }
     
     // Configurar el formulario de información del cliente
     const customerInfoForm = document.getElementById('customer-info-form');
     if (customerInfoForm) {
+        console.log('Formulario de información del cliente encontrado');
+        
         customerInfoForm.addEventListener('submit', function(event) {
             event.preventDefault();
+            console.log('Formulario de información del cliente enviado');
             
             // Validar el formulario
-            if (!this.checkValidity()) {
+            if (!customerInfoForm.checkValidity()) {
                 event.stopPropagation();
-                this.classList.add('was-validated');
+                customerInfoForm.classList.add('was-validated');
+                console.log('Formulario de información del cliente inválido');
                 return;
             }
             
-            // Mostrar la sección de pago
-            document.getElementById('customer-info-section').style.display = 'none';
-            document.getElementById('payment-section').style.display = 'block';
+            // Guardar la información del cliente
+            customerInfo = {
+                name: document.getElementById('customerName').value,
+                email: document.getElementById('customerEmail').value,
+                phone: document.getElementById('customerPhone').value,
+                address: {
+                    line1: document.getElementById('addressLine1').value,
+                    line2: document.getElementById('addressLine2').value,
+                    city: document.getElementById('city').value,
+                    region: document.getElementById('region').value,
+                    postalCode: document.getElementById('postalCode').value
+                }
+            };
             
-            // Actualizar los pasos del progreso
-            document.getElementById('step-1').classList.remove('active');
-            document.getElementById('step-2').classList.add('active');
+            console.log('Información del cliente guardada:', customerInfo);
             
-            // Copiar el email del cliente al formulario de pago
-            const customerEmail = document.getElementById('customerEmail').value;
-            document.getElementById('email').value = customerEmail;
+            // Cambiar a la sección de pago
+            if (customerInfoSection) customerInfoSection.style.display = 'none';
+            if (paymentSection) paymentSection.style.display = 'block';
+            
+            // Actualizar indicador de progreso
+            if (step1) step1.classList.remove('active');
+            if (step2) step2.classList.add('active');
+            
+            console.log('Cambiado a la sección de pago');
+            
+            // Prellenar el email en el formulario de pago
+            const emailInput = document.getElementById('email');
+            if (emailInput && customerInfo.email) {
+                emailInput.value = customerInfo.email;
+            }
         });
+    } else {
+        console.warn('No se encontró el formulario de información del cliente');
     }
     
-    // Configurar validación de tarjeta de crédito
+    // Configurar el botón para proceder al pago
+    const proceedToPaymentBtn = document.getElementById('proceed-to-payment');
+    if (proceedToPaymentBtn) {
+        console.log('Botón de proceder al pago encontrado');
+        
+        // Asegurarse de que el botón esté dentro del formulario
+        const parentForm = proceedToPaymentBtn.closest('form');
+        if (!parentForm) {
+            console.warn('El botón de proceder al pago no está dentro de un formulario');
+        }
+    } else {
+        console.warn('No se encontró el botón para proceder al pago');
+    }
+}
+
+// Configurar el formulario de información del cliente
+function setupCustomerInfoForm() {
+    const customerInfoForm = document.getElementById('customer-info-form');
+    if (!customerInfoForm) {
+        console.warn('No se encontró el formulario de información del cliente');
+        return;
+    }
+    
+    // Prellenar con información del usuario si está disponible
+    const userInfo = getUserInfo();
+    if (userInfo) {
+        const nameInput = document.getElementById('customerName');
+        const emailInput = document.getElementById('customerEmail');
+        
+        if (nameInput && userInfo.name) nameInput.value = userInfo.name;
+        if (emailInput && userInfo.email) emailInput.value = userInfo.email;
+    }
+}
+
+// Obtener información del usuario (simulada)
+function getUserInfo() {
+    // Intentar obtener información del usuario desde localStorage
+    const userInfoStr = localStorage.getItem('user_info');
+    if (userInfoStr) {
+        try {
+            return JSON.parse(userInfoStr);
+        } catch (e) {
+            console.error('Error al parsear la información del usuario:', e);
+        }
+    }
+    return null;
+}
+
+// Configurar el formulario de pago
+function setupPaymentForm() {
+    const paymentForm = document.getElementById('payment-form');
+    if (!paymentForm) {
+        console.warn('No se encontró el formulario de pago');
+        return;
+    }
+    
+    // Configurar formateo automático de campos
     const cardNumberInput = document.getElementById('cardNumber');
     if (cardNumberInput) {
         cardNumberInput.addEventListener('input', function() {
-            // Formatear el número de tarjeta (agregar espacios cada 4 dígitos)
-            let value = this.value.replace(/\D/g, '');
-            let formattedValue = '';
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formattedValue += ' ';
-                }
-                formattedValue += value[i];
-            }
-            this.value = formattedValue;
-            
-            // Validar el número de tarjeta (implementación básica)
-            if (value.length < 16) {
-                showError(this, 'El número de tarjeta debe tener al menos 16 dígitos');
-            } else {
-                clearError(this);
-            }
+            formatCardNumber(this);
         });
     }
     
-    // Configurar validación de fecha de expiración
     const expiryDateInput = document.getElementById('expiryDate');
     if (expiryDateInput) {
         expiryDateInput.addEventListener('input', function() {
-            // Formatear la fecha (MM/AA)
-            let value = this.value.replace(/\D/g, '');
-            if (value.length > 0) {
-                value = value.substring(0, 4);
-                if (value.length > 2) {
-                    this.value = value.substring(0, 2) + '/' + value.substring(2);
-                } else {
-                    this.value = value;
-                }
-            }
-            
-            // Validar la fecha
-            if (value.length < 4) {
-                showError(this, 'Ingresa una fecha válida (MM/AA)');
-            } else {
-                const month = parseInt(value.substring(0, 2));
-                if (month < 1 || month > 12) {
-                    showError(this, 'Mes inválido');
-                } else {
-                    clearError(this);
-                }
-            }
+            formatExpiryDate(this);
         });
     }
     
-    // Configurar validación de CVV
-    const cvvInput = document.getElementById('cvv');
-    if (cvvInput) {
-        cvvInput.addEventListener('input', function() {
-            // Solo permitir números
-            this.value = this.value.replace(/\D/g, '').substring(0, 3);
-            
-            // Validar CVV
-            if (this.value.length < 3) {
-                showError(this, 'El CVV debe tener 3 dígitos');
-            } else {
-                clearError(this);
-            }
-        });
+    // Configurar el evento de envío del formulario
+    paymentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Validar el formulario
+        if (!validateForm()) {
+            return;
+        }
+        
+        procesarPago(event);
+    });
+}
+
+// Formatear número de tarjeta
+function formatCardNumber(input) {
+    // Eliminar todos los caracteres no numéricos
+    let value = input.value.replace(/\D/g, '');
+    
+    // Limitar a 16 dígitos
+    value = value.substring(0, 16);
+    
+    // Formatear con espacios cada 4 dígitos
+    let formattedValue = '';
+    for (let i = 0; i < value.length; i++) {
+        if (i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+        }
+        formattedValue += value[i];
     }
-});
+    
+    // Actualizar el valor del input
+    input.value = formattedValue;
+}
 
-// Función para preparar los datos del formulario oculto para Web3Forms
-function prepareWeb3FormsData() {
-  // Crear o actualizar el campo oculto para la clave de acceso
-  let accessKeyInput = document.getElementById('web3forms_access_key');
-  if (!accessKeyInput) {
-    accessKeyInput = document.createElement('input');
-    accessKeyInput.type = 'hidden';
-    accessKeyInput.id = 'web3forms_access_key';
-    accessKeyInput.name = 'access_key';
-    accessKeyInput.value = '6ac00df9-5da4-4eeb-b820-70fdcb4d71e3'; // Tu clave de acceso
-    document.getElementById('payment-form').appendChild(accessKeyInput);
-  }
-  
-  // Crear o actualizar el campo oculto para los detalles del pedido
-  let orderDetailsInput = document.getElementById('orderDetailsInput');
-  if (!orderDetailsInput) {
-    orderDetailsInput = document.createElement('input');
-    orderDetailsInput.type = 'hidden';
-    orderDetailsInput.id = 'orderDetailsInput';
-    orderDetailsInput.name = 'order_details';
-    document.getElementById('payment-form').appendChild(orderDetailsInput);
-  }
-  
-  // Preparar los detalles del pedido en formato legible
-  const orderDetails = cart.map(item => 
-    `${item.name} - ${item.quantity || 1} x ${formatPrice(item.price)} = ${formatPrice(item.price * (item.quantity || 1))}`
-  ).join('\n');
-  
-  // Agregar el total
-  const fullOrderDetails = `${orderDetails}\n\nTotal: ${formatPrice(total)}`;
-  
-  // Asignar al campo oculto
-  orderDetailsInput.value = fullOrderDetails;
-  
-  // Crear o actualizar el campo oculto para el asunto del correo
-  let subjectInput = document.getElementById('email_subject');
-  if (!subjectInput) {
-    subjectInput = document.createElement('input');
-    subjectInput.type = 'hidden';
-    subjectInput.id = 'email_subject';
-    subjectInput.name = 'subject';
-    subjectInput.value = 'Confirmación de Pedido - MasterBikes';
-    document.getElementById('payment-form').appendChild(subjectInput);
-  }
-  
-  // Crear o actualizar el campo oculto para el nombre del remitente
-  let fromNameInput = document.getElementById('from_name');
-  if (!fromNameInput) {
-    fromNameInput = document.createElement('input');
-    fromNameInput.type = 'hidden';
-    fromNameInput.id = 'from_name';
-    fromNameInput.name = 'from_name';
-    fromNameInput.value = 'MasterBikes';
-    document.getElementById('payment-form').appendChild(fromNameInput);
-  }
-    // Configurar el botón de pago
-    const paymentForm = document.getElementById('payment-form');}
+// Formatear fecha de expiración
+function formatExpiryDate(input) {
+    // Eliminar todos los caracteres no numéricos
+    let value = input.value.replace(/\D/g, '');
+    
+    // Limitar a 4 dígitos
+    value = value.substring(0, 4);
+    
+    // Formatear con / después de los primeros 2 dígitos
+    if (value.length > 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2);
+    }
+    
+    // Actualizar el valor del input
+    input.value = value;
+}
 
-// Actualizar el resumen del pedido
-function updateOrderSummary() {
-  const orderSummary = document.getElementById('order-summary');
-  const summarySubtotal = document.getElementById('summary-subtotal');
-  const summaryTotal = document.getElementById('summary-total');
-  
-  if (!orderSummary || !summarySubtotal || !summaryTotal) return;
-  
-  // Limpiar el contenedor
-  orderSummary.innerHTML = '';
-  
-  // Verificar si el carrito está vacío
-  if (cart.length === 0) {
-    orderSummary.innerHTML = `
-      <div class="alert alert-info">
-        Tu carrito está vacío. <a href="../index.html" class="alert-link">Volver a la tienda</a>
-      </div>
-    `;
-    return;
-  }
-  
-  // Agregar cada item al resumen
-  cart.forEach(item => {
-    const itemTotal = item.price * (item.quantity || 1);
-    const itemHtml = `
-      <div class="summary-item">
-        <div>
-          <strong>${item.name}</strong>
-          <div class="text-muted small">
-            ${item.quantity || 1} x ${formatPrice(item.price)}
-          </div>
-        </div>
-        <strong>${formatPrice(itemTotal)}</strong>
-      </div>
-    `;
-    orderSummary.innerHTML += itemHtml;
-  });
-  
-  // Actualizar subtotal y total
-  summarySubtotal.textContent = formatPrice(total);
-  summaryTotal.textContent = formatPrice(total);
-  
-  // Preparar los datos del formulario oculto para Web3Forms
-  prepareWeb3FormsData();
+// Validar formulario de pago
+function validateForm() {
+    const paymentForm = document.getElementById('payment-form');
+    if (!paymentForm) return false;
+    
+    // Añadir clase para activar validaciones de Bootstrap
+    paymentForm.classList.add('was-validated');
+    
+    // Validar campos específicos
+    const cardNumber = document.getElementById('cardNumber');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvv');
+    
+    let isValid = true;
+    
+    // Validar número de tarjeta (16 dígitos)
+    if (cardNumber) {
+        const digits = cardNumber.value.replace(/\s+/g, '');
+        if (digits.length !== 16) {
+            isValid = false;
+            cardNumber.classList.add('is-invalid');
+        } else {
+            cardNumber.classList.remove('is-invalid');
+        }
+    }
+    
+    // Validar fecha de expiración (formato MM/YY y no vencida)
+    if (expiryDate) {
+        const [month, year] = expiryDate.value.split('/');
+        const currentYear = new Date().getFullYear() % 100;
+        const currentMonth = new Date().getMonth() + 1;
+        
+        if (!month || !year || month.length !== 2 || year.length !== 2 || parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+            isValid = false;
+            expiryDate.classList.add('is-invalid');
+        } else {
+            expiryDate.classList.remove('is-invalid');
+        }
+    }
+    
+    // Validar CVV (3 o 4 dígitos)
+    if (cvv) {
+        const cvvDigits = cvv.value;
+        if (!cvvDigits || (cvvDigits.length !== 3 && cvvDigits.length !== 4)) {
+            isValid = false;
+            cvv.classList.add('is-invalid');
+        } else {
+            cvv.classList.remove('is-invalid');
+        }
+    }
+    
+    return isValid && paymentForm.checkValidity();
+}
+
+// Procesar el pago
+async function procesarPago(event) {
+    event.preventDefault();
+    
+    const submitButton = document.getElementById('submit-payment');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+    }
+    
+    try {
+        // Simulación de procesamiento de pago (esperar 2 segundos)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Datos para el email
+        const nombre = document.getElementById('cardName')?.value || 'Cliente';
+        const correo = document.getElementById('email')?.value || '';
+        const orderNumber = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+        
+        console.log('Enviando email de confirmación a:', correo);
+        
+        // Enviar email de confirmación si EmailJS está disponible
+        if (typeof emailjs !== 'undefined' && correo) {
+            try {
+                await emailjs.send('service_masterb', 'template_compra', {
+                    to_name: nombre,
+                    to_email: correo,
+                    order_id: orderNumber,
+                    total: formatPrice(total)
+                });
+                console.log('Email enviado correctamente');
+            } catch (emailError) {
+                console.error('Error al enviar email:', emailError);
+                // Continuamos con el proceso aunque falle el email
+            }
+        }
+        
+        // Limpiar carrito
+        localStorage.removeItem('masterbikes_cart');
+        
+        // Mostrar sección de confirmación
+        const paymentSection = document.getElementById('payment-section');
+        const confirmationSection = document.getElementById('confirmation-section');
+        
+        if (paymentSection) paymentSection.style.display = 'none';
+        if (confirmationSection) {
+            confirmationSection.style.display = 'block';
+            const orderNumberElement = document.getElementById('order-number');
+            if (orderNumberElement) orderNumberElement.textContent = orderNumber;
+        }
+        
+        // Actualizar indicador de progreso
+        document.querySelectorAll('.progress-step')[1].classList.remove('active');
+        document.querySelectorAll('.progress-step')[2].classList.add('active');
+        
+    } catch (error) {
+        console.error('Error al procesar el pago:', error);
+        alert('Ha ocurrido un error al procesar el pago. Por favor, inténtalo de nuevo.');
+        
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Pagar Ahora';
+        }
+    }
 }
