@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba API Gateway</title>
+</head>
+<body>
+  <h1>Test conexión con API Gateway</h1>
+  <button onclick="cargarSucursales()">Cargar Sucursales</button>
+
+  <ul id="listaSucursales"></ul>
+
+  <script>
+    function cargarSucursales() {
+      fetch("http://localhost:8080/api/sucursal/api/v1/sucursales")
+        .then(response => {
+          if (!response.ok) throw new Error("Error en la llamada: " + response.status);
+          return response.json();
+        })
+        .then(data => {
+          const lista = document.getElementById("listaSucursales");
+          lista.innerHTML = "";
+          data.forEach(sucursal => {
+            const li = document.createElement("li");
+            li.textContent = `ID: ${sucursal.id}, Nombre: ${sucursal.nombre}`;
+            lista.appendChild(li);
+          });
+        })
+        .catch(error => {
+          alert("Fallo: " + error.message);
+        });
+    }
+  </script>
+</body>
+</html>
