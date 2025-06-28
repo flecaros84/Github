@@ -1,123 +1,67 @@
+const productContainer = document.getElementById('productContainer');
+const resultsCount = document.getElementById('resultsCount');
+const priceRange = document.getElementById('priceRange');
+const priceDisplay = document.getElementById('priceDisplay');
+const typeFilter = document.getElementById('typeFilter');
+const sizeFilter = document.getElementById('sizeFilter');
+const brandFilter = document.getElementById('brandFilter');
+const ratingFilter = document.getElementById('ratingFilter');
+const sortOrder = document.getElementById('sortOrder');
+const clearFilters = document.getElementById('clearFilters');
+const gridView = document.getElementById('gridView');
+const listView = document.getElementById('listView');
+
+// **estado compartido** por todas las funciones
+let filters = {
+    type: 'Todas las bicicletas',
+    size: 'Todas las tallas',
+    maxPrice: 3000000,
+    brand: 'Todas las marcas',
+    minRating: 0
+};
+let viewMode    = 'grid';
+let currentSort = 'featured';
+
 document.addEventListener('DOMContentLoaded', function() {    // Referencias a elementos del DOM
-    const productContainer = document.getElementById('productContainer');
-    const resultsCount = document.getElementById('resultsCount');
-    const priceRange = document.getElementById('priceRange');
-    const priceDisplay = document.getElementById('priceDisplay');
-    const typeFilter = document.getElementById('typeFilter');
-    const sizeFilter = document.getElementById('sizeFilter');
-    const brandFilter = document.getElementById('brandFilter');
-    const ratingFilter = document.getElementById('ratingFilter');
-    const sortOrder = document.getElementById('sortOrder');
-    const clearFilters = document.getElementById('clearFilters');
-    const gridView = document.getElementById('gridView');
-    const listView = document.getElementById('listView');
-    
-    // Estado de los filtros
-    let filters = {
-        type: 'Todas las bicicletas',
-        size: 'Todas las tallas',
-        maxPrice: 3000000,
-        brand: 'Todas las marcas',
-        minRating: 0
-    };
-    
-    // Estado de la vista
-    let viewMode = 'grid';
-    let currentSort = 'featured';
-    
-    // Datos de bicicletas (si no existe window.bikeData)
-    if (!window.bikeData) {
-        window.bikeData = [
-            {
-                id: 1,
-                name: "Bicicleta Montaña Aura 6",
-                brand: "Oxford",
-                type: "Montaña",
-                size: "M",
-                price: 599990,
-                oldPrice: 699990,
-                rating: 4.5,
-                image: "../images/aura6.jpg",
-                discount: 15,
-                description: "Bicicleta de montaña con cuadro de aluminio, suspensión delantera y frenos de disco hidráulicos.",
-                detailPage: "Aura6.html"
-            },
-            {
-                id: 2,
-                name: "Bicicleta Ruta Merak 1",
-                brand: "Oxford",
-                type: "Ruta",
-                size: "L",
-                price: 899990,
+
+    window.bikeData = window.bikeData || [];
+
+    fetch('http://localhost:8080/api/catalogo/api/v1/catalogo/bicicletas')
+        .then(res => {
+            if (!res.ok) throw new Error('Error al obtener el catálogo');
+            return res.json();
+        })
+        .then(data => {
+            window.bikeData = data.map(item => ({
+                id: item.id,
+                name: item.modelo,
+                brand: item.marco.marca,
+                type: item.marco.tipoUso,
+                size: item.tallaUsuario,
+                price: item.precioUnitario,
                 oldPrice: null,
-                rating: 5,
-                image: "../images/merak1.jpg",
+                rating: 0,
+                image: "../images/default.jpg", // Puedes cambiar esto por lógica real si usas imágenes por modelo
                 discount: 0,
-                description: "Bicicleta de ruta con cuadro de carbono, grupo Shimano 105 y ruedas aerodinámicas.",
-                detailPage: "merak1.html"
-            },
-            {
-                id: 3,
-                name: "Bicicleta Urbana Luna 20",
-                brand: "Trek",
-                type: "Urbana",
-                size: "S",
-                price: 349990,
-                oldPrice: 399990,
-                rating: 4,
-                image: "../images/luna20.jpg",
-                discount: 12,
-                description: "Bicicleta urbana con cuadro de aluminio, cambios Shimano y posición cómoda para ciudad.",
-                detailPage: "luna20.html"
-            },
-            {
-                id: 4,
-                name: "Bicicleta Eléctrica Polux 7",
-                brand: "Specialized",
-                type: "Eléctrica",
-                size: "M",
-                price: 1899990,
-                oldPrice: 2199990,
-                rating: 4.8,
-                image: "../images/polux7.jpg",
-                discount: 14,
-                description: "Bicicleta eléctrica con motor central Bosch, batería de alta capacidad y autonomía de 80km.",
-                detailPage: "polux7.html"
-            },
-            {
-                id: 5,
-                name: "Bicicleta MTB Halley",
-                brand: "Giant",
-                type: "Montaña",
-                size: "L",
-                price: 799990,
-                oldPrice: null,
-                rating: 4.2,
-                image: "../images/halley.jpg",
-                discount: 0,
-                description: "Bicicleta de montaña con cuadro de aluminio reforzado, suspensión RockShox y frenos Shimano.",
-                detailPage: "halley.html"
-            },
-            {
-                id: 6,
-                name: "Bicicleta Gravel Orion",
-                brand: "Bianchi",
-                type: "Gravel",
-                size: "XL",
-                price: 1299990,
-                oldPrice: 1499990,
-                rating: 4.7,
-                image: "../images/orion.jpg",
-                discount: 13,
-                description: "Bicicleta gravel con cuadro de carbono, horquilla de carbono y grupo SRAM Rival.",
-                detailPage: "orion.html"
+                description: item.marco.descripcion,
+                detailPage: `detalle.html?id=${item.id}`,
+                stock: 10 // Puedes ajustar esto si tienes lógica real de stock
+            }));
+            initCatalog(); // Inicializa todo
+            if (typeof updateCartUI === 'function') {
+                updateCartUI();
             }
-        ];
-    }
+        })
+        .catch(err => {
+            console.error('Error al cargar catálogo:', err);
+            const container = document.getElementById('productContainer');
+            container.innerHTML = '<p class="text-danger">No se pudo cargar el catálogo.</p>';
+        });
     
-    // Inicializar la funcionalidad del catálogo
-    initCatalog();
-    
+
+    // ¡Renderizar por primera vez!
+    console.log(window.bikeData)
+
     // Asegurarse de que el carrito esté inicializado
     if (typeof updateCartUI === 'function') {
         updateCartUI();
@@ -135,7 +79,9 @@ function initCatalog() {
     setupFilters();
     
     // Inicializar información de stock
-    initializeStockInfo();
+    //initializeStockInfo();
+    loadProducts();
+
 }
 
 /**
@@ -417,32 +363,52 @@ function setupFilters() {
  * Función para cargar productos
  */
 function loadProducts() {
-    // Mostrar spinner de carga
-    if (productContainer) {
-        productContainer.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-                <p class="mt-3">Cargando productos...</p>
-            </div>
-        `;
-        
-        // Usar los datos del catálogo desde cart.js (window.bikeData)
-        setTimeout(() => {
-            // Simular tiempo de carga
-            if (window.bikeData && window.bikeData.length > 0) {
-                applyFilters();
-            } else {
-                productContainer.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
-                        <p class="mt-3">No se pudieron cargar los productos. Por favor, intenta nuevamente más tarde.</p>
-                    </div>
-                `;
-            }
-        }, 500);
-    }
+    if (!productContainer) return;
+
+    // 1) Muestro el spinner
+    productContainer.innerHTML = `
+    <div class="col-12 text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-3">Cargando productos...</p>
+    </div>
+  `;
+
+    // 2) Fetch al backend
+    fetch('http://localhost:8080/api/catalogo/api/v1/catalogo/bicicletas')
+        .then(resp => {
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+            return resp.json();
+        })
+        .then(data => {
+            // 3) Transforma tu respuesta al formato que espera tu JS
+            window.bikeData = data.map(item => ({
+                id: item.id,
+                name: item.modelo,
+                brand: item.marco.marca,
+                price: item.precioUnitario,
+                description: item.marco.descripcion,
+                image: item.marco.imagenUrl || `../images/bicicletas/${item.id}.jpg`,
+                size: item.tallaUsuario,
+                rating: item.marco.rating || 0,
+                stock:  Math.floor(Math.random() * 10) + 1, // o usa tu initializeStockInfo
+                detailPage: '#'  // o item.detailUrl si lo tienes
+            }));
+
+            // 4) Inicializa stock (si lo necesitas) y luego pinta
+            initializeStockInfo();
+            applyFilters();
+        })
+        .catch(err => {
+            console.error('Error al cargar catálogo:', err);
+            productContainer.innerHTML = `
+        <div class="col-12 text-center py-5">
+          <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+          <p class="mt-3">No se pudieron cargar los productos. Intenta de nuevo más tarde.</p>
+        </div>
+      `;
+        });
 }
 
 // Función para aplicar filtros
