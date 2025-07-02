@@ -1,17 +1,30 @@
 const productContainer = document.getElementById('productContainer');
-const resultsCount = document.getElementById('resultsCount');
-const priceRange = document.getElementById('priceRange');
-const priceDisplay = document.getElementById('priceDisplay');
-const typeFilter = document.getElementById('typeFilter');
-const sizeFilter = document.getElementById('sizeFilter');
-const brandFilter = document.getElementById('brandFilter');
-const ratingFilter = document.getElementById('ratingFilter');
-const sortOrder = document.getElementById('sortOrder');
-const clearFilters = document.getElementById('clearFilters');
-const gridView = document.getElementById('gridView');
-const listView = document.getElementById('listView');
+const resultsCount    = document.getElementById('resultsCount');
+const priceRange      = document.getElementById('priceRange');
+const priceDisplay    = document.getElementById('priceDisplay');
+const typeFilter      = document.getElementById('typeFilter');
+const sizeFilter      = document.getElementById('sizeFilter');
+const brandFilter     = document.getElementById('brandFilter');
+const ratingFilter    = document.getElementById('ratingFilter');
+const sortOrder       = document.getElementById('sortOrder');
+const clearFilters    = document.getElementById('clearFilters');
+const gridView        = document.getElementById('gridView');
+const listView        = document.getElementById('listView');
 
-// **estado compartido** por todas las funciones
+const GATEWAY_URL = 'http://localhost:8080';
+
+const API = {
+    getStockBicicleta: (productId, tipoProducto) => {
+        const url = `${GATEWAY_URL}/api/inventario/api/v1/inventarios/cantidad`
+            + `?productoId=${productId}`
+            + `&tipoProducto=${encodeURIComponent(tipoProducto)}`;
+        return fetch(url).then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        });
+    }
+};
+
 let filters = {
     type: 'Todas las bicicletas',
     size: 'Todas las tallas',
@@ -22,8 +35,7 @@ let filters = {
 let viewMode    = 'grid';
 let currentSort = 'featured';
 
-document.addEventListener('DOMContentLoaded', function() {    // Referencias a elementos del DOM
-
+document.addEventListener('DOMContentLoaded', function() {
     window.bikeData = window.bikeData || [];
 
     fetch('http://localhost:8080/api/catalogo/api/v1/catalogo/bicicletas')
@@ -32,98 +44,61 @@ document.addEventListener('DOMContentLoaded', function() {    // Referencias a e
             return res.json();
         })
         .then(data => {
-            window.bikeData = data.map(item => ({
-                id: item.id,
-                name: item.modelo,
-                brand: item.marco.marca,
-                type: item.marco.tipoUso,
-                size: item.tallaUsuario,
-                price: item.precioUnitario,
-                oldPrice: null,
-                rating: 0,
-                image: "../images/default.jpg", // Puedes cambiar esto por lógica real si usas imágenes por modelo
-                discount: 0,
-                description: item.marco.descripcion,
-                detailPage: `detalle.html?id=${item.id}`,
-                stock: 10 // Puedes ajustar esto si tienes lógica real de stock
+            // Filtrar solo las predefinidas
+            const predefinidas = data.filter(item => item.esPredefinida);
+
+            window.bikeData = predefinidas.map(item => ({
+                id:          item.id,
+                name:        item.modelo,
+                brand:       item.marca,            // usa item.marca tal como lo defines en tu servicio
+                type:        item.marco.tipoUso,
+                size:        item.tallaUsuario,
+                price:       item.precioUnitario,
+                oldPrice:    null,
+                rating:      0,
+                image:       "../images/default.jpg",
+                discount:    0,
+                description: item.descripcion,
+                detailPage:  `detalle.html?id=${item.id}`,
+                stock:       10
             }));
-            initCatalog(); // Inicializa todo
-            if (typeof updateCartUI === 'function') {
-                updateCartUI();
-            }
+
+            initCatalog();
+            if (typeof updateCartUI === 'function') updateCartUI();
         })
         .catch(err => {
             console.error('Error al cargar catálogo:', err);
-            const container = document.getElementById('productContainer');
-            container.innerHTML = '<p class="text-danger">No se pudo cargar el catálogo.</p>';
+            productContainer.innerHTML = '<p class="text-danger">No se pudo cargar el catálogo.</p>';
         });
-    
-
-    // ¡Renderizar por primera vez!
-    console.log(window.bikeData)
-
-    // Asegurarse de que el carrito esté inicializado
-    if (typeof updateCartUI === 'function') {
-        updateCartUI();
-    }
 });
 
-/**
- * Inicializa la funcionalidad del catálogo
- */
 function initCatalog() {
-    // Configurar los botones de agregar al carrito
+    setupViewButtons();
     setupAddToCartButtons();
-    
-    // Configurar los filtros y ordenamiento
     setupFilters();
-    
-    // Inicializar información de stock
-    //initializeStockInfo();
     loadProducts();
-
 }
 
-/**
- * Configura los botones de vista (cuadrícula/lista)
- */
 function setupViewButtons() {
     if (gridView && listView && productContainer) {
-        // Grid view button click handler
-        gridView.addEventListener('click', function() {
+        gridView.addEventListener('click', () => {
             productContainer.classList.remove('list-view');
             productContainer.classList.add('grid-view');
-            
-            // Update active button state
             gridView.classList.add('active');
             listView.classList.remove('active');
-            
-            // Save preference to localStorage
             localStorage.setItem('preferredView', 'grid');
-            
-            // Update view mode
             viewMode = 'grid';
             applyFilters();
         });
-        
-        // List view button click handler
-        listView.addEventListener('click', function() {
+        listView.addEventListener('click', () => {
             productContainer.classList.remove('grid-view');
             productContainer.classList.add('list-view');
-            
-            // Update active button state
             listView.classList.add('active');
             gridView.classList.remove('active');
-            
-            // Save preference to localStorage
             localStorage.setItem('preferredView', 'list');
-            
-            // Update view mode
             viewMode = 'list';
             applyFilters();
         });
-        
-        // Load saved preference or default to grid view
         const preferredView = localStorage.getItem('preferredView') || 'grid';
         if (preferredView === 'list') {
             listView.click();
@@ -133,105 +108,63 @@ function setupViewButtons() {
     }
 }
 
-/**
- * Configura los botones de agregar al carrito en la página de catálogo
- */
 function setupAddToCartButtons() {
-    // Esta función se llamará después de renderizar los productos
     document.addEventListener('click', function(event) {
-        // Usar delegación de eventos para manejar botones de agregar al carrito
-        if (event.target.closest('.add-to-cart-btn')) {
-            event.preventDefault();
-            const button = event.target.closest('.add-to-cart-btn');
-            
-            // Obtener información del producto
-            const productCard = button.closest('.product-card, .card');
-            if (!productCard) return;
-            
-            // Obtener ID del producto
-            const productId = button.getAttribute('data-product-id');
-            
-            // Buscar el nombre del producto
-            let productName = '';
-            const titleElement = productCard.querySelector('.product-title, .card-title');
-            if (titleElement) {
-                productName = titleElement.textContent.trim();
-            }
-            
-            // Buscar el precio del producto
-            let productPrice = 0;
-            const priceElement = productCard.querySelector('.product-price');
-            if (priceElement) {
-                productPrice = parseFloat(priceElement.getAttribute('data-price') || 
-priceElement.textContent.replace(/[^\d]/g, ''));
-            }
-            
-            // Buscar la imagen del producto
-            let productImage = '';
-            const imageElement = productCard.querySelector('.card-img-top');
-            if (imageElement) {
-                productImage = imageElement.src;
-            }
-            
-            // Verificar stock antes de agregar al carrito
-            checkStockAndAddToCart(productId, productName, productPrice, productImage);
-        }
+        const btn = event.target.closest('.add-to-cart-btn');
+        if (!btn) return;
+        event.preventDefault();
+        const productCard = btn.closest('.product-card, .card');
+        if (!productCard) return;
+
+        const productId    = btn.getAttribute('data-product-id');
+        const productType  = btn.getAttribute('data-product-type');
+        const titleEl      = productCard.querySelector('.product-title, .card-title');
+        const priceEl      = productCard.querySelector('.product-price');
+        const imgEl        = productCard.querySelector('.card-img-top');
+
+        const productName  = titleEl ? titleEl.textContent.trim() : '';
+        const productPrice = priceEl
+            ? parseFloat(priceEl.getAttribute('data-price') || priceEl.textContent.replace(/[^\d]/g, ''))
+            : 0;
+        const productImage = imgEl ? imgEl.src : '';
+
+        checkStockAndAddToCart(productId, productName, productPrice, productImage);
     });
 }
 
-/**
- * Verifica el stock disponible y agrega el producto al carrito si hay disponibilidad
- */
 async function checkStockAndAddToCart(productId, productName, productPrice, productImage) {
     try {
-        // Mostrar indicador de carga
         showLoadingIndicator(productId);
-        
-        // Verificar stock usando la API
         let stockAvailable = true;
-        let stockQuantity = 0;
-        
+        let stockQuantity  = 0;
+
         try {
-            const stockData = await API.getStockBicicleta(productId);
-            if (stockData) {
-                // Sumar el stock de todas las sucursales
-                stockQuantity = Object.values(stockData.sucursales).reduce((total, qty) => total + qty, 0);
-                stockAvailable = stockQuantity > 0;
-                
-                console.log(`Stock para ${productName}: ${stockQuantity} unidades`);
-            }
-        } catch (error) {
-            console.warn('No se pudo verificar el stock:', error);
-            // Si hay un error al verificar el stock, asumimos que hay stock disponible
+            const button       = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"]`);
+            const tipoProducto = button.getAttribute('data-product-type');
+            const sucursales   = await API.getStockBicicleta(productId, tipoProducto);
+            stockQuantity      = sucursales.map(s => s.cantidad).reduce((sum, c) => sum + c, 0);
+            stockAvailable     = stockQuantity > 0;
+            console.log(`Stock para ${productName}: ${stockQuantity} unidades`);
+        } catch {
             stockAvailable = true;
         }
-        
-        // Ocultar indicador de carga
+
         hideLoadingIndicator(productId);
-        
+
         if (stockAvailable) {
-            // Crear objeto de producto para el carrito
             const product = {
-                id: productId,
-                name: productName,
-                price: productPrice,
-                image: productImage,
+                id:       productId,
+                name:     productName,
+                price:    productPrice,
+                image:    productImage,
                 quantity: 1,
-                maxStock: stockQuantity // Guardar el stock máximo disponible
+                maxStock: stockQuantity
             };
-            
-            // Agregar al carrito
-            const added = addToCart(productId, 1, {}, product);
-            
-            if (added) {
-                // Actualizar el stock mostrado (restar 1 unidad)
+            if (addToCart(productId, 1, {}, product)) {
                 updateProductStock(productId);
-                
-                // Mostrar notificación de éxito
                 showSuccessNotification(productName);
             }
         } else {
-            // Mostrar notificación de falta de stock
             showErrorNotification('Lo sentimos, no hay stock disponible para este producto.');
         }
     } catch (error) {
@@ -241,9 +174,6 @@ async function checkStockAndAddToCart(productId, productName, productPrice, prod
     }
 }
 
-/**
- * Muestra un indicador de carga en el botón
- */
 function showLoadingIndicator(productId) {
     const button = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"]`);
     if (button) {
@@ -252,9 +182,6 @@ function showLoadingIndicator(productId) {
     }
 }
 
-/**
- * Oculta el indicador de carga del botón
- */
 function hideLoadingIndicator(productId) {
     const button = document.querySelector(`.add-to-cart-btn[data-product-id="${productId}"]`);
     if (button) {
@@ -263,109 +190,44 @@ function hideLoadingIndicator(productId) {
     }
 }
 
-/**
- * Muestra una notificación de éxito cuando se agrega un producto al carrito
- */
 function showSuccessNotification(productName) {
-    const toastEl = document.getElementById('notificationToast');
-    const toastBody = toastEl.querySelector('.toast-body');
-    
-    // Actualizar el contenido del toast
-    toastBody.textContent = `${productName} agregado al carrito correctamente.`;
-    
-    // Mostrar el toast
-    const toast = new bootstrap.Toast(toastEl);
+    const toastEl  = document.getElementById('notificationToast');
+    const toast    = new bootstrap.Toast(toastEl);
+    toastEl.querySelector('.toast-body').textContent = `${productName} agregado al carrito correctamente.`;
     toast.show();
 }
 
-/**
- * Muestra una notificación de error
- */
 function showErrorNotification(message) {
-    const toastEl = document.getElementById('notificationToast');
-    const toastHeader = toastEl.querySelector('.toast-header i');
-    const toastBody = toastEl.querySelector('.toast-body');
-    
-    // Cambiar el ícono a error
-    toastHeader.className = 'bi bi-exclamation-circle-fill text-danger me-2';
-    
-    // Actualizar el contenido del toast
-    toastBody.textContent = message;
-    
-    // Mostrar el toast
-    const toast = new bootstrap.Toast(toastEl);
+    const toastEl  = document.getElementById('notificationToast');
+    const toastHdr = toastEl.querySelector('.toast-header i');
+    const toast    = new bootstrap.Toast(toastEl);
+    toastHdr.className = 'bi bi-exclamation-circle-fill text-danger me-2';
+    toastEl.querySelector('.toast-body').textContent = message;
     toast.show();
-    
-    // Restaurar el ícono después de un tiempo
     setTimeout(() => {
-        toastHeader.className = 'bi bi-check-circle-fill text-success me-2';
+        toastHdr.className = 'bi bi-check-circle-fill text-success me-2';
     }, 5000);
 }
 
-/**
- * Configura los filtros y ordenamiento del catálogo
- */
 function setupFilters() {
-    // Evento para el rango de precio
     if (priceRange) {
-        priceRange.addEventListener('input', function() {
-            const value = this.value;
-            priceDisplay.textContent = formatPrice(value);
-            filters.maxPrice = parseInt(value);
+        priceRange.addEventListener('input', () => {
+            filters.maxPrice   = parseInt(priceRange.value);
+            priceDisplay.textContent = formatPrice(filters.maxPrice);
             applyFilters();
         });
     }
-    
-    // Eventos para los selectores de filtro
-    if (typeFilter) {
-        typeFilter.addEventListener('change', function() {
-            filters.type = this.value;
-            applyFilters();
-        });
-    }
-    
-    if (sizeFilter) {
-        sizeFilter.addEventListener('change', function() {
-            filters.size = this.value;
-            applyFilters();
-        });
-    }
-    
-    if (brandFilter) {
-        brandFilter.addEventListener('change', function() {
-            filters.brand = this.value;
-            applyFilters();
-        });
-    }
-    
-    if (ratingFilter) {
-        ratingFilter.addEventListener('change', function() {
-            filters.minRating = parseFloat(this.value);
-            applyFilters();
-        });
-    }
-    
-    // Evento para ordenar
-    if (sortOrder) {
-        sortOrder.addEventListener('change', function() {
-            currentSort = this.value;
-            applyFilters();
-        });
-    }
-    
-    // Evento para limpiar filtros
-    if (clearFilters) {
-        clearFilters.addEventListener('click', resetFilters);
-    }
+    if (typeFilter)   typeFilter.addEventListener('change', () => { filters.type = typeFilter.value; applyFilters(); });
+    if (sizeFilter)   sizeFilter.addEventListener('change', () => { filters.size = sizeFilter.value; applyFilters(); });
+    if (brandFilter)  brandFilter.addEventListener('change', () => { filters.brand = brandFilter.value; applyFilters(); });
+    if (ratingFilter) ratingFilter.addEventListener('change', () => { filters.minRating = parseFloat(ratingFilter.value); applyFilters(); });
+    if (sortOrder)    sortOrder.addEventListener('change', () => { currentSort = sortOrder.value; applyFilters(); });
+    if (clearFilters) clearFilters.addEventListener('click', resetFilters);
 }
 
-/**
- * Función para cargar productos
- */
 function loadProducts() {
     if (!productContainer) return;
 
-    // 1) Muestro el spinner
     productContainer.innerHTML = `
     <div class="col-12 text-center py-5">
       <div class="spinner-border text-primary" role="status">
@@ -375,30 +237,38 @@ function loadProducts() {
     </div>
   `;
 
-    // 2) Fetch al backend
     fetch('http://localhost:8080/api/catalogo/api/v1/catalogo/bicicletas')
         .then(resp => {
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
             return resp.json();
         })
         .then(data => {
-            // 3) Transforma tu respuesta al formato que espera tu JS
-            window.bikeData = data.map(item => ({
-                id: item.id,
-                name: item.modelo,
-                brand: item.marco.marca,
-                price: item.precioUnitario,
-                description: item.marco.descripcion,
-                image: item.marco.imagenUrl || `../images/bicicletas/${item.id}.jpg`,
-                size: item.tallaUsuario,
-                rating: item.marco.rating || 0,
-                stock:  Math.floor(Math.random() * 10) + 1, // o usa tu initializeStockInfo
-                detailPage: '#'  // o item.detailUrl si lo tienes
+            const predefinidas = data.filter(item => item.esPredefinida);
+            window.bikeData = predefinidas.map(item => ({
+                id:          item.id,
+                name:        item.modelo,
+                brand:       item.marca,
+                type:        item.marco.tipoUso,
+                size:        item.tallaUsuario,
+                price:       item.precioUnitario,
+                description: item.descripcion,
+                image:       item.marco.imagenUrl || `../images/bicicletas/${item.id}.jpg`,
+                rating:      item.valoracion || 0,
+                stock:       Math.floor(Math.random() * 10) + 1,
+                detailPage:  `detalle.html?id=${item.id}`
             }));
 
-            // 4) Inicializa stock (si lo necesitas) y luego pinta
-            initializeStockInfo();
-            applyFilters();
+            initializeStockInfo()
+                .then(applyFilters)
+                .catch(err => {
+                    console.error('Error al cargar catálogo:', err);
+                    productContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+              <p class="mt-3">No se pudieron cargar los productos. Intenta de nuevo más tarde.</p>
+            </div>
+          `
+                });
         })
         .catch(err => {
             console.error('Error al cargar catálogo:', err);
@@ -411,128 +281,77 @@ function loadProducts() {
         });
 }
 
-// Función para aplicar filtros
 function applyFilters() {
     if (!productContainer) return;
-    
-    // Filtrar productos
-    let filteredProducts = window.bikeData.filter(product => {
-        // Filtrar por tipo
-        if (filters.type !== 'Todas las bicicletas' && product.type !== filters.type) {
-            return false;
-        }
-        
-        // Filtrar por talla
-        if (filters.size !== 'Todas las tallas' && product.size !== filters.size) {
-            return false;
-        }
-        
-        // Filtrar por precio
-        if (product.price > filters.maxPrice) {
-            return false;
-        }
-        
-        // Filtrar por marca
-        if (filters.brand !== 'Todas las marcas' && product.brand !== filters.brand) {
-            return false;
-        }
-        
-        // Filtrar por valoración
-        if (product.rating < filters.minRating) {
-            return false;
-        }
-        
+    let filtered = window.bikeData.filter(p => {
+        if (filters.type       !== 'Todas las bicicletas' && p.type !== filters.type)     return false;
+        if (filters.size       !== 'Todas las tallas'     && p.size !== filters.size)     return false;
+        if (p.price            > filters.maxPrice)                                      return false;
+        if (filters.brand      !== 'Todas las marcas'   && p.brand !== filters.brand)    return false;
+        if (p.rating           < filters.minRating)                                    return false;
         return true;
     });
-    
-    // Ordenar productos
-    filteredProducts = sortProducts(filteredProducts, currentSort);
-    
-    // Actualizar contador de resultados
-    if (resultsCount) {
-        resultsCount.textContent = filteredProducts.length;
-    }
-    
-    // Mostrar productos
-    renderProducts(filteredProducts);
+    filtered = sortProducts(filtered, currentSort);
+    if (resultsCount) resultsCount.textContent = filtered.length;
+    renderProducts(filtered);
 }
 
-// Función para ordenar productos
 function sortProducts(products, sortBy) {
-    const sortedProducts = [...products];
-    
+    const sorted = [...products];
     switch (sortBy) {
-        case 'priceAsc':
-            sortedProducts.sort((a, b) => a.price - b.price);
-            break;
-        case 'priceDesc':
-            sortedProducts.sort((a, b) => b.price - a.price);
-            break;
-        case 'nameAsc':
-            sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-        case 'nameDesc':
-            sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
-            break;
-        case 'rating':
-            sortedProducts.sort((a, b) => b.rating - a.rating);
-            break;
-        default: // featured - mantener el orden original
-            break;
+        case 'priceAsc':  sorted.sort((a,b) => a.price - b.price); break;
+        case 'priceDesc': sorted.sort((a,b) => b.price - a.price); break;
+        case 'nameAsc':   sorted.sort((a,b) => a.name.localeCompare(b.name)); break;
+        case 'nameDesc':  sorted.sort((a,b) => b.name.localeCompare(a.name)); break;
+        case 'rating':    sorted.sort((a,b) => b.rating - a.rating); break;
     }
-    
-    return sortedProducts;
+    return sorted;
 }
 
-// Función para renderizar productos
 function renderProducts(products) {
     if (!productContainer) return;
-    
-    // Limpiar contenedor
     productContainer.innerHTML = '';
-    
-    // Verificar si hay productos
     if (products.length === 0) {
         productContainer.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-search" style="font-size: 3rem; color: #6c757d;"></i>
-                <h4 class="mt-3">No se encontraron productos</h4>
-                <p class="text-muted">Intenta con otros filtros o <button class="btn btn-link p-0" id="resetFiltersBtn">limpia los filtros</button></p>
-            </div>
-        `;
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-search" style="font-size: 3rem; color: #6c757d;"></i>
+        <h4 class="mt-3">No se encontraron productos</h4>
+        <p class="text-muted">Intenta con otros filtros o <button class="btn btn-link p-0" id="resetFiltersBtn">limpia los filtros</button></p>
+      </div>
+    `;
         return;
     }
-    
-    // Renderizar productos
     products.forEach(product => {
-        const productElement = document.createElement('div');
-        productElement.className = `col-md-4 mb-4 ${viewMode === 'grid' ? 'col-lg-3' : ''}`;
-        productElement.innerHTML = `
-            <div class="card product-card">
-                <img src="${product.image}" class="card-img-top product-img" alt="${product.name}">
-                <div class="card-body">
-                    <h5 class="card-title product-title">${product.name}</h5>
-                    <p class="card-text">${product.description}</p>
-                    <p class="card-text"><strong>Precio:</strong> <span class="product-price" data-price="${product.price}">${formatPrice(product.price)}</span></p>
-                    <p class="card-text"><strong>Marca:</strong> ${product.brand}</p>
-                    <p class="card-text"><strong>Talla:</strong> ${product.size}</p>
-                    <p class="card-text"><strong>Valoración:</strong> ${product.rating} <i class="bi bi-star-fill"></i></p>
-                    <p class="card-text"><strong>Stock:</strong> ${product.stock || 0}</p>
-                    <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}"><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
-                    <a href="${product.detailPage}" class="btn btn-secondary mt-2">Ver detalles</a>
-                </div>
-            </div>
-        `;
-        productContainer.appendChild(productElement);
+        const div = document.createElement('div');
+        div.className = `col-md-4 mb-4 ${viewMode==='grid'?'col-lg-3':''}`;
+        div.innerHTML = `
+      <div class="card product-card">
+        <img src="${product.image}" class="card-img-top product-img" alt="${product.name}">
+        <div class="card-body">
+          <h5 class="card-title product-title">${product.name}</h5>
+          <p class="card-text">${product.description}</p>
+          <p class="card-text"><strong>Precio:</strong> <span class="product-price" data-price="${product.price}">${formatPrice(product.price)}</span></p>
+          <p class="card-text"><strong>Marca:</strong> ${product.brand}</p>
+          <p class="card-text"><strong>Talla:</strong> ${product.size}</p>
+          <p class="card-text"><strong>Valoración:</strong> ${product.rating} <i class="bi bi-star-fill"></i></p>
+          <p class="card-text"><strong>Stock:</strong> ${product.stock || 0}</p>
+          <button class="btn btn-primary add-to-cart-btn"
+                  data-product-id="${product.id}"
+                  data-product-type="${product.type}">
+            <i class="bi bi-cart-plus"></i> Agregar al carrito
+          </button>
+          <a href="${product.detailPage}" class="btn btn-secondary mt-2">Ver detalles</a>
+        </div>
+      </div>
+    `;
+        productContainer.appendChild(div);
     });
 }
 
-// Función para formatear el precio
 function formatPrice(price) {
     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price);
 }
 
-// Función para restablecer filtros
 function resetFilters() {
     filters = {
         type: 'Todas las bicicletas',
@@ -542,17 +361,16 @@ function resetFilters() {
         minRating: 0
     };
     currentSort = 'featured';
-    priceRange.value = filters.maxPrice;
+    priceRange.value   = filters.maxPrice;
     priceDisplay.textContent = formatPrice(filters.maxPrice);
-    typeFilter.value = filters.type;
-    sizeFilter.value = filters.size;
-    brandFilter.value = filters.brand;
+    typeFilter.value   = filters.type;
+    sizeFilter.value   = filters.size;
+    brandFilter.value  = filters.brand;
     ratingFilter.value = filters.minRating;
-    sortOrder.value = currentSort;
+    sortOrder.value    = currentSort;
     applyFilters();
 }
 
-// Función para establecer el modo de vista
 function setViewMode(mode) {
     viewMode = mode;
     gridView.classList.toggle('active', viewMode === 'grid');
@@ -562,15 +380,15 @@ function setViewMode(mode) {
     applyFilters();
 }
 
-// Función para inicializar la información de stock
-function initializeStockInfo() {
-    // Aquí se podría agregar lógica para inicializar o actualizar la información de stock
-    // Por ejemplo, hacer una llamada a una API para obtener la cantidad de stock disponible
-    // y actualizar los objetos en window.bikeData con esta información.
-    // Para este ejemplo, asumiremos que cada producto tiene un stock predeterminado.
-    window.bikeData.forEach(product => {
-        if (!product.stock) {
-            product.stock = Math.floor(Math.random() * 10) + 1; // Stock aleatorio entre 1 y 10
+async function initializeStockInfo() {
+    await Promise.all(window.bikeData.map(async product => {
+        try {
+            const sucursales = await API.getStockBicicleta(product.id, product.type);
+            product.sucursales = sucursales;
+            product.stock      = sucursales.map(s => s.cantidad).reduce((sum, c) => sum + c, 0);
+        } catch {
+            product.sucursales = [];
+            product.stock      = product.stock || 0;
         }
-    });
+    }));
 }

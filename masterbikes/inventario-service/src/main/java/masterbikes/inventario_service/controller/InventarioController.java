@@ -40,7 +40,7 @@ public class InventarioController {
         inventarioService.deleteById(id);
     }
 
-    @GetMapping(params = { "productoId", "sucursalId" })
+    @GetMapping(params = {"productoId", "sucursalId"})
     public List<Inventario> findByProductoYSucursal(
             @RequestParam Long productoId,
             @RequestParam Long sucursalId
@@ -48,6 +48,12 @@ public class InventarioController {
         return inventarioRepository.findByProductoIdAndSucursalId(productoId, sucursalId);
     }
 
+    @GetMapping(value = "/cantidad", params = {"productoId", "tipoProducto"})
+    public List<Inventario> getCantidadPorProductoYTipo(
+            @RequestParam Long productoId,
+            @RequestParam String tipoProducto) {
+        return inventarioService.findByProductoIdAndTipoProducto(productoId, tipoProducto);
+    }
 
 
 

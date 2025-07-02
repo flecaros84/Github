@@ -11,4 +11,6 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
     List<Inventario> findBySucursalId(Long sucursalId);
 
     List<Inventario> findByProductoIdAndSucursalId(Long productoId, Long sucursalId);
+
+    List<Inventario> findByProductoIdAndTipoProducto(Long productoId, String tipoProducto);
 }

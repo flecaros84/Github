@@ -35,4 +35,9 @@ public class InventarioService {
         inventarioRepository.deleteById(id);
     }
 
+    //Para buscar por producto_id y tipo_producto
+    public List<Inventario> findByProductoIdAndTipoProducto(Long productoId, String tipoProducto) {
+        return inventarioRepository.findByProductoIdAndTipoProducto(productoId, tipoProducto);
+    }
+
 }

@@ -60,4 +60,8 @@ public class Bicicleta {
     @Column(name="precio_unitario")
     private Double precioUnitario;
 
+    private String marca;
+    private String descripcion;
+    private Double valoracion;
+
 }
