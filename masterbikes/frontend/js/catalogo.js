@@ -13,16 +13,28 @@ const listView        = document.getElementById('listView');
 
 const GATEWAY_URL = 'http://localhost:8080';
 
+// Mapa global para traducir sucursalId → nombre
+let branchMap = {};
+
 const API = {
     getStockBicicleta: (productId, tipoProducto) => {
         const url = `${GATEWAY_URL}/api/inventario/api/v1/inventarios/cantidad`
             + `?productoId=${productId}`
-            + `&tipoProducto=${encodeURIComponent(tipoProducto)}`;
+            + `&tipoProducto=bicicleta`;
         return fetch(url).then(res => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.json();
         });
+    },
+    getSucursales: () => {
+        const url = `${GATEWAY_URL}/api/sucursal/api/v1/sucursales`;
+        return fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            });
     }
+
 };
 
 let filters = {
@@ -36,6 +48,15 @@ let viewMode    = 'grid';
 let currentSort = 'featured';
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    API.getSucursales()
+        .then(sucursales => {
+            sucursales.forEach(s => {
+                branchMap[s.id] = s.nombre;
+            });
+        })
+        .catch(err => console.error('Error cargando sucursales:', err));
+
     window.bikeData = window.bikeData || [];
 
     fetch('http://localhost:8080/api/catalogo/api/v1/catalogo/bicicletas')
@@ -334,7 +355,14 @@ function renderProducts(products) {
           <p class="card-text"><strong>Marca:</strong> ${product.brand}</p>
           <p class="card-text"><strong>Talla:</strong> ${product.size}</p>
           <p class="card-text"><strong>Valoración:</strong> ${product.rating} <i class="bi bi-star-fill"></i></p>
-          <p class="card-text"><strong>Stock:</strong> ${product.stock || 0}</p>
+          <p class="card-text"><strong>Stock total:</strong> ${product.stock}</p>
+          <ul class="list-unstyled mb-2">
+            ${product.sucursales.map(s =>
+                 `<li><strong>${
+                branchMap[s.sucursalId] || `Sucursal ${s.sucursalId}`
+                }:</strong> ${s.cantidad}</li>`
+            ).join('')}
+          </ul>
           <button class="btn btn-primary add-to-cart-btn"
                   data-product-id="${product.id}"
                   data-product-type="${product.type}">
