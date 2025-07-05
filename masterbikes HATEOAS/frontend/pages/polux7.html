@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bicicleta Aro 29 Polux 7 Negro | MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="../js/session.js"></script>
+    <script src="../js/cart.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/orion-futuristic.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+        }
+        #cartOffcanvas .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #cartOffcanvas .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-details h6 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        .cart-item-details .text-muted {
+            font-size: 0.9rem;
+        }
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .cart-item-remove {
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        #cart-total-container {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        /* Estilos para la galería de productos */
+        .product-gallery {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        /* Estilos para los thumbnails del carrusel */
+        .carousel-thumbnails {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 12px;
+        }
+        
+        .carousel-thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .carousel-thumbnail:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0.9;
+        }
+        
+        .carousel-thumbnail.active {
+            opacity: 1;
+            border: 2px solid #0066ff;
+            transform: scale(1.05);
+        }
+        
+        /* Estilos para el offcanvas del carrito */
+        .cart-offcanvas {
+            width: 350px;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 0.7rem;
+        }
+        
+        /* Estilos para la navbar personalizada */
+        .custom-navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Estilos para la sección de reseñas personalizada */
+        .custom-review {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .custom-review:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Estilos modernos para el carrusel */
+        .carousel-control-prev, .carousel-control-next {
+            background-color: rgba(0, 102, 204, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.8;
+        }
+        
+        .carousel-control-prev {
+            left: 10px;
+        }
+        
+        .carousel-control-next {
+            right: 10px;
+        }
+        
+        .carousel-control-prev:hover, .carousel-control-next:hover {
+            background-color: rgba(0, 102, 204, 1);
+            opacity: 1;
+        }
+        
+        /* Efecto de transición suave para las imágenes del carrusel */
+        .carousel-item {
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Estilos Oxford Store */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .oxford-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .product-brand {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e63946;
+            margin-bottom: 20px;
+        }
+
+        .product-features {
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feature-item i {
+            color: #0066cc;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #333;
+        }
+
+        .btn-oxford {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-oxford:hover {
+            background-color: #004c99;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-oxford-secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-oxford-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para secciones colapsables */
+        .collapsible-section {
+            margin-bottom: 30px;
+        }
+
+        .collapsible-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background-color: #e9ecef;
+        }
+
+        .collapsible-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .collapsible-content {
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            display: none;
+        }
+
+        .collapsible-header.active {
+            background-color: #0066cc;
+            color: white;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .collapsible-header.active i {
+            transform: rotate(180deg);
+        }
+
+        /* Estilos para breadcrumbs */
+        .oxford-breadcrumb {
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .oxford-breadcrumb .breadcrumb {
+            margin-bottom: 0;
+        }
+
+        .oxford-breadcrumb .breadcrumb-item a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .oxford-breadcrumb .breadcrumb-item.active {
+            color: #666;
+        }
+
+        /* Estilos para las estrellas de calificación */
+        .rating-stars i {
+            color: #ffc107;
+        }
+
+        /* Estilos para el selector de tienda */
+        .store-selector {
+            margin-bottom: 20px;
+        }
+
+        .store-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body class="futuristic-theme">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../images/icon-master.png" alt="MasterBikes" height="30" class="d-inline-block align-text-top me-2">
+                MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            Bicicletas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="orion.html">Orion</a></li>
+                            <li><a class="dropdown-item" href="merak1.html">Merak 1</a></li>
+                            <li><a class="dropdown-item active" href="polux7.html">Polux 7</a></li>
+                            <li><a class="dropdown-item" href="Aura6.html">Aura 6</a></li>
+                            <li><a class="dropdown-item" href="halley.html">Halley</a></li>
+                            <li><a class="dropdown-item" href="luna20.html">Luna 20</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="formulario.html">Contacto</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <!-- Cart button -->
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart"></i> Carrito
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
+                        </button>
+                    </li>
+                    <!-- Login/Register buttons -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person"></i> Iniciar Sesión
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </button>
+                    </li>
+                    <!-- User menu (hidden by default) -->
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span class="user-name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="arriendo.html"><i class="bi bi-bicycle"></i> Mis Arriendos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+            <p class="text-center text-muted" id="cart-empty-msg">Tu carrito está vacío.</p>
+        </div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pago.html" class="btn btn-primary w-100" id="checkout-btn">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Proceder al Pago
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <!-- Breadcrumbs -->
+        <div class="oxford-breadcrumb">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="#">Bicicletas</a></li>
+                    <li class="breadcrumb-item"><a href="#">Montaña</a></li>
+                    <li class="breadcrumb-item active">Bicicleta Aro 29 Polux 7 Negro</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <!-- Botón para cambiar color -->
+            <div class="col-12 mb-3">
+                <button id="toggleColorBtn" class="btn btn-danger">Ver color Rojo</button>
+            </div>
+
+            <!-- Galería de imágenes -->
+            <div class="col-md-6">
+                <div class="oxford-container">
+                    <div class="product-gallery">
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="../images/ba2961-orion-4-29-titanio-2022-02.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022-02">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961-orion-4-29-titanio-2022-08.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022-08">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961-orion-4-29-titanio-2022-09.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022-09">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961_orion_4_29_titanio_2022_02.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022_02">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961_orion_4_29_titanio_2022_03.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022_03">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Siguiente</span>
+                            </button>
+                        </div>
+                        <div class="carousel-thumbnails mt-3">
+                            <img src="../images/ba2961-orion-4-29-titanio-2022-02.jpg" class="carousel-thumbnail active" data-bs-slide-to="0" data-bs-target="#productCarousel" alt="Thumb 1">
+                            <img src="../images/ba2961-orion-4-29-titanio-2022-08.jpg" class="carousel-thumbnail" data-bs-slide-to="1" data-bs-target="#productCarousel" alt="Thumb 2">
+                            <img src="../images/ba2961-orion-4-29-titanio-2022-09.jpg" class="carousel-thumbnail" data-bs-slide-to="2" data-bs-target="#productCarousel" alt="Thumb 3">
+                            <img src="../images/ba2961_orion_4_29_titanio_2022_02.jpg" class="carousel-thumbnail" data-bs-slide-to="3" data-bs-target="#productCarousel" alt="Thumb 4">
+                            <img src="../images/ba2961_orion_4_29_titanio_2022_03.jpg" class="carousel-thumbnail" data-bs-slide-to="4" data-bs-target="#productCarousel" alt="Thumb 5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del producto -->
+            <div class="col-md-6">
+                <div class="oxford-container">
+                    <div class="product-brand">OXFORD</div>
+                    <h1 class="product-title" id="productTitle">Bicicleta Aro 29 Polux 7 Negro</h1>
+                    <div class="mb-3">
+                        <small class="text-muted">SKU: POLUX7-29-NG</small>
+                    </div>
+                    <div class="product-price mb-4">
+                        $599.990
+                    </div>
+
+                    <div class="product-features mb-4">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Transmisión Shimano 18 velocidades (2x9)</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Cuadro aluminio con cableado interno</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Horquilla Suntour XCR 32 LOR 100 mm</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Frenos de disco hidráulico</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Aro 29"</span>
+                        </div>
+                    </div>
+
+                    <!-- Selector de talla -->
+                    <div class="mb-3">
+                        <label for="sizeSelect" class="form-label">Talla</label>
+                        <select class="form-select" id="sizeSelect">
+                            <option value="S">S (15")</option>
+                            <option value="M" selected>M (17")</option>
+                            <option value="L">L (19")</option>
+                            <option value="XL">XL (21")</option>
+                        </select>
+                    </div>
+
+                    <!-- Selector de cantidad -->
+                    <div class="mb-3">
+                        <label for="quantitySelect" class="form-label">Cantidad</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">-</button>
+                            <input type="number" class="form-control text-center" id="quantityInput" value="1" min="1" max="10">
+                            <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">+</button>
+                        </div>
+                        <small class="text-muted mt-1" id="stockInfo">10 unidades disponibles</small>
+                    </div>
+
+                    <!-- Selector de tienda -->
+                    <div class="store-selector mb-4">
+                        <label for="storeSelect" class="form-label">Seleccionar tienda</label>
+                        <select class="form-select" id="storeSelect">
+                            <option value="">Seleccione una tienda</option>
+                            <option value="santiago">Santiago Centro</option>
+                            <option value="providencia">Providencia</option>
+                            <option value="vitacura">Vitacura</option>
+                            <option value="lascondes">Las Condes</option>
+                        </select>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-oxford" id="addToCartBtn">
+                            <i class="fas fa-shopping-cart me-2"></i>Agregar al carrito
+                        </button>
+                        <button class="btn btn-oxford-secondary" id="checkStoreBtn">
+                            <i class="fas fa-store me-2"></i>Consultar disponibilidad en tiendas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Opiniones de Clientes (Collapsible) -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="collapsible-section">
+                    <div class="collapsible-header" id="opinionsHeader">
+                        <h3>Opiniones de Clientes</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="collapsible-content" id="opinionsContent">
+                        <div class="oxford-container">
+                            <!-- Resumen de reseñas -->
+                            <div class="row mb-4">
+                                <div class="col-md-4 text-center">
+                                    <div class="review-summary p-4">
+                                        <h2 class="display-4 mb-3">4.7</h2>
+                                        <div class="text-warning mb-2">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                        <p class="mb-0">Basado en 23 opiniones</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="p-4">
+                                        <h4 class="mb-3">¿Qué dicen nuestros clientes?</h4>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span>5 estrellas</span>
+                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                                                </div>
+                                                <span>75%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span>4 estrellas</span>
+                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 20%"></div>
+                                                </div>
+                                                <span>20%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span>3 estrellas</span>
+                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 5%"></div>
+                                                </div>
+                                                <span>5%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span>2 estrellas</span>
+                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
+                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+                                                </div>
+                                                <span>0%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <span>1 estrella</span>
+                                                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
+                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+                                                </div>
+                                                <span>0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lista de reseñas -->
+                            <div id="reviewsList">
+                                <div class="review-futuristic mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5>Carlos Rodríguez</h5>
+                                        <div class="text-warning">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1">Excelente bicicleta para rutas de montaña. El marco de aluminio es muy ligero y la suspensión funciona perfectamente en terrenos difíciles. Muy satisfecho con mi compra.</p>
+                                    <small class="text-muted">Publicado el 15 de marzo de 2023</small>
+                                </div>
+
+                                <div class="review-futuristic mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5>Ana Martínez</h5>
+                                        <div class="text-warning">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1">Muy buena relación calidad-precio. Los cambios Shimano funcionan muy bien y el color titanio es precioso. Le quito una estrella porque los frenos podrían ser mejores.</p>
+                                    <small class="text-muted">Publicado el 2 de abril de 2023</small>
+                                </div>
+
+                                <div class="review-futuristic mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5>Miguel Ángel López</h5>
+                                        <div class="text-warning">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1">Llevo un mes con esta bicicleta y estoy encantado. Es muy cómoda para rutas largas y el cambio de velocidades es suave. La recomiendo totalmente para ciclistas intermedios.</p>
+                                    <small class="text-muted">Publicado el 18 de abril de 2023</small>
+                                </div>
+                            </div>
+
+                            <!-- Botones para ver todas las opiniones y escribir una reseña -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-oxford-secondary" id="viewAllReviewsBtn">
+                                    <i class="fas fa-comments me-2"></i>Ver todas las opiniones
+                                </button>
+                                <button class="btn btn-oxford" id="writeReviewBtn" data-bs-toggle="collapse" data-bs-target="#writeReviewForm">
+                                    <i class="fas fa-pen me-2"></i>Escribir una opinión
+                                </button>
+                            </div>
+
+                            <!-- Formulario para escribir una reseña (colapsable) -->
+                            <div class="collapse mt-4" id="writeReviewForm">
+                                <div class="card card-body">
+                                    <h4 class="mb-3">Escribe tu opinión</h4>
+                                    <form id="reviewForm">
+                                        <div class="mb-3">
+                                            <label for="reviewName" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="reviewName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reviewEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="reviewEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Calificación</label>
+                                            <div class="rating-stars">
+                                                <i class="far fa-star" data-rating="1"></i>
+                                                <i class="far fa-star" data-rating="2"></i>
+                                                <i class="far fa-star" data-rating="3"></i>
+                                                <i class="far fa-star" data-rating="4"></i>
+                                                <i class="far fa-star" data-rating="5"></i>
+                                            </div>
+                                            <input type="hidden" id="reviewRating" value="0" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reviewText" class="form-label">Tu opinión</label>
+                                            <textarea class="form-control" id="reviewText" rows="4" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-oxford">Enviar opinión</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beneficios de tu compra -->
+        <section class="py-5" id="beneficios-compra">
+            <div class="container">
+                <div class="row text-center row-cols-2 row-cols-md-4 g-4">
+                    <div class="col">
+                        <img src="../images/I_cono-Home-AjusteGratis_1.png" alt="Ajuste gratuito" height="80" class="mb-3">
+                        <p class="small">Despachos al día siguiente en Santiago y a regiones desde 4 días hábiles.</p>
+                    </div>
+                    <div class="col">
+                        <img src="../images/I_cono-Home-RetiroTienda2.png" alt="Retira gratis en tienda" height="80" class="mb-3">
+                        <h6 class="fw-bold">RETIRA GRATIS EN TIENDA</h6>
+                        <p class="small">Sin costo de despacho retirando en nuestras tiendas o puntos de retiro.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Características del Producto -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="oxford-container">
+                    <h2 class="section-title">Características</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-box p-4 text-center">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-bicycle fa-3x"></i>
+                                </div>
+                                <h4>Marco de Aluminio</h4>
+                                <p>Liviano y resistente, diseñado para un rendimiento óptimo en terrenos variados.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-box p-4 text-center">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-cogs fa-3x"></i>
+                                </div>
+                                <h4>Transmisión Shimano</h4>
+                                <p>21 velocidades para adaptarse a cualquier terreno y pendiente con facilidad.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-box p-4 text-center">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-mountain fa-3x"></i>
+                                </div>
+                                <h4>Suspensión Suntour</h4>
+                                <p>Horquilla con 100mm de recorrido para absorber impactos en terrenos irregulares.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Especificaciones (Collapsible) -->
+        <div class="row mt-4 mb-5">
+            <div class="col-12">
+                <div class="collapsible-section">
+                    <div class="collapsible-header" id="specsHeader">
+                        <h3>Especificaciones</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="collapsible-content" id="specsContent">
+                        <div class="oxford-container">
+                            <div class="accordion specs-accordion" id="specsAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                            Cuadro y Geometría
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#specsAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="list-group list-group-flush specs-list">
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Material del cuadro</span>
+                                                    <span class="fw-bold">Aluminio 6061</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Tallas disponibles</span>
+                                                    <span class="fw-bold">S (15"), M (17"), L (19"), XL (21")</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Peso aproximado</span>
+                                                    <span class="fw-bold">13.5 kg (talla M)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                            Componentes
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#specsAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="list-group list-group-flush specs-list">
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Horquilla</span>
+                                                    <span class="fw-bold">Suntour XCR 32 LOR 100 mm</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Cambio trasero</span>
+                                                    <span class="fw-bold">Shimano Tourney TY300</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Desviador</span>
+                                                    <span class="fw-bold">Shimano Tourney TY500</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Mandos de cambio</span>
+                                                    <span class="fw-bold">Shimano EF500 3x7</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Frenos</span>
+                                                    <span class="fw-bold">Disco mecánico 160mm</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                            Ruedas
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#specsAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="list-group list-group-flush specs-list">
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Tamaño de rueda</span>
+                                                    <span class="fw-bold">29 pulgadas</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Llantas</span>
+                                                    <span class="fw-bold">Aluminio doble pared</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Cubiertas</span>
+                                                    <span class="fw-bold">29 x 2.20" con diseño para todo terreno</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ¿Cómo enviamos las bicicletas? -->
+        <div class="row mt-5 mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-2">¿CÓMO ENVIAMOS LAS BICICLETAS?</h2>
+                <p class="text-muted">Contamos con despachos a domicilio y retiro en nuestras tiendas o puntos de retiro.</p>
+            </div>
+            <div class="col-12">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 text-center">
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A DOMICILIO:</h6>
+                            <p class="text-warning fw-bold">ARMADA</p>
+                            <img src="../images/envio_bici_armada.svg" alt="Bicicleta Armada" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta es armada y ajustada en nuestro Centro de Distribución. Luego se envía con todas las protecciones necesarias.</p>
+                            <p class="small text-muted mb-0">✔ Lista para usar</p>
+                            <p class="small text-muted">✔ Ajuste gratis a los 30 días</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A DOMICILIO:</h6>
+                            <p class="text-warning fw-bold">EN CAJA</p>
+                            <img src="../images/envio_bici_caja.svg" alt="Bicicleta en Caja" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta es enviada en caja (90% armada) y debes completar el armado tú o un Servicio Técnico Autorizado.</p>
+                            <p class="small text-muted mb-0">⬆ Envío más rápido y económico</p>
+                            <a href="#" class="small">Tutoriales AQUÍ</a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A TIENDA OXFORD:</h6>
+                            <p class="text-warning fw-bold">ARMADA</p>
+                            <img src="../images/envio_tienda_armada.svg" alt="Tienda Oxford" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta se envía a la tienda que elijas, donde se entrega armada y ajustada.</p>
+                            <p class="small text-muted mb-0">✔ La puedes usar de inmediato</p>
+                            <a href="#" class="small">Ver tiendas</a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A PUNTO AUTORIZADO:</h6>
+                            <p class="text-warning fw-bold">ARMADA</p>
+                            <img src="../images/envio_punto_autorizado.svg" alt="Punto Autorizado" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta se envía al punto de retiro que prefieras, lista para usar.</p>
+                            <p class="small text-muted mb-0">✔ La puedes usar de inmediato</p>
+                            <a href="#" class="small">Puntos de retiro</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descripción Orion 4 -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">ORION 4</h2>
+            </div>
+            <div class="col-12">
+                <img src="../images/BA2761-ORION-4-27.5-TITANIO-2022-02_2.jpg" alt="ORION 4 Banner" class="img-fluid mb-4">
+            </div>
+            <div class="col-12">
+                <p>Orion 4 vuelve recargada para seguir dominando las calles y senderos de tierra con máximo control y desempeño. Esta nueva versión, perteneciente a la colección <strong>Oxford Lumina</strong>, mantiene su destacada horquilla Suntour XCE de 100 mm de recorrido, transmisión Shimano de 21 velocidades y un liviano y resistente marco de aluminio.</p>
+                <p>Además, Orion 4 incorpora alucinantes decorados iridiscentes presentes en ambos aros, característica que proporciona un acabado que impresiona a primera vista. Orion 4 es una bicicleta pensada para aquellos entusiastas del MTB que buscan nuevos y mayores desafíos.</p>
+                <p>Si estás listo para esta aventura, en Orion 4 encontrarás la seguridad y confianza que necesitas para alcanzar la meta que te propones.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">QUANTUM GEOMETRY</h2>
+            </div>
+            <div class="col-md-3">
+                <img src="../images/quantum.jpg" alt="Quantum Geometry" class="img-fluid mb-3">
+            </div>
+            <div class="col-md-9">
+                <p>La geometría de los cuadros Oxford está inspirada en la arquitectura del todo. Desde las estructuras más complejas a las más simples, hay un concepto que es transversal a lo que podemos ver o sentir. Presente en el cosmos y a su vez, en la palma de nuestra mano, lo cuántico es la composición de la vida misma. Hoy está en nuestra nueva forma de concebir las bicicletas, la nueva ciencia que nos brinda cuadros más ligeros, estéticos y eficientes, para llevar la pequeña escala a lo más grande.</p>
+                <p>En Oxford Lumina podrás apreciar y experimentar la Quantum Geometry en el rediseño ergonométrico de los tubos para cada talla, en la geometría con centro de gravedad más bajo y en la reducción del Chain Stay, otorgando un mejor agarre y distribución del peso en la rueda trasera.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">REBORN IN SEARCH OF EXCELLENCE</h2>
+            </div>
+            <div class="col-md-3">
+                <img src="../images/reborn.jpg" alt="RISE Technology" class="img-fluid mb-3">
+            </div>
+            <div class="col-md-9">
+                <p>Nos exigimos llegar a otro estándar, y RISE Technology es nuestra respuesta a los más grandes desafíos. Elementos de primera línea se incluyen en la colección Oxford Lumina para cumplir con las expectativas de los ciclistas más experimentados, y que ahora podrás disfrutar en toda la colección. Nos elevamos a nuevas alturas para borrar todos los límites en búsqueda de la mejor performance.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5 mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">UNITY FIT</h2>
+            </div>
+            <div class="col-md-3">
+                <img src="../images/Unity.jpg" alt="Unity Fit" class="img-fluid mb-3">
+            </div>
+            <div class="col-md-9">
+                <p>Proyecta tus movimientos en la nueva colección Oxford Lumina, con una conducción suave, pero con potencial para dominar completamente la montaña. Como un traje hecho a la medida, la ergonomía Unity Fit dará una nueva potencia a tu cuerpo para alcanzar los objetivos más ambiciosos. Es otra forma de reinverte, permitiéndote reinventar tus capacidades y transformarte en uno con tu bicicleta.</p>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../js/orion-futuristic.js"></script>
+        <script>
+            // Inicializar el carrusel de Bootstrap
+            document.addEventListener('DOMContentLoaded', function() {
+                const carousel = new bootstrap.Carousel(document.getElementById('productCarousel'));
+                
+                // Actualizar cantidad
+                const decreaseBtn = document.getElementById('decreaseQuantity');
+                const increaseBtn = document.getElementById('increaseQuantity');
+                const quantityInput = document.getElementById('quantityInput');
+                
+                decreaseBtn.addEventListener('click', function() {
+                    const currentValue = parseInt(quantityInput.value);
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                        updateQuantity(currentValue - 1);
+                    }
+                });
+                
+                increaseBtn.addEventListener('click', function() {
+                    const currentValue = parseInt(quantityInput.value);
+                    const maxStock = parseInt(document.getElementById('stockInfo').textContent.split(' ')[0]);
+                    if (currentValue < maxStock) {
+                        quantityInput.value = currentValue + 1;
+                        updateQuantity(currentValue + 1);
+                    }
+                });
+                
+                // Configurar estrellas de calificación
+                const ratingStars = document.querySelectorAll('.rating-stars i');
+                const ratingInput = document.getElementById('reviewRating');
+                
+                ratingStars.forEach(star => {
+                    star.addEventListener('mouseover', function() {
+                        const rating = this.getAttribute('data-rating');
+                        highlightStars(rating);
+                    });
+                    
+                    star.addEventListener('mouseout', function() {
+                        const currentRating = ratingInput.value;
+                        if (currentRating > 0) {
+                            highlightStars(currentRating);
+                        } else {
+                            resetStars();
+                        }
+                    });
+                    
+                    star.addEventListener('click', function() {
+                        const rating = this.getAttribute('data-rating');
+                        ratingInput.value = rating;
+                        highlightStars(rating);
+                        
+                        // Añadir animación de confirmación
+                        this.classList.add('star-confirm');
+                        setTimeout(() => {
+                            this.classList.remove('star-confirm');
+                        }, 500);
+                    });
+                });
+                
+                function highlightStars(rating) {
+                    resetStars();
+                    for (let i = 0; i < rating; i++) {
+                        ratingStars[i].classList.remove('far');
+                        ratingStars[i].classList.add('fas');
+                    }
+                }
+                
+                function resetStars() {
+                    ratingStars.forEach(star => {
+                        star.classList.remove('fas');
+                        star.classList.add('far');
+                    });
+                }
+                
+                // Manejar clics en miniaturas
+                const thumbnails = document.querySelectorAll('.carousel-thumbnail');
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', function() {
+                        thumbnails.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+                
+                // Actualizar miniaturas cuando cambia el carrusel
+                const carouselElement = document.getElementById('productCarousel');
+                carouselElement.addEventListener('slid.bs.carousel', function(event) {
+                    const slideIndex = event.to;
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    thumbnails[slideIndex].classList.add('active');
+                });
+                
+                // Inicializar offcanvas del carrito
+                const cartOffcanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
+                
+                // Función para formatear precio
+                function formatPrice(price) {
+                    return '$' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                }
+                
+                // Función para renderizar el carrito
+                function renderCart() {
+                    const cartItemsContainer = document.getElementById('cartItems');
+                    const cartTotalElement = document.getElementById('cartTotal');
+                    const cartBadge = document.querySelector('.cart-badge');
+                    
+                    // Obtener carrito del localStorage
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    
+                    // Actualizar badge del carrito
+                    cartBadge.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+                    
+                    // Si el carrito está vacío
+                    if (cart.length === 0) {
+                        cartItemsContainer.innerHTML = '<p class="text-center my-5">Tu carrito está vacío</p>';
+                        cartTotalElement.textContent = formatPrice(0);
+                        return;
+                    }
+                    
+                    // Renderizar items
+                    let cartHTML = '';
+                    let total = 0;
+                    
+                    cart.forEach((item, index) => {
+                        const itemTotal = item.price * item.quantity;
+                        total += itemTotal;
+                        
+                        cartHTML += `
+                        <div class="cart-item">
+                            <div class="d-flex">
+                                <img src="${item.image}" class="cart-item-img me-3" alt="${item.name}">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">${item.name}</h6>
+                                    <p class="text-muted mb-1">Talla: ${item.size}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>${formatPrice(item.price)} x ${item.quantity}</span>
+                                        <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                    
+                    cartItemsContainer.innerHTML = cartHTML;
+                    cartTotalElement.textContent = formatPrice(total);
+                    
+                    // Añadir event listeners para eliminar items
+                    document.querySelectorAll('.remove-item').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const index = this.getAttribute('data-index');
+                            removeFromCart(index);
+                        });
+                    });
+                }
+                
+                // Función para eliminar item del carrito
+                function removeFromCart(index) {
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    cart.splice(index, 1);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    renderCart();
+                }
+                
+                // Manejar clic en botón "Agregar al carrito"
+                const addToCartBtn = document.getElementById('addToCartBtn');
+                addToCartBtn.addEventListener('click', function() {
+                    const storeSelect = document.getElementById('storeSelect');
+                    if (!storeSelect.value) {
+                        alert('Por favor selecciona una tienda');
+                        return;
+                    }
+                    
+                    const sizeSelect = document.getElementById('sizeSelect');
+                    const quantityInput = document.getElementById('quantityInput');
+                    const productTitle = document.getElementById('productTitle').textContent;
+                    
+                    // Verificar stock
+                    const stockInfo = document.getElementById('stockInfo');
+                    const availableStock = parseInt(stockInfo.textContent.split(' ')[0]);
+                    const quantity = parseInt(quantityInput.value);
+                    
+                    if (quantity > availableStock) {
+                        alert(`Lo sentimos, solo hay ${availableStock} unidades disponibles.`);
+                        return;
+                    }
+                    
+                    // Crear objeto de item
+                    const item = {
+                        id: 'orion-4-titanium',
+                        name: productTitle,
+                        price: 599990,
+                        size: sizeSelect.value,
+                        quantity: quantity,
+                        image: '../images/ba2961-orion-4-29-titanio-2022-03.jpg',
+                        store: storeSelect.options[storeSelect.selectedIndex].text
+                    };
+                    
+                    // Obtener carrito actual
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    
+                    // Verificar si el item ya existe en el carrito
+                    const existingItemIndex = cart.findIndex(cartItem => 
+                        cartItem.id === item.id && cartItem.size === item.size && cartItem.store === item.store
+                    );
+                    
+                    if (existingItemIndex !== -1) {
+                        // Actualizar cantidad si ya existe
+                        cart[existingItemIndex].quantity += quantity;
+                    } else {
+                        // Añadir nuevo item si no existe
+                        cart.push(item);
+                    }
+                    
+                    // Guardar carrito actualizado
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    
+                    // Actualizar stock
+                    const newStock = availableStock - quantity;
+                    stockInfo.textContent = `${newStock} unidades disponibles`;
+                    
+                    // Actualizar UI
+                    renderCart();
+                    cartOffcanvas.show();
+                    
+                    // Resetear cantidad
+                    quantityInput.value = 1;
+                });
+                
+                // Manejar clic en botón "Consultar disponibilidad en tiendas"
+                const checkStoreBtn = document.getElementById('checkStoreBtn');
+                checkStoreBtn.addEventListener('click', function() {
+                    const sizeSelect = document.getElementById('sizeSelect');
+                    const size = sizeSelect.value;
+                    
+                    // Simular stock por tienda
+                    const stockByStore = {
+                        'S': {
+                            'santiago': 5,
+                            'providencia': 3,
+                            'vitacura': 2,
+                            'lascondes': 4
+                        },
+                        'M': {
+                            'santiago': 10,
+                            'providencia': 7,
+                            'vitacura': 5,
+                            'lascondes': 8
+                        },
+                        'L': {
+                            'santiago': 8,
+                            'providencia': 6,
+                            'vitacura': 4,
+                            'lascondes': 3
+                        },
+                        'XL': {
+                            'santiago': 3,
+                            'providencia': 2,
+                            'vitacura': 1,
+                            'lascondes': 2
+                        }
+                    };
+                    
+                    let message = `Disponibilidad de talla ${size}:\n\n`;
+                    message += `Santiago Centro: ${stockByStore[size]['santiago']} unidades\n`;
+                    message += `Providencia: ${stockByStore[size]['providencia']} unidades\n`;
+                    message += `Vitacura: ${stockByStore[size]['vitacura']} unidades\n`;
+                    message += `Las Condes: ${stockByStore[size]['lascondes']} unidades`;
+                    
+                    alert(message);
+                });
+                
+                // Eventos iniciales al cargar la página
+                renderCart();
+                updateQuantity(1);
+                
+                // Manejar envío del formulario de reseña
+                const reviewForm = document.getElementById('reviewForm');
+                reviewForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('reviewName').value;
+                    const rating = document.getElementById('reviewRating').value;
+                    const reviewText = document.getElementById('reviewText').value;
+                    
+                    if (rating === '0') {
+                        alert('Por favor selecciona una calificación');
+                        return;
+                    }
+                    
+                    // Simular envío de reseña
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
+                    
+                    setTimeout(() => {
+                        // Crear nueva reseña
+                        const today = new Date();
+                        const formattedDate = today.toLocaleDateString('es-ES', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                        
+                        const starsHTML = Array(5).fill().map((_, i) => {
+                            return i < rating ? 
+                                '<i class="fas fa-star"></i>' : 
+                                '<i class="far fa-star"></i>';
+                        }).join('');
+                        
+                        const newReview = `
+                        <div class="review-futuristic mb-4" style="opacity: 0; transform: translateY(20px);">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h5>${name}</h5>
+                                <div class="text-warning">
+                                    ${starsHTML}
+                                </div>
+                            </div>
+                            <p class="mb-1">${reviewText}</p>
+                            <small class="text-muted">Publicado el ${formattedDate}</small>
+                        </div>
+                        `;
+                        
+                        // Añadir la nueva reseña al principio de la lista
+                        const reviewsList = document.getElementById('reviewsList');
+                        reviewsList.insertAdjacentHTML('afterbegin', newReview);
+                        
+                        // Animar la entrada de la nueva reseña
+                        setTimeout(() => {
+                            const newReviewElement = reviewsList.firstElementChild;
+                            newReviewElement.style.transition = 'all 0.5s ease';
+                            newReviewElement.style.opacity = '1';
+                            newReviewElement.style.transform = 'translateY(0)';
+                        }, 100);
+                        
+                        // Mostrar mensaje de éxito
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'alert alert-success mt-3';
+                        successMessage.textContent = '¡Gracias por tu opinión!';
+                        reviewForm.insertAdjacentElement('beforebegin', successMessage);
+                        
+                        // Resetear formulario
+                        reviewForm.reset();
+                        resetStars();
+                        ratingInput.value = '0';
+                        
+                        // Restaurar botón
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Enviar opinión';
+                        
+                        // Ocultar formulario después de un tiempo
+                        setTimeout(() => {
+                            const collapseElement = bootstrap.Collapse.getInstance(document.getElementById('writeReviewForm'));
+                            collapseElement.hide();
+                            
+                            // Eliminar mensaje de éxito después de un tiempo
+                            setTimeout(() => {
+                                successMessage.remove();
+                            }, 3000);
+                        }, 2000);
+                    }, 1500);
+                });
+
+                // Inicializar secciones colapsables
+                const opinionsHeader = document.getElementById('opinionsHeader');
+                const opinionsContent = document.getElementById('opinionsContent');
+                const specsHeader = document.getElementById('specsHeader');
+                const specsContent = document.getElementById('specsContent');
+
+                opinionsHeader.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    if (opinionsContent.style.display === 'block') {
+                        opinionsContent.style.display = 'none';
+                    } else {
+                        opinionsContent.style.display = 'block';
+                    }
+                });
+
+                specsHeader.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    if (specsContent.style.display === 'block') {
+                        specsContent.style.display = 'none';
+                    } else {
+                        specsContent.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Función para actualizar la cantidad
+            function updateQuantity(quantity) {
+                const stockInfo = document.getElementById('stockInfo');
+                const storeSelect = document.getElementById('storeSelect');
+                const sizeSelect = document.getElementById('sizeSelect');
+                
+                // Simular stock por tienda y talla
+                const stockByStoreAndSize = {
+                    'S': {
+                        'santiago': 5,
+                        'providencia': 3,
+                        'vitacura': 2,
+                        'lascondes': 4
+                    },
+                    'M': {
+                        'santiago': 10,
+                        'providencia': 7,
+                        'vitacura': 5,
+                        'lascondes': 8
+                    },
+                    'L': {
+                        'santiago': 8,
+                        'providencia': 6,
+                        'vitacura': 4,
+                        'lascondes': 3
+                    },
+                    'XL': {
+                        'santiago': 3,
+                        'providencia': 2,
+                        'vitacura': 1,
+                        'lascondes': 2
+                    }
+                };
+                
+                const size = sizeSelect.value;
+                const store = storeSelect.value;
+                
+                if (store) {
+                    const availableStock = stockByStoreAndSize[size][store];
+                    stockInfo.textContent = `${availableStock} unidades disponibles`;
+                    
+                    // Actualizar max del input de cantidad
+                    document.getElementById('quantityInput').max = availableStock;
+                    
+                    // Si la cantidad actual es mayor que el stock disponible, ajustarla
+                    if (quantity > availableStock) {
+                        document.getElementById('quantityInput').value = availableStock;
+                    }
+                } else {
+                    stockInfo.textContent = 'Selecciona una tienda para ver disponibilidad';
+                }
+            }
+            
+            // Spinner CSS
+            document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                .spinner-border {
+                    display: inline-block;
+                    width: 1rem;
+                    height: 1rem;
+                    border: 0.2em solid currentColor;
+                    border-right-color: transparent;
+                    border-radius: 50%;
+                    animation: spin .75s linear infinite;
+                }
+            </style>
+            `);
+        </script>
+    <!-- Footer estilo MasterBikes -->
+    <footer class="bg-white border-top mt-5 pt-4 pb-3">
+      <div class="container">
+        <div class="row text-center text-md-start">
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">SOBRE MASTERBIKES</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="text-dark text-decoration-none">Tiendas y puntos de retiro</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Precios taller</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Servicios técnicos autorizados</a></li>
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Trabaja con nosotros</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">SERVICIO CLIENTE</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Preguntas frecuentes</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Garantía MasterBikes</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Armados de bicicletas</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Registra tu bicicleta</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Términos y condiciones</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Políticas de devolución</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Métodos de envío</a></li>
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Seguimiento de pedidos</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">MÉTODOS DE PAGO</h6>
+            <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
+              <img src="../images/icon-webpay.png" alt="Webpay" height="28">
+              <a href="https://www.visa.cl/" target="_blank">
+                <img src="../images/icon-visa.png" alt="Visa" height="28">
+              </a>
+              <img src="../images/icon-master.png" alt="Mastercard" height="28">
+              <img src="../images/icon-magna.png" alt="Magna" height="28">
+              <img src="../images/icon-cabal.png" alt="Cabal" height="28">
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <h6 class="fw-bold mb-3">SÍGUENOS EN NUESTRAS REDES</h6>
+            <div class="mb-2 d-flex align-items-center">
+              <a href="#" class="me-2"><img src="../images/facebook.png" alt="Facebook" height="28"></a>
+              <a href="#" class="me-2"><img src="../images/instagram.png" alt="Instagram" height="28"></a>
+              <a href="#" class="me-2"><img src="../images/youtube.png" alt="YouTube" height="28"></a>
+            </div>
+            <div class="mb-2">
+              <img src="../images/logo.png" alt="MasterBikes" height="28" class="me-2">
+              <img src="../images/shimano-logo.avif" alt="Shimano" height="28">
+            </div>
+            <a href="#" class="btn btn-dark btn-sm w-100 mt-2" style="border-radius:0;">
+              <i class="bi bi-envelope-fill me-2"></i>Formulario de contacto
+            </a>
+          </div>
+        </div>
+        <div class="text-center mt-4 small text-muted">
+          &copy; 2024 MasterBikes. Todos los derechos reservados.
+        </div>
+      </div>
+    </footer>
+    <!-- Fin Footer -->
+    </body>
+</html>

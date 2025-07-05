@@ -1,0 +1,121 @@
+/*
+  Global Navbar Styles
+  -------------------------------------------------------------------
+  These rules standardize the look & feel of every navigation bar
+  across the project, ensuring consistent height, spacing, colours and
+  interaction feedback.  Import this stylesheet *after* Bootstrap so
+  it can safely override default variables.
+*/
+
+:root {
+    /* Sizing */
+    --navbar-height: 64px;          /* Total height of the navbar */
+    --navbar-brand-img: 38px;       /* Logo height – keeps everything aligned */
+
+    /* Colours */
+    --navbar-bg: #212529;           /* Dark background (matches Bootstrap .bg-dark) */
+    --navbar-shadow: rgba(0, 0, 0, 0.12);
+    --navbar-link: rgba(255, 255, 255, 0.85);
+    --navbar-link-hover: #3a86ff;   /* Accent colour on hover / active */
+}
+
+/* === Base container ======================================================= */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    height: var(--navbar-height);
+    padding-top: 0;                 /* Remove default vertical padding */
+    padding-bottom: 0;
+    box-shadow: 0 2px 6px var(--navbar-shadow);
+}
+
+/* === Brand / logo ========================================================= */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand img {
+    height: var(--navbar-brand-img);
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+/* === Toggler (hamburger) ================================================== */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.5 12.5a.5.5 0 0 1 0-1h13a.5.5 0 0 1 0 1h-13zm0-4a.5.5 0 0 1 0-1h13a.5.5 0 0 1 0 1h-13zm0-4a.5.5 0 0 1 0-1h13a.5.5 0 0 1 0 1h-13z'/%3e%3c/svg%3e");
+}
+
+/* === Links ================================================================ */
+.navbar-nav .nav-link {
+    color: var(--navbar-link) !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    height: var(--navbar-height);
+    padding: 0 1rem;
+    transition: color 0.25s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--navbar-link-hover) !important;
+}
+
+/* === Dropdowns ============================================================ */
+.navbar-dark .dropdown-menu {
+    background-color: #343a40;
+    border: 1px solid #495057;
+}
+
+.navbar-dark .dropdown-item {
+    color: var(--navbar-link);
+}
+
+.navbar-dark .dropdown-item:hover,
+.navbar-dark .dropdown-item:focus {
+    background-color: #495057;
+    color: #ffffff;
+}
+
+/* === Buttons inside navbar =============================================== */
+.navbar-dark .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-dark .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-dark .btn-primary {
+    background-color: var(--navbar-link-hover);
+    border-color: var(--navbar-link-hover);
+}
+
+.navbar-dark .btn-primary:hover {
+    background-color: #2a75e8;
+    border-color: #2a75e8;
+}
+
+/* === Responsive adjustments ============================================== */
+@media (max-width: 991.98px) {
+    .navbar {
+        height: auto;               /* Allow growth when collapsed */
+        padding: .5rem 1rem;
+    }
+
+    .navbar-nav .nav-link {
+        height: auto;
+        padding: .5rem 1rem;
+    }
+
+    .navbar-brand img {
+        height: 32px;
+    }
+}
