@@ -1,0 +1,81 @@
+{
+  "info": {
+    "_postman_id": "bikes-catalog-populate-collection-001",
+    "name": "MasterBikes - Poblar Catálogo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Ver todas las bicicletas (GET)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/catalogo/bicicletas",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "catalogo", "bicicletas"]
+        }
+      }
+    },
+    {
+      "name": "Agregar bicicleta MTB demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"MTB Demo 29\",\n  \"brand\": \"Orion\",\n  \"type\": \"MTB\",\n  \"size\": \"M\",\n  \"price\": 1850000,\n  \"image\": \"/frontend/images/ba2951-merak-29-azul-2025-01-2.png\",\n  \"description\": \"Bicicleta de montaña demo, cuadro aluminio, 29 pulgadas.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/catalogo/bicicletas",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "catalogo", "bicicletas"]
+        }
+      }
+    },
+    {
+      "name": "Agregar bicicleta Ruta demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ruta Demo Carbon\",\n  \"brand\": \"Aura\",\n  \"type\": \"Ruta\",\n  \"size\": \"L\",\n  \"price\": 2450000,\n  \"image\": \"/frontend/images/ba2764-aura-6-27_5-lila-2021-01.jpg\",\n  \"description\": \"Bicicleta de ruta demo, cuadro carbono, 700c.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/catalogo/bicicletas",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "catalogo", "bicicletas"]
+        }
+      }
+    },
+    {
+      "name": "Agregar bicicleta Urbana demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Urbana Demo City\",\n  \"brand\": \"Halley\",\n  \"type\": \"Urbana\",\n  \"size\": \"S\",\n  \"price\": 950000,\n  \"image\": \"/frontend/images/ba2732_halley_27_verde_2024-01_1.jpg\",\n  \"description\": \"Bicicleta urbana demo, ideal para ciudad, 27.5 pulgadas.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/catalogo/bicicletas",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "catalogo", "bicicletas"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8082"
+    }
+  ]
+}
