@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Bicicletas | MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="../js/session.js"></script>
+    <script src="../js/cart.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/orion-futuristic.css">
+    <style>
+        /* Estilos específicos para el catálogo */
+        .catalog-header {
+            background-color: #f8f9fa;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .filter-sidebar {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 100px;
+        }
+        
+        .filter-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .filter-checkbox {
+            margin-bottom: 8px;
+        }
+        
+        .price-range-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .price-range-inputs input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .bike-card {
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .bike-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .bike-card .card-img-top {
+            height: 200px;
+            object-fit: contain;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .bike-card .card-body {
+            padding: 20px;
+        }
+        
+        .bike-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .bike-card .card-brand {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .bike-card .card-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e63946;
+            margin-bottom: 15px;
+        }
+        
+        .bike-card .card-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+            height: 60px;
+            overflow: hidden;
+        }
+        
+        .bike-card .btn-add-cart {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .bike-card .btn-add-cart:hover {
+            background-color: #004c99;
+            transform: translateY(-2px);
+        }
+        
+        .bike-card .btn-details {
+            background-color: transparent;
+            color: #0066cc;
+            border: 1px solid #0066cc;
+        }
+        
+        .bike-card .btn-details:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e63946;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #2a9d8f;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .sort-options {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .pagination {
+            margin-top: 30px;
+        }
+        
+        .pagination .page-link {
+            color: #0066cc;
+            border-color: #dee2e6;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #0066cc;
+            border-color: #0066cc;
+        }
+        
+        .catalog-empty {
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .catalog-empty i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .catalog-empty h3 {
+            font-size: 1.5rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .catalog-empty p {
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+        
+        /* Estilos para el offcanvas del carrito */
+        #cartOffcanvas .offcanvas-header {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        #cartOffcanvas .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        
+        .cart-item-details h6 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        .cart-item-details .text-muted {
+            font-size: 0.9rem;
+        }
+        
+        .cart-item-price {
+            font-weight: 600;
+            color: #0066cc;
+        }
+        
+        .cart-item-remove {
+            color: #e63946;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        
+        #cart-total-container {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        /* Estilos adicionales para las imágenes */
+        .bike-card .card-img-top {
+            width: 100%; /* Ocupa todo el ancho disponible */
+            height: 200px;
+            object-fit: cover; /* Llena completamente el contenedor, recortando si es necesario */
+            object-position: center;
+        }
+        
+        /* Asegura que todas las tarjetas tengan el mismo ancho */
+        .bike-card {
+            width: 406px;
+            max-width: 100%; /* Para responsividad en pantallas pequeñas */
+            margin: 0 auto; /* Centra la tarjeta si es necesario */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .bike-card .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .bike-card .card-body .d-flex {
+            margin-top: auto;
+        }
+        
+        /* Corrige el problema del logo no visible */
+        .navbar-brand img {
+            max-height: 40px;
+            width: auto;
+        }
+    </style>
+</head>
+<body class="futuristic-theme">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../images/logo.png" alt="MasterBikes" height="30" class="d-inline-block align-text-top me-2">
+                MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Bicicletas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="orion.html">Orion</a></li>
+                            <li><a class="dropdown-item" href="merak1.html">Merak 1</a></li>
+                            <li><a class="dropdown-item" href="polux7.html">Polux 7</a></li>
+                            <li><a class="dropdown-item" href="Aura6.html">Aura 6</a></li>
+                            <li><a class="dropdown-item" href="halley.html">Halley</a></li>
+                            <li><a class="dropdown-item" href="luna20.html">Luna 20</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="formulario.html">Contacto</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <!-- Cart button -->
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart3"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
+                                0
+                            </span>
+                        </button>
+                    </li>
+                    <!-- User dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" id="userDropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span class="ms-1 d-none d-lg-inline" id="username">Mi Cuenta</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="loginBtn"><i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión</a></li>
+                            <li><a class="dropdown-item" href="#" id="registerBtn"><i class="bi bi-person-plus me-2"></i>Registrarse</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container py-5 mt-5">
+        <!-- Catalog Header -->
+        <div class="catalog-header text-center">
+            <h1 class="display-5 fw-bold">Catálogo de Bicicletas</h1>
+            <p class="lead">Descubre nuestra selección de bicicletas de alta calidad para todas tus aventuras</p>
+        </div>
+    
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="filter-sidebar">
+                    <h3 class="filter-title">Filtros</h3>
+                    
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <span class="filter-group-title">Categoría</span>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="category1">
+                            <label class="form-check-label" for="category1">Montaña</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="category2">
+                            <label class="form-check-label" for="category2">Ruta</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="category3">
+                            <label class="form-check-label" for="category3">Urbana</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="category4">
+                            <label class="form-check-label" for="category4">Eléctrica</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="category5">
+                            <label class="form-check-label" for="category5">BMX</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Brand Filter -->
+                    <div class="filter-group">
+                        <span class="filter-group-title">Marca</span>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="brand1">
+                            <label class="form-check-label" for="brand1">MasterBikes</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="brand2">
+                            <label class="form-check-label" for="brand2">Oxford</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="brand3">
+                            <label class="form-check-label" for="brand3">Trek</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="brand4">
+                            <label class="form-check-label" for="brand4">Specialized</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="brand5">
+                            <label class="form-check-label" for="brand5">Giant</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Price Range Filter -->
+                    <div class="filter-group">
+                        <span class="filter-group-title">Rango de Precio</span>
+                        <input type="range" class="form-range" min="0" max="2000000" step="50000" id="priceRange">
+                        <div class="price-range-inputs">
+                            <input type="number" class="form-control" placeholder="Min" id="minPrice">
+                            <input type="number" class="form-control" placeholder="Max" id="maxPrice">
+                        </div>
+                    </div>
+                    
+                    <!-- Size Filter -->
+                    <div class="filter-group">
+                        <span class="filter-group-title">Tamaño de Aro</span>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="size1">
+                            <label class="form-check-label" for="size1">20"</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="size2">
+                            <label class="form-check-label" for="size2">26"</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="size3">
+                            <label class="form-check-label" for="size3">27.5"</label>
+                        </div>
+                        <div class="filter-checkbox">
+                            <input type="checkbox" class="form-check-input" id="size4">
+                            <label class="form-check-label" for="size4">29"</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Apply Filters Button -->
+                    <button class="btn btn-primary w-100 mt-3">Aplicar Filtros</button>
+                    <button class="btn btn-outline-secondary w-100 mt-2">Limpiar Filtros</button>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                <!-- Sort Options -->
+                <div class="sort-options d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="me-2">Mostrando 12 de 36 productos</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <label for="sortOptions" class="me-2">Ordenar por:</label>
+                        <select class="form-select" id="sortOptions">
+                            <option value="relevance">Relevancia</option>
+                            <option value="price_asc">Precio: Menor a Mayor</option>
+                            <option value="price_desc">Precio: Mayor a Menor</option>
+                            <option value="newest">Más Recientes</option>
+                            <option value="rating">Mejor Valorados</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Products Row: limpio y con id para JS -->
+                    <div id="productContainer" class="row row-cols-1 row-cols-md-2">
+                    <!-- Aquí el JS insertará las tarjetas -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+            <p class="text-center text-muted" id="cart-empty-msg">Tu carrito está vacío.</p>
+        </div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pago.html" class="btn btn-primary w-100" id="checkout-btn">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Proceder al Pago
+            </a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">MasterBikes</h5>
+                    <p>Tu tienda especializada en bicicletas de alta calidad, accesorios y servicios de personalización para ciclistas exigentes.</p>
+                    <div class="social-icons mt-4">
+                        <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-white text-decoration-none">Inicio</a></li>
+                        <li class="mb-2"><a href="catalogo.html" class="text-white text-decoration-none">Catálogo</a></li>
+                        <li class="mb-2"><a href="arriendo.html" class="text-white text-decoration-none">Arriendos</a></li>
+                        <li class="mb-2"><a href="personalizacion.html" class="text-white text-decoration-none">Personalización</a></li>
+                        <li class="mb-2"><a href="formulario.html" class="text-white text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">Ayuda</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Envíos y Devoluciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Términos y Condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Política de Privacidad</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Garantía</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3">
+                    <h5 class="text-uppercase mb-4">Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> Av. Providencia 1234, Santiago</li>
+                        <li class="mb-2"><i class="bi bi-telephone me-2"></i> +56 2 2345 6789</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2"></i> contacto@masterbikes.cl</li>
+                        <li class="mb-2"><i class="bi bi-clock me-2"></i> Lun-Vie: 9:00 - 18:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p class="small mb-md-0">© 2023 MasterBikes. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-5 col-lg-4">
+                    <div class="text-md-end">
+                        <img src="../images/payment-methods.png" alt="Métodos de pago" class="img-fluid" style="max-height: 30px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Recordarme</label>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p class="mb-0">¿No tienes cuenta? <a href="#" id="showRegisterModal" class="text-decoration-none">Regístrate</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Crear Cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="termsAgree" required>
+                            <label class="form-check-label" for="termsAgree">Acepto los <a href="#" class="text-decoration-none">términos y condiciones</a></label>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p class="mb-0">¿Ya tienes cuenta? <a href="#" id="showLoginModal" class="text-decoration-none">Inicia Sesión</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                <strong class="me-auto">MasterBikes</strong>
+                <small>Ahora</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Producto agregado al carrito correctamente.
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="../js/session.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/catalogo.js"></script>
+</body>
+</html>

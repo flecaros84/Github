@@ -1,0 +1,8 @@
+# Ignorar archivos .jar en cualquier subcarpeta
+*.jar
+
+# Ignorar archivos .zip en cualquier subcarpeta
+*.zip
+
+# Ignorar la carpeta target completa de cada microservicio
+**/target/

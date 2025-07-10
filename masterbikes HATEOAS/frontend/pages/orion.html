@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bicicleta Aro 29 Orion 4 Titanio | MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="../js/session.js"></script>
+    <script src="../js/cart.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+        }
+        #cartOffcanvas .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #cartOffcanvas .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-details h6 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        .cart-item-details .text-muted {
+            font-size: 0.9rem;
+        }
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .cart-item-remove {
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        #cart-total-container {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        /* Estilos para la galería de productos */
+        .product-gallery {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        /* Estilos para los thumbnails del carrusel */
+        .carousel-thumbnails {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 12px;
+        }
+        
+        .carousel-thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .carousel-thumbnail:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0.9;
+        }
+        
+        .carousel-thumbnail.active {
+            opacity: 1;
+            border: 2px solid #0066ff;
+            transform: scale(1.05);
+        }
+
+        /* Estilos para la navbar */
+        .custom-navbar {
+            background-color: #0066cc !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .custom-navbar .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .custom-navbar .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .custom-navbar .nav-link:hover {
+            color: #e0e0e0 !important;
+        }
+
+        .custom-navbar .btn-outline-primary {
+            color: white !important;
+            border-color: white !important;
+        }
+
+        .custom-navbar .btn-outline-primary:hover {
+            background-color: #004c99 !important;
+            color: white !important;
+        }
+
+        .custom-navbar .cart-badge {
+            background-color: white !important;
+            color: #0066cc !important;
+        }
+
+        /* Estilos para el offcanvas del carrito */
+        .cart-offcanvas {
+            width: 350px;
+        }
+        
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .cart-item-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 0.7rem;
+        }
+        
+        /* Estilos para la navbar personalizada */
+        .custom-navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Estilos para la sección de reseñas personalizada */
+        .custom-review {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .custom-review:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Estilos modernos para el carrusel */
+        .carousel-control-prev, .carousel-control-next {
+            background-color: rgba(0, 102, 204, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.8;
+        }
+        
+        .carousel-control-prev {
+            left: 10px;
+        }
+        
+        .carousel-control-next {
+            right: 10px;
+        }
+        
+        .carousel-control-prev:hover, .carousel-control-next:hover {
+            background-color: rgba(0, 102, 204, 1);
+            opacity: 1;
+        }
+        
+        /* Efecto de transición suave para las imágenes del carrusel */
+        .carousel-item {
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Estilos Oxford Store */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .oxford-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .product-brand {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e63946;
+            margin-bottom: 20px;
+        }
+
+        .product-features {
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feature-item i {
+            color: #0066cc;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #333;
+        }
+
+        .btn-oxford {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-oxford:hover {
+            background-color: #004c99;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-oxford-secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-oxford-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para secciones colapsables */
+        .collapsible-section {
+            margin-bottom: 30px;
+        }
+
+        .collapsible-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background-color: #e9ecef;
+        }
+
+        .collapsible-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .collapsible-content {
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            display: none;
+        }
+
+        .collapsible-header.active {
+            background-color: #0066cc;
+            color: white;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .collapsible-header.active i {
+            transform: rotate(180deg);
+        }
+
+        /* Estilos para breadcrumbs */
+        .oxford-breadcrumb {
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .oxford-breadcrumb .breadcrumb {
+            margin-bottom: 0;
+        }
+
+        .oxford-breadcrumb .breadcrumb-item a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .oxford-breadcrumb .breadcrumb-item.active {
+            color: #666;
+        }
+
+        /* Estilos para las estrellas de calificación */
+        .rating-stars i {
+            color: #ffc107;
+        }
+
+        /* Estilos para el selector de tienda */
+        .store-selector {
+            margin-bottom: 20px;
+        }
+
+        .store-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        /* Estilos para la tabla de especificaciones */
+        .specs-table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 40px;
+            overflow: hidden; /* Clave para mantener los bordes redondeados */
+        }
+        .specs-header {
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .specs-header:hover {
+            background-color: #f8f9fa;
+        }
+        .specs-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        .specs-header .fas {
+            transition: transform 0.3s ease;
+        }
+        .specs-header[aria-expanded="true"] .fas {
+            transform: rotate(180deg);
+        }
+        .specs-content {
+            padding: 0 30px 30px 30px;
+        }
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .specs-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .specs-table tr:last-child td {
+            border-bottom: none;
+        }
+        .specs-table tr td:first-child {
+            font-weight: 600;
+            color: #333;
+            width: 35%;
+        }
+        .specs-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Estilos para la navegación interna */
+        .section-nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 60px 0 20px;
+            font-weight: 500;
+        }
+        .section-nav a {
+            color: #555;
+            position: relative;
+            text-decoration: none;
+            padding-bottom: 4px;
+        }
+        .section-nav a.active,
+        .section-nav a:hover {
+            color: #000;
+        }
+        .section-nav a.active::after,
+        .section-nav a:hover::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: #000;
+        }
+    </style>
+</head>
+<body class="futuristic-theme">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../images/icon-master.png" alt="MasterBikes" height="30" class="d-inline-block align-text-top me-2">
+                MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            Bicicletas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item active" href="orion.html">Orion</a></li>
+                            <li><a class="dropdown-item" href="merak1.html">Merak 1</a></li>
+                            <li><a class="dropdown-item" href="polux7.html">Polux 7</a></li>
+                            <li><a class="dropdown-item" href="Aura6.html">Aura 6</a></li>
+                            <li><a class="dropdown-item" href="halley.html">Halley</a></li>
+                            <li><a class="dropdown-item" href="luna20.html">Luna 20</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="formulario.html">Contacto</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <!-- Cart button -->
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart"></i> Carrito
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
+                        </button>
+                    </li>
+                    <!-- Login/Register buttons -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person"></i> Iniciar Sesión
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </button>
+                    </li>
+                    <!-- User menu (hidden by default) -->
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span class="user-name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="arriendo.html"><i class="bi bi-bicycle"></i> Mis Arriendos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+            <p class="text-center text-muted" id="cart-empty-msg">Tu carrito está vacío.</p>
+        </div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pago.html" class="btn btn-primary w-100" id="checkout-btn">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Proceder al Pago
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal de Producto Añadido -->
+    <div class="modal fade" id="addedToCartModal" tabindex="-1" aria-labelledby="addedToCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addedToCartModalLabel"><i class="fas fa-check-circle text-success me-2"></i>Producto añadido al carrito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center">
+                        <img id="modalProductImg" src="" alt="" class="me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h6 id="modalProductName" class="mb-1"></h6>
+                            <p id="modalProductDetails" class="text-muted small mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Seguir Comprando</button>
+                    <button type="button" class="btn btn-primary" id="viewCartBtn">Ver Carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <!-- Breadcrumbs -->
+        <div class="oxford-breadcrumb">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="#">Bicicletas</a></li>
+                    <li class="breadcrumb-item"><a href="#">Montaña</a></li>
+                    <li class="breadcrumb-item active">Orion 4 Titanio</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <!-- Botón para cambiar color -->
+            <div class="col-12 mb-3">
+                <button id="toggleColorBtn" class="btn btn-danger">Ver color Rojo</button>
+            </div>
+
+            <!-- Galería de imágenes -->
+            <div class="col-md-6">
+                <div class="oxford-container">
+                    <div class="product-gallery">
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="../images/ba2961-orion-4-29-titanio-2022-02.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022-02">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961-orion-4-29-titanio-2022-08.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022-08">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961-orion-4-29-titanio-2022-09.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022-09">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961_orion_4_29_titanio_2022_02.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022_02">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="../images/ba2961_orion_4_29_titanio_2022_03.jpg" class="d-block w-100 product-image-zoom" alt="Orion 4 Titanio 2022_03">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Siguiente</span>
+                            </button>
+                        </div>
+                        <div class="carousel-thumbnails mt-3">
+                            <img src="../images/ba2961-orion-4-29-titanio-2022-02.jpg" class="carousel-thumbnail active" data-bs-slide-to="0" data-bs-target="#productCarousel" alt="Thumb 1">
+                            <img src="../images/ba2961-orion-4-29-titanio-2022-08.jpg" class="carousel-thumbnail" data-bs-slide-to="1" data-bs-target="#productCarousel" alt="Thumb 2">
+                            <img src="../images/ba2961-orion-4-29-titanio-2022-09.jpg" class="carousel-thumbnail" data-bs-slide-to="2" data-bs-target="#productCarousel" alt="Thumb 3">
+                            <img src="../images/ba2961_orion_4_29_titanio_2022_02.jpg" class="carousel-thumbnail" data-bs-slide-to="3" data-bs-target="#productCarousel" alt="Thumb 4">
+                            <img src="../images/ba2961_orion_4_29_titanio_2022_03.jpg" class="carousel-thumbnail" data-bs-slide-to="4" data-bs-target="#productCarousel" alt="Thumb 5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del producto -->
+            <div class="col-md-6">
+                <div class="oxford-container">
+                    <div class="product-brand">OXFORD</div>
+                    <h1 class="product-title" id="productTitle">Bicicleta Aro 29 Orion 4 Titanio</h1>
+                    <div class="mb-3">
+                        <small class="text-muted">SKU: BK-OR4-TI-29</small>
+                    </div>
+                    <div class="product-price mb-4">
+                        $599.990
+                    </div>
+
+                    <div class="product-features mb-4">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Marco de aluminio liviano y resistente</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Horquilla Suntour XCE de 100mm</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Transmisión Shimano de 21 velocidades</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Frenos de disco hidráulicos</span>
+                        </div>
+                    </div>
+
+                    <!-- Selector de talla -->
+                    <div class="mb-3">
+                        <label for="sizeSelect" class="form-label">Talla</label>
+                        <select class="form-select" id="sizeSelect" required>
+                            <option value="" selected hidden>Seleccione talla</option>
+                            <option value="M">M (17")</option>
+                            <option value="L">L (19")</option>
+                        </select>
+                    </div>
+
+                    <!-- Selector de tienda -->
+                    <div class="mb-3">
+                        <label for="storeSelect" class="form-label">Tienda</label>
+                        <select class="form-select" id="storeSelect" required>
+                            <option value="" selected hidden>Seleccione una tienda</option>
+                            <option value="santiago">Santiago</option>
+                            <option value="concepcion">Concepción</option>
+                        </select>
+                    </div>
+
+                    <!-- Selector de cantidad -->
+                    <div class="mb-3">
+                        <label for="quantitySelect" class="form-label">Cantidad</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">-</button>
+                            <input type="number" class="form-control text-center" id="quantityInput" value="1" min="1" max="10">
+                            <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">+</button>
+                        </div>
+                        <small class="text-muted mt-1" id="stockInfo">10 unidades disponibles</small>
+
+                        <!-- Botones de acción -->
+                        <div class="d-grid gap-2 d-md-block mt-3">
+                            <button class="btn btn-oxford me-md-2 mb-2 mb-md-0" id="addToCartButton">
+                                <i class="fas fa-shopping-cart me-2"></i>Agregar al carrito
+                            </button>
+                            <button class="btn btn-oxford-secondary" id="checkStoreBtn">
+                                <i class="fas fa-store me-2"></i>Consultar disponibilidad en tiendas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navegación interna de secciones -->
+        <nav class="section-nav" id="sectionNav">
+            <a href="#descripcion" class="nav-link">Descripción</a>
+            <a href="#especificaciones" class="nav-link">Especificaciones</a>
+            <a href="#opiniones" class="nav-link">Opiniones</a>
+        </nav>
+
+        <!-- Beneficios de tu compra -->
+        <section class="py-5" id="beneficios-compra">
+            <div class="container">
+                <div class="row text-center row-cols-2 row-cols-md-4 g-4">
+                    <div class="col">
+                        <img src="../images/I_cono-Home-AjusteGratis_1.png" alt="Ajuste gratuito" height="80" class="mb-3">
+                        <h6 class="fw-bold">AJUSTE GRATUITO</h6>
+                        <p class="small">Dentro de los primeros 30 días de la compra en nuestras tiendas o servicios técnicos autorizados.</p>
+                    </div>
+                    <div class="col">
+                        <img src="../images/I_cono-Home-BiciLista_1.png" alt="Lista para pedalear" height="80" class="mb-3">
+                        <h6 class="fw-bold">LISTA PARA PEDALEAR</h6>
+                        <p class="small">Tu bicicleta puede llegar armada y ajustada, ¡lista para salir de inmediato!</p>
+                    </div>
+                    <div class="col">
+                        <img src="../images/I_cono-Home-Envi_oRa_pido_1.png" alt="Envío rápido" height="80" class="mb-3">
+                        <h6 class="fw-bold">ENVÍO RÁPIDO</h6>
+                        <p class="small">Despachos al día siguiente en Santiago y a regiones desde 4 días hábiles.</p>
+                    </div>
+                    <div class="col">
+                        <img src="../images/I_cono-Home-RetiroTienda2.png" alt="Retira gratis en tienda" height="80" class="mb-3">
+                        <h6 class="fw-bold">RETIRA GRATIS EN TIENDA</h6>
+                        <p class="small">Sin costo de despacho retirando en nuestras tiendas o puntos de retiro.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESCRIPCIÓN / UNITY FIT -->
+        <section id="descripcion">
+            <div class="row">
+                <div class="col-md-9">
+                    <p>Proyecta tus movimientos en la nueva colección Oxford Lumina, con una conducción suave, pero con potencial para dominar completamente la montaña. Como un traje hecho a la medida, la ergonomía Unity Fit dará una nueva potencia a tu cuerpo para alcanzar los objetivos más ambiciosos. Es otra forma de reinverte, permitiéndote reinventar tus capacidades y transformarte en uno con tu bicicleta.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Especificaciones Técnicas (Desplegable) -->
+        <section id="especificaciones">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="specs-table-container">
+                        <div class="specs-header" data-bs-toggle="collapse" data-bs-target="#specsCollapseContent" aria-expanded="false" aria-controls="specsCollapseContent">
+                            <h3 class="mb-0">Especificaciones Técnicas</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="collapse" id="specsCollapseContent">
+                            <div class="specs-content">
+                                <table class="specs-table mt-3">
+                                    <tbody>
+                                        <tr><td>Marca</td><td>OXFORD</td></tr>
+                                        <tr><td>Aro</td><td>29</td></tr>
+                                        <tr><td>Color</td><td>TITANIO</td></tr>
+                                        <tr><td>Género</td><td>HOMBRE</td></tr>
+                                        <tr><td>Marco</td><td>Marco de aluminio</td></tr>
+                                        <tr><td>Tallas Disponibles</td><td>M-L</td></tr>
+                                        <tr><td>Altura Recomendada</td><td>29 M: 1.70 a 1.82cm, 29 L: 1.75 a 1.90cm</td></tr>
+                                        <tr><td>Suspensión</td><td>Delantera</td></tr>
+                                        <tr><td>Detalle Suspensión</td><td>100mm Suntour XCE 28, Coil con ajuste de precarga</td></tr>
+                                        <tr><td>Recorrido Suspensión DEL</td><td>100mm</td></tr>
+                                        <tr><td>Shock Trasero</td><td>N/A</td></tr>
+                                        <tr><td>N° de Cambios</td><td>21 velocidades (3x7)</td></tr>
+                                        <tr><td>Cambio Delantero</td><td>Shimano Tourney 3V</td></tr>
+                                        <tr><td>Cambio Trasero</td><td>Shimano Tourney 7V</td></tr>
+                                        <tr><td>Volante / Biela</td><td>SHIMANO Tourney TY301, 24/34/42. Bielas Aluminio 170 mm.</td></tr>
+                                        <tr><td>Piñón</td><td>SHIMANO TZ500, 14-28T, 7 velocidades.</td></tr>
+                                        <tr><td>Frenos</td><td>Disco mecánico con rotor de 160 mm.</td></tr>
+                                        <tr><td>Rotor</td><td>160 mm adelante y atrás</td></tr>
+                                        <tr><td>Neumáticos</td><td>29x2.1". Dibujo mixto para diversos terrenos.</td></tr>
+                                        <tr><td>Llantas</td><td>Disco 29" Aluminio 32 H. Doble pared.</td></tr>
+                                        <tr><td>Maza delantera</td><td>Aluminio 32H anclaje para disco con bloqueo.</td></tr>
+                                        <tr><td>Maza Trasera</td><td>Aluminio 32H anclaje para disco con bloqueo.</td></tr>
+                                        <tr><td>Rayos (Material)</td><td>Acero con niple de bronce</td></tr>
+                                        <tr><td>Manubrio</td><td>Aluminio sobremedida. 720 mm ancho x 25 mm alto X 31,8 mm diámetro.</td></tr>
+                                        <tr><td>Puños</td><td>Puños genéricos</td></tr>
+                                        <tr><td>Asiento</td><td>Anatomico light.</td></tr>
+                                        <tr><td>Tubo Sillín</td><td>Aluminio 30.9 mm x 400 mm. Abrazadera Aluminio.</td></tr>
+                                        <tr><td>Pedal</td><td>Resina</td></tr>
+                                        <tr><td>Cadena</td><td>KMC HV500</td></tr>
+                                        <tr><td>Peso</td><td>15,48 KG</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ¿Cómo enviamos las bicicletas? -->
+        <div class="row mt-5 mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-2">¿CÓMO ENVIAMOS LAS BICICLETAS?</h2>
+                <p class="text-muted">Contamos con despachos a domicilio y retiro en nuestras tiendas o puntos de retiro.</p>
+            </div>
+            <div class="col-12">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 text-center">
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A DOMICILIO:</h6>
+                            <p class="text-warning fw-bold">ARMADA</p>
+                            <img src="../images/envio_bici_armada.svg" alt="Bicicleta Armada" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta es armada y ajustada en nuestro Centro de Distribución. Luego se envía con todas las protecciones necesarias.</p>
+                            <p class="small text-muted mb-0">✔ Lista para usar</p>
+                            <p class="small text-muted">✔ Ajuste gratis a los 30 días</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A DOMICILIO:</h6>
+                            <p class="text-warning fw-bold">EN CAJA</p>
+                            <img src="../images/envio_bici_caja.svg" alt="Bicicleta en Caja" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta es enviada en caja (90% armada) y debes completar el armado tú o un Servicio Técnico Autorizado.</p>
+                            <p class="small text-muted mb-0">⬆ Envío más rápido y económico</p>
+                            <a href="#" class="small">Tutoriales AQUÍ</a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A TIENDA OXFORD:</h6>
+                            <p class="text-warning fw-bold">ARMADA</p>
+                            <img src="../images/envio_tienda_armada.svg" alt="Tienda Oxford" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta se envía a la tienda que elijas, donde se entrega armada y ajustada.</p>
+                            <p class="small text-muted mb-0">✔ La puedes usar de inmediato</p>
+                            <a href="#" class="small">Ver tiendas</a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-4 h-100 bg-white shadow rounded-3">
+                            <h6 class="fw-bold mb-1">DESPACHO A PUNTO AUTORIZADO:</h6>
+                            <p class="text-warning fw-bold">ARMADA</p>
+                            <img src="../images/envio_punto_autorizado.svg" alt="Punto Autorizado" style="height:80px" class="mb-3">
+                            <p class="small">La bicicleta se envía al punto de retiro que prefieras, lista para usar.</p>
+                            <p class="small text-muted mb-0">✔ La puedes usar de inmediato</p>
+                            <a href="#" class="small">Puntos de retiro</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descripción Orion 4 -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">ORION 4</h2>
+            </div>
+            <div class="col-12">
+                <img src="../images/BA2761-ORION-4-27.5-TITANIO-2022-02_2.jpg" alt="ORION 4 Banner" class="img-fluid mb-4">
+            </div>
+            <div class="col-12">
+                <p>Orion 4 vuelve recargada para seguir dominando las calles y senderos de tierra con máximo control y desempeño. Esta nueva versión, perteneciente a la colección <strong>Oxford Lumina</strong>, mantiene su destacada horquilla Suntour XCE de 100 mm de recorrido, transmisión Shimano de 21 velocidades y un liviano y resistente marco de aluminio.</p>
+                <p>Además, Orion 4 incorpora alucinantes decorados iridiscentes presentes en ambos aros, característica que proporciona un acabado que impresiona a primera vista. Orion 4 es una bicicleta pensada para aquellos entusiastas del MTB que buscan nuevos y mayores desafíos.</p>
+                <p>Si estás listo para esta aventura, en Orion 4 encontrarás la seguridad y confianza que necesitas para alcanzar la meta que te propones.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">QUANTUM GEOMETRY</h2>
+            </div>
+            <div class="col-md-3">
+                <img src="../images/quantum.jpg" alt="Quantum Geometry" class="img-fluid mb-3">
+            </div>
+            <div class="col-md-9">
+                <p>La geometría de los cuadros Oxford está inspirada en la arquitectura del todo. Desde las estructuras más complejas a las más simples, hay un concepto que es transversal a lo que podemos ver o sentir. Presente en el cosmos y a su vez, en la palma de nuestra mano, lo cuántico es la composición de la vida misma. Hoy está en nuestra nueva forma de concebir las bicicletas, la nueva ciencia que nos brinda cuadros más ligeros, estéticos y eficientes, para llevar la pequeña escala a lo más grande.</p>
+                <p>En Oxford Lumina podrás apreciar y experimentar la Quantum Geometry en el rediseño ergonométrico de los tubos para cada talla, en la geometría con centro de gravedad más bajo y en la reducción del Chain Stay, otorgando un mejor agarre y distribución del peso en la rueda trasera.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">REBORN IN SEARCH OF EXCELLENCE</h2>
+            </div>
+            <div class="col-md-3">
+                <img src="../images/reborn.jpg" alt="RISE Technology" class="img-fluid mb-3">
+            </div>
+            <div class="col-md-9">
+                <p>Nos exigimos llegar a otro estándar, y RISE Technology es nuestra respuesta a los más grandes desafíos. Elementos de primera línea se incluyen en la colección Oxford Lumina para cumplir con las expectativas de los ciclistas más experimentados, y que ahora podrás disfrutar en toda la colección. Nos elevamos a nuevas alturas para borrar todos los límites en búsqueda de la mejor performance.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5 mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-4">UNITY FIT</h2>
+            </div>
+            <div class="col-md-3">
+                <img src="../images/Unity.jpg" alt="Unity Fit" class="img-fluid mb-3">
+            </div>
+            <div class="col-md-9">
+                <p>Proyecta tus movimientos en la nueva colección Oxford Lumina, con una conducción suave, pero con potencial para dominar completamente la montaña. Como un traje hecho a la medida, la ergonomía Unity Fit dará una nueva potencia a tu cuerpo para alcanzar los objetivos más ambiciosos. Es otra forma de reinverte, permitiéndote reinventar tus capacidades y transformarte en uno con tu bicicleta.</p>
+            </div>
+        </div>
+
+        <!-- Opiniones -->
+        <section id="opiniones" class="mt-5">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 class="mb-3">Opiniones</h3>
+                    <p class="text-muted">Próximamente sección de reseñas de nuestros clientes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Datos iniciales para scripts -->
+    <script>
+        window.stockByStoreAndSize = {
+            'M': { 'santiago': 10, 'concepcion': 7 },
+            'L': { 'santiago': 8,  'concepcion': 6 }
+        };
+    </script>
+
+    <!-- Scripts de la aplicación -->
+    <script src="../js/orion-futuristic.js"></script>
+    <script src="../js/cart.js" defer></script>
+
+    <script>
+        // ----------------- Navegación interna -----------------
+        const navLinks = document.querySelectorAll('#sectionNav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        // Highlight activo según scroll
+        const sectionIds = ['#descripcion','#especificaciones','#opiniones'];
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${entry.target.id}`));
+                }
+            });
+        },{ rootMargin: '-50% 0px -45% 0px' });
+        sectionIds.forEach(id => {
+            const el = document.querySelector(id);
+            if (el) observer.observe(el);
+        });
+    </script>
+</body>
+</html>

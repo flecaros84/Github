@@ -1,0 +1,98 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    overflow-x: hidden;
+}
+.slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Reducido a 0.5 segundos */
+}
+.slide.active {
+    opacity: 1;
+}
+.bike-wheel {
+    position: absolute;
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: rotate 20s infinite linear;
+}
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.circle-pattern {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+}
+.problem-card {
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+.problem-card:hover {
+    transform: translateX(5px);
+    border-left-color: #2ecc71;
+    background-color: rgba(46, 204, 113, 0.1);
+}
+.solution-card {
+    transition: all 0.3s ease;
+    border-right: 3px solid transparent;
+}
+.solution-card:hover {
+    transform: translateX(-5px);
+    border-right-color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+.icon-container {
+    transition: all 0.3s ease;
+}
+.problem-card:hover .icon-container {
+    transform: scale(1.1);
+}
+.pulse {
+    animation: pulse-animation 2s infinite;
+}
+@keyframes pulse-animation {
+    0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+nav {
+    position: fixed;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+nav a:hover {
+    background: rgba(46, 204, 113, 0.8);
+}
+nav a i {
+    font-size: 1.2rem;
+}

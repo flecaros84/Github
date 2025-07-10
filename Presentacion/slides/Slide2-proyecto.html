@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿En qué consiste el proyecto?</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/proyecto.css">
+</head>
+<body>
+    <div class="slide flex flex-col text-white p-10 relative active">
+        <!-- Background decorative elements -->
+        <div class="bike-wheel" style="width: 500px; height: 500px; top: -150px; right: -100px; border-width: 10px; opacity: 0.2"></div>
+        <div class="bike-wheel" style="width: 300px; height: 300px; bottom: -50px; left: -50px; border-width: 8px; opacity: 0.15"></div>
+        
+        <div class="circle-pattern" style="width: 200px; height: 200px; top: 10%; left: 5%;"></div>
+        <div class="circle-pattern" style="width: 100px; height: 100px; bottom: 15%; right: 10%;"></div>
+        
+        <!-- Header -->
+        <div class="mb-8 z-10">
+            <h2 class="text-4xl font-bold">¿En qué consiste el proyecto?</h2>
+            <div class="w-20 h-1 bg-green-400 mt-2"></div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="flex z-10">
+            <!-- Left column: Description -->
+            <div class="w-1/2 pr-6">
+                <div class="bg-black bg-opacity-20 p-6 rounded-lg backdrop-filter backdrop-blur-sm mb-6">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-green-400 p-2 rounded-full mr-4">
+                            <i class="fas fa-info-circle text-gray-800 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Descripción General</h3>
+                            <p class="text-sm leading-relaxed opacity-90">
+                                Plataforma tecnológica integral para <b>MasterBikes</b>, empresa con más de 30 años de experiencia 
+                                en fabricación y venta de bicicletas (antes "San Diego"). 
+                                El proyecto busca modernizar su operación, digitalizando procesos y ampliando 
+                                la oferta con nuevos servicios.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-green-400 p-2 rounded-full mr-4">
+                            <i class="fas fa-bullseye text-gray-800 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Propósito Principal</h3>
+                            <p class="text-sm leading-relaxed opacity-90">
+                                Modernizar los procesos de venta, arriendo, reparación y despacho de bicicletas
+                                para mejorar la eficiencia operativa de MasterBikes y la experiencia de sus clientes.
+                                Esta transformación digital es clave para competir mejor y diversificar ingresos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Workflow comparison diagram -->
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+                    <h3 class="text-xl font-semibold mb-3">Flujo Actual vs. Futuro</h3>
+                    
+                    <div class="mb-4">
+                        <h4 class="text-sm font-semibold uppercase opacity-75 mb-2">Proceso Actual <i class="fas fa-file-alt ml-1"></i></h4>
+                        <div class="flex items-center text-xs">
+                            <div class="bg-gray-600 px-3 py-2 rounded">Cliente solicita</div>
+                            <div class="workflow-arrow flex-grow"></div>
+                            <div class="bg-gray-600 px-3 py-2 rounded">Formulario papel</div>
+                            <div class="workflow-arrow flex-grow"></div>
+                            <div class="bg-gray-600 px-3 py-2 rounded">Carpetas físicas</div>
+                            <div class="workflow-arrow flex-grow"></div>
+                            <div class="bg-gray-600 px-3 py-2 rounded">Reportes manual</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-semibold uppercase opacity-75 mb-2">Proceso Futuro <i class="fas fa-laptop ml-1"></i></h4>
+                        <div class="flex items-center text-xs">
+                            <div class="bg-green-600 px-3 py-2 rounded">Web/App</div>
+                            <div class="workflow-arrow flex-grow"></div>
+                            <div class="bg-green-600 px-3 py-2 rounded">Registro digital</div>
+                            <div class="workflow-arrow flex-grow"></div>
+                            <div class="bg-green-600 px-3 py-2 rounded">Base de datos</div>
+                            <div class="workflow-arrow flex-grow"></div>
+                            <div class="bg-green-600 px-3 py-2 rounded">Reportes automáticos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right column: Target audience -->
+            <div class="w-1/2 pl-6">
+                <div class="bg-black bg-opacity-20 p-6 rounded-lg backdrop-filter backdrop-blur-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-users text-green-400 mr-3"></i>
+                        Público Objetivo
+                    </h3>
+                    
+                    <div class="feature-box pl-4 mb-4 pb-4">
+                        <h4 class="text-lg font-semibold mb-2">Clientes</h4>
+                        <p class="text-sm opacity-90 mb-2">Usuarios finales que usarán la web para:</p>
+                        <ul class="text-sm list-disc list-inside opacity-80 pl-2">
+                            <li>Registrarse y solicitar arriendos</li>
+                            <li>Agendar reparaciones</li>
+                            <li>Consultar historial y recibir ofertas</li>
+                        </ul>
+                        <div class="mt-2 text-xs opacity-70 italic">Nivel técnico: bajo (interfaz intuitiva)</div>
+                    </div>
+                    
+                    <h4 class="text-md font-semibold mb-3">Usuarios Internos:</h4>
+                    
+                    <div class="feature-box pl-4 mb-4 pb-3">
+                        <h4 class="text-base font-semibold mb-1">Vendedores</h4>
+                        <ul class="text-sm list-disc list-inside opacity-80 pl-2">
+                            <li>Registrar ventas y consultar stock</li>
+                            <li>Gestionar pedidos y despachos</li>
+                        </ul>
+                        <div class="mt-1 text-xs opacity-70 italic">Nivel técnico: medio</div>
+                    </div>
+                    
+                    <div class="feature-box pl-4 mb-4 pb-3">
+                        <h4 class="text-base font-semibold mb-1">Técnicos</h4>
+                        <ul class="text-sm list-disc list-inside opacity-80 pl-2">
+                            <li>Visualizar solicitudes de reparación</li>
+                            <li>Confirmar viabilidad y stock de piezas</li>
+                            <li>Actualizar estados de reparaciones</li>
+                        </ul>
+                        <div class="mt-1 text-xs opacity-70 italic">Nivel técnico: medio</div>
+                    </div>
+                    
+                    <div class="feature-box pl-4 pb-3">
+                        <h4 class="text-base font-semibold mb-1">Supervisores</h4>
+                        <ul class="text-sm list-disc list-inside opacity-80 pl-2">
+                            <li>Acceder a reportes de ventas/servicios</li>
+                            <li>Supervisión y toma de decisiones</li>
+                        </ul>
+                        <div class="mt-1 text-xs opacity-70 italic">Nivel técnico: medio</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom decoration -->
+        <div class="absolute bottom-6 right-8 flex items-center opacity-80 z-10">
+            <div class="bounce">
+                <i class="fas fa-bicycle text-green-400 text-3xl"></i>
+            </div>
+        </div>
+        
+        <!-- Decorative gear icons -->
+        <i class="fas fa-cog text-white opacity-10 absolute bottom-20 left-20 text-6xl" style="animation: rotate 15s infinite linear;"></i>
+    </div>
+    <nav>
+        <a href="Slide1-indice.html" title="Índice"><i class="fas fa-list"></i></a>
+        <a href="Slide1-indice.html" title="Anterior"><i class="fas fa-arrow-up"></i></a>
+        <a href="Slide3-problematica.html" title="Siguiente"><i class="fas fa-arrow-down"></i></a>
+    </nav>
+    <script src="../js/proyecto.js"></script>
+    <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            window.location.href = 'Slide3-problematica.html';
+        } else if (event.key === 'ArrowLeft') {
+            window.location.href = 'Slide1-indice.html';
+        }
+    });
+    </script>
+</body>
+</html>

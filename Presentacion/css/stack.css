@@ -1,0 +1,137 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    overflow-x: hidden;
+}
+.slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Reducido a 0.5 segundos */
+}
+.slide.active {
+    opacity: 1;
+}
+.bike-wheel {
+    position: absolute;
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: rotate 20s infinite linear;
+}
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.circle-pattern {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+}
+.tech-card {
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+.tech-card:hover {
+    transform: translateX(5px);
+    border-left-color: #2ecc71;
+    background-color: rgba(46, 204, 113, 0.1);
+}
+.icon-container {
+    transition: all 0.3s ease;
+}
+.tech-card:hover .icon-container {
+    transform: scale(1.1);
+}
+.tech-chip {
+    background-color: rgba(46, 204, 113, 0.2);
+    border-radius: 12px;
+    padding: 4px 10px;
+    margin: 2px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+.tech-chip:hover {
+    background-color: rgba(46, 204, 113, 0.4);
+    transform: translateY(-2px);
+}
+.mermaid {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    /* Añadir cursor pointer para indicar que es clickeable */
+    cursor: pointer;
+}
+nav {
+    position: fixed;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+nav a:hover {
+    background: rgba(46, 204, 113, 0.8);
+}
+nav a i {
+    font-size: 1.2rem;
+}
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+.modal-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 90%;
+    margin: auto;
+    position: relative;
+    /* Quitar top y transform para centrado con flex */
+}
+.modal-content .mermaid {
+    width: 100%; /* Ajustar al contenedor modal */
+    height: 100%; /* Ajustar al contenedor modal */
+    cursor: default; /* Quitar cursor pointer dentro del modal */
+}
+.modal-close {
+    position: absolute;
+    top: 15px; /* Ajustar posición */
+    right: 25px; /* Ajustar posición */
+    font-size: 2rem; /* Hacer más grande */
+    color: white;
+    cursor: pointer;
+    z-index: 2010; /* Asegurar que esté sobre el contenido */
+}

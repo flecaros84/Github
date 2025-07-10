@@ -1,0 +1,811 @@
+var chatbotDatabotIframe; // global variable for chatbot iframe
+var onlyOneBot = [];
+
+// Valida si existe más de un script del chatbot 2
+function onlyChatbot() {
+  let scripts = document.querySelectorAll('script');
+
+  if (scripts && scripts.length > 0) {
+    // capturo url para validar si está en databot o no
+    let origin = document.location.href;
+    for (el of scripts) {
+      if (el.id && el.attributes.bot && !origin.includes('ia.databot.cl', 0)) {
+        onlyOneBot.push(el.id);
+      }
+    }
+  }
+  console.log('onlyOneBot->', onlyOneBot);
+  if (onlyOneBot.length > 1) console.log('mas de 1 script->');
+}
+
+// onlyChatbot();
+
+(async () => {
+  if (!onlyOneBot || onlyOneBot.length <= 1) {
+    var me = document.currentScript;
+    var id = me.getAttribute('id');
+    var token = me.getAttribute('bot');
+    var src = me.getAttribute('src');
+    var url_env = src.replace('/dist_files/databot.js', '');
+    var isPlayground = me.getAttribute('isPlayground');
+
+    function setChabot() {
+      var clientPathName = window.location.pathname;
+      var clientHostName = window.location.hostname;
+      let userAgent = navigator.userAgent;
+      var t = document.createElement('div');
+      t.id = 'message_box_id';
+      t.style.position = 'fixed';
+      t.style.zIndex = '2147483646';
+      let listOfCookies;
+      let invertPosition = ['1134', '2089', '2495', '1883', '456'];
+      let whatsappAboveChatbot = ['537', '2351', '2572', '1883', '456'];
+      let isSalcobrandBot = ['2674'];
+      let customInitialClasses = [];
+      let isRectangleBubble = [];
+
+      window.addEventListener('load', function (event) {
+        listOfCookies = document.cookie.split(';');
+      });
+      window.addEventListener('message', (e) => {
+        if (e.data.event === 'show_chat') {
+          document.getElementById('chat_box_identifier').style.display = '';
+        }
+        if (e.data.event === 'show_widget') {
+          const chatBox = document.getElementById('message_box_id');
+          const iframe = document.createElement('iframe');
+          iframe.id = 'whatsapp_box_identifier';
+          iframe.className = 'compact';
+          iframe.src = `${url_env}/whatsapp?id=${id}&token=${token}`;
+          chatBox.appendChild(iframe);
+
+          if (invertPosition.includes(id)) iframe.classList.add('p-right');
+          if (whatsappAboveChatbot.includes(id))
+            iframe.classList.add('p-right', 'p-above');
+          if (
+            whatsappAboveChatbot.includes(id) &&
+            invertPosition.includes(id)
+          ) {
+            iframe.classList.remove('p-right');
+            iframe.classList.add('p-left', 'p-above');
+          }
+          if (isSalcobrandBot.includes(id)) {
+            let url_origin = window?.location?.href;
+            if (!url_origin?.includes('/content/ocular_copy', 0))
+              iframe.classList.add('space-mobile');
+          }
+        }
+        // To wsp widget classes
+        const widget = document.getElementById('whatsapp_box_identifier');
+
+        if (e.data.event === 'set_widget') {
+          if (widget) {
+            if (!e.data.payload.title) {
+              widget.classList.add('is-icon');
+            } else {
+              widget.classList.remove('is-icon');
+            }
+          }
+        }
+        // for dinamic width in px
+        if (e.data.event === 'dinamic_width_wsp_bar') {
+          const label_width = e.data.payload.dinamic_width;
+          const proportion = 78;
+
+          widget.style.width = `${label_width + proportion}px`;
+        }
+        if (e.data.event === 'space_up') {
+          t.firstChild.classList.add('space-up');
+          if (widget) widget.classList.add('space-up');
+        }
+        if (e.data.event === 'sucursales_shopify') {
+          let data = JSON.parse(e.data.payload.selectedItem);
+          const preview = document.createElement('div');
+          let inventory = '';
+          data.inventoryLevel = data.inventoryLevel.filter(
+            (x) => x.available > 0,
+          );
+          data.inventoryLevel.map((inventoryLevel, index) => {
+            const inventoryElement = `
+            <div>
+              <p style="font-weight: 700; margin-bottom: 0">${
+                inventoryLevel.location.name
+              }</p>
+              <small style="font-weight: 700">Disponibilidad ${
+                inventoryLevel.available
+              }</small>
+              <p style="margin-bottom: 0">${
+                inventoryLevel.location.address1
+              }</p>
+              <p style="margin-bottom: 0; margin-top: 0">${
+                inventoryLevel.location.zip
+              } ${inventoryLevel.location.city} ${
+              inventoryLevel.location.province_code
+            }</p>
+              <p style="margin-top: 0">${
+                inventoryLevel.location.country_name
+              }</p>
+              <p>${inventoryLevel.location.phone}</p>
+              ${
+                data.inventoryLevel.length == index + 1
+                  ? ''
+                  : '<div class="solid-line"></div>'
+              }
+              </div>
+              `;
+            inventory += inventoryElement;
+          });
+
+          const displayData = `
+            <div class="modal-image-background"></div>
+            <div class='modal-sucursal-container' style="font-family: Manrope, sans-serif;">
+              <span class='modal-image-close'>x</span>
+              <h2>${data.name}</h2>
+              <div>${inventory}</div>
+            </div>
+          `;
+          preview.classList.add('modal-image-screen');
+          preview.innerHTML += displayData;
+          document.getElementsByTagName('body')[0].append(preview);
+          const closeButton = document.querySelector('.modal-image-close');
+          const modalScreen = document.querySelector('.modal-image-screen');
+          closeButton.addEventListener('click', () => {
+            modalScreen.remove();
+          });
+
+          const back = document.querySelector('.modal-image-background');
+          back.addEventListener('click', () => {
+            modalScreen.remove();
+          });
+        }
+        if (e.data.event == 'getWoocommerceCartHash') {
+          const woocommerceCartHash = getCookie('woocommerce_cart_hash');
+          const databotIframe = document.getElementById('chat_box_identifier');
+          databotIframe.contentWindow.postMessage(
+            {
+              event: 'getWoocommerceCartHash',
+              payload: {
+                woocommerceCartHash: woocommerceCartHash || null,
+              },
+            },
+            url_env,
+          );
+        }
+        if (e.data.event === 'zoom_image') {
+          const preview = document.createElement('div');
+          const img = `
+          <div class="modal-image-background"></div>
+          <div class='modal-image-container'>
+            <span class='modal-image-close'>x</span>
+            <img 
+              src=${e.data.payload.image_url} 
+              class='modal-image'
+            />
+          </div>
+          `;
+          preview.classList.add('modal-image-screen');
+          preview.innerHTML += img;
+          document.getElementsByTagName('body')[0].append(preview);
+
+          const closeButton = document.querySelector('.modal-image-close');
+          const modalScreen = document.querySelector('.modal-image-screen');
+          closeButton.addEventListener('click', () => {
+            modalScreen.remove();
+          });
+
+          const back = document.querySelector('.modal-image-background');
+          back.addEventListener('click', () => {
+            modalScreen.remove();
+          });
+        }
+        if (e.data.event == 'alertRedirect') {
+          const div = document.createElement('div');
+          div.classList.add('modal-databot');
+
+          const modal = `
+            <span class='modal-image-close'>x</span>
+            <div class="card">
+              <h3>¿Salir del sitio?</h3>
+              <button class="btn-base databot-close-modal">Volver al chatbot</button>
+              <p class="btn-text">Salir</p>
+            </div>
+          `;
+          div.innerHTML += modal;
+          document.getElementsByTagName('body')[0].append(div);
+          const modalScreen = document.querySelector('.modal-databot');
+          const closeButton = document.querySelector('.modal-image-close');
+          const closeButton2 = document.querySelector('.databot-close-modal');
+          const redirect = document.querySelector('.btn-text');
+          closeButton.addEventListener('click', () => {
+            modalScreen.remove();
+          });
+          closeButton2.addEventListener('click', () => {
+            modalScreen.remove();
+          });
+          redirect.addEventListener('click', () => {
+            window.open('http://www.databot.cl', '_blank');
+            modalScreen.remove();
+          });
+        }
+        // Burbuja
+        if (e.data === 'compact') {
+          t.firstChild.classList.remove('compact-md');
+          t.firstChild.classList.remove('expand');
+          t.firstChild.classList.remove('chat-md');
+          t.firstChild.classList.remove('menu-xl');
+          t.firstChild.classList.add('compact');
+          if (isSalcobrandBot.includes(id))
+            t.firstChild.classList.add('space-mobile');
+          if (isRectangleBubble.includes(id))
+            t.firstChild.classList.add('rectangle_box');
+        }
+        // Ventana
+        if (e.data === 'expand') {
+          t.firstChild.classList.remove('compact');
+          t.firstChild.classList.remove('compact-md');
+          t.firstChild.classList.remove('chat-md');
+          t.firstChild.classList.remove('menu-xl');
+          t.firstChild.classList.remove('h_55');
+          t.firstChild.classList.remove('rectangle_box');
+          t.firstChild.classList.add('expand');
+
+          if (isSalcobrandBot.includes(id)) {
+            t.firstChild.classList.remove('space-mobile');
+            t.firstChild.classList.add('full-height');
+          }
+        }
+        // recomendador xl
+        if (e.data === 'menu-xl') {
+          t.firstChild.classList.remove('compact');
+          t.firstChild.classList.remove('compact-md');
+          t.firstChild.classList.remove('expand');
+          t.firstChild.classList.remove('chat-md');
+          t.firstChild.classList.remove('rectangle_box');
+          t.firstChild.classList.add('menu-xl');
+        }
+        // recomendador md
+        if (e.data === 'chat-md') {
+          t.firstChild.classList.remove('compact');
+          t.firstChild.classList.remove('compact-md');
+          t.firstChild.classList.remove('expand');
+          t.firstChild.classList.remove('menu-xl');
+          t.firstChild.classList.remove('rectangle_box');
+          t.firstChild.classList.add('chat-md');
+        }
+        // Input Magic search IA
+        if (e.data === 'compact-md') {
+          t.firstChild.classList.remove('compact');
+          t.firstChild.classList.remove('expand');
+          t.firstChild.classList.remove('menu-xl');
+          t.firstChild.classList.remove('rectangle_box');
+          t.firstChild.classList.add('compact-md');
+        }
+        if (e.data === 'expandWsp') {
+          t.lastChild.classList.remove('compact');
+          t.lastChild.classList.add('expand');
+        } else if (e.data === 'compactWsp') {
+          t.lastChild.classList.remove('expand');
+          t.lastChild.classList.add('compact');
+        }
+        if (e.data === 'h_55') {
+          t.firstChild.classList.add('h_55');
+        }
+        if (e.data === 'clean_h_55') {
+          t.firstChild.classList.remove('h_55');
+        }
+        if (e.data.event === 'chatbot_ready') {
+          const databotIframe = document.getElementById('chat_box_identifier');
+          chatbotDatabotIframe = databotIframe;
+          const urlSearchParams = new URLSearchParams(window.location.search);
+          const params = Object.fromEntries(urlSearchParams.entries());
+          databotIframe.contentWindow.postMessage(
+            { event: 'chatbot_ready', payload: { queryparams: params } },
+            url_env,
+          );
+          databotIframe.contentWindow.postMessage(
+            {
+              event: 'user_agent',
+              payload: {
+                userAgent,
+              },
+            },
+            url_env,
+          );
+        }
+        if (e.data.event === 'dinamic_width_bar_bot') {
+          const chatbot = document.getElementById('chat_box_identifier');
+          chatbot.classList.add('rectangle_box');
+
+          const label_width = e.data.payload.dinamic_width;
+          const proportion = 88;
+
+          chatbot.style.width = `${ label_width + proportion }px`
+        }
+        if (e.data.event === 'actual_location') {
+          const location = window.location;
+          const databotIframe = document.getElementById('chat_box_identifier');
+          chatbotDatabotIframe = databotIframe;
+          databotIframe.contentWindow.postMessage(
+            {
+              event: 'actual_location',
+              payload: {
+                href: location.href,
+                clientPathName: location.pathname,
+                clientHostName: location.hostname,
+              },
+            },
+            url_env,
+          );
+        }
+        if (e.data.event === 'vtex_orderFormId') {
+          let tries = 0;
+
+          const getOrderFormNetwork = async () => {
+            const body = {
+              expectedOrderFormSections: [
+                'items',
+                'paymentData',
+                'totalizers',
+                'shippingData',
+                'sellers',
+              ],
+            };
+            // Evitando bucle de error en vista preview
+            if (window.location.origin != 'https://ia.databot.cl') {
+              const response = await fetch(
+                `${e.data.payload.vtexDomain}/api/checkout/pub/orderForm?refreshOutdatedData=true`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    accept: 'application/json',
+                    Authority: e.data.payload.vtexDomain,
+                  },
+                  body: JSON.stringify(body),
+                },
+              );
+              const data = await response.json();
+              return data.orderFormId;
+            }
+          };
+
+          if (window.location.origin != 'https://ia.databot.cl') {
+            const interval = setInterval(async () => {
+              tries++;
+
+              let orderForm = JSON.parse(localStorage.getItem('orderform'));
+              if (!orderForm || orderForm.id === 'default-order-form') {
+                orderForm = await getOrderFormNetwork();
+              }
+              if (
+                (orderForm && orderForm.id !== 'default-order-form') ||
+                tries === 3
+              ) {
+                const databotIframe = document.getElementById(
+                  'chat_box_identifier',
+                );
+                databotIframe.contentWindow.postMessage(
+                  {
+                    event: 'vtex_orderFormId',
+                    payload: {
+                      orderFormId:
+                        orderForm?.id ||
+                        orderForm?.orderFormId ||
+                        orderForm ||
+                        null,
+                    },
+                  },
+                  url_env,
+                );
+                clearInterval(interval);
+              }
+            }, 3000);
+          }
+        }
+        if (e.data.event === 'woocommerce_nonce') {
+          console.log("woo-cart init")
+          const { bot_id, nonce, wdomain, id, quantity } = e.data.payload
+          const getCart = async () => {
+            try {
+              console.log("woo-cart get cart", `${wdomain}/wp-json/wc/store/v1/cart/items`);
+              const res = await fetch(
+                `${wdomain}/wp-json/wc/store/v1/cart/items`,
+              );
+              let cart = await res.json();
+              return cart
+            } catch (error) {
+              console.log("error getCart",);
+            }
+          }
+
+          const postCart = async () => {
+            console.log("woo-cart front",bot_id);
+            const formData = new FormData();
+            formData.append('product_id', id);
+            formData.append('quantity', quantity);
+            await fetch(`${wdomain}?wc-ajax=add_to_cart`,{
+              method: 'POST',
+              body: formData
+            })
+            await quantityCartWoo(wdomain);
+            // SI HAY QUE FILTRAR POR BOT CON EL FLUJO ANTERIOR
+            // if(bot_id == 10) {
+            //   console.log("woo-cart front",bot_id);
+            //   const formData = new FormData();
+            //   formData.append('product_id', id);
+            //   formData.append('quantity', quantity);
+            //   await fetch(`${wdomain}?wc-ajax=add_to_cart`,{
+            //     method: 'POST',
+            //     body: formData
+            //   })
+            //   await quantityCartWoo(wdomain);
+            // } else {
+            //   console.log("woo-cart api",bot_id);
+            //   await fetch(`${wdomain}/pruebando`,{
+            //     method: 'POST',
+            //     headers: {
+            //       'Content-Type': 'application/json',
+            //       Nonce: nonce
+            //     }
+            //   })
+            //   await quantityCartWoo(wdomain)
+            // }
+          };
+
+          // PARA EL FLUJO DE ADDCART VIA AJAX, SE DEBE ELIMINAR EL PRODUCTO PARA ACTUALIZAR LA CANTIDAD
+          const removeItem = async (key) => {
+            try {
+              console.log("woo-cart remove item");
+
+              const formData = new FormData();
+              formData.append('cart_item_key', key);
+              await fetch(`${wdomain}/?wc-ajax=remove_from_cart`,{
+                method: 'POST',
+                body: formData
+              })
+
+            } catch (error) {
+              console.log("error remove item",error);
+            }
+          }
+
+          const updateCart = async (key) => {
+            try {
+              console.log("woo-cart update item");
+
+              await fetch(
+                `${wdomain}/wp-json/wc/store/v1/cart/update-item?key=${key}&quantity=${quantity}`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Nonce: nonce,
+                  },
+                },
+              )
+            } catch (error) {
+              console.log("error update cart",error);
+            }
+          }
+
+          const addCart = async () => {
+            const cart = await getCart()
+            try {
+              // Carro con productos
+              if(cart.length > 0) {
+                const findID = cart.find(
+                  (element) => element.id == id,
+                );
+                if(!findID) {
+                  // PRODUCTO NUEVO EN EL CARRO
+                  await postCart()
+                } else {
+                  await removeItem(findID.key)
+                  await postCart()
+                  // SI HAY QUE FILTRAR POR BOT CON EL FLUJO ANTERIOR
+                  // PRODUCTO EN EL CARRO, SE DEBE ACTUALIZAR LA CANTIDAD
+                  // if(bot_id == 10) {
+                  //   await removeItem(findID.key)
+                  //   await postCart()
+                  // } else {
+                  //   await updateCart(findID.key)
+                  //   await quantityCartWoo(wdomain)
+                  // }
+                }
+              } else {
+                postCart();
+              }
+            } catch (error) {
+              console.log('error global', error);
+            }
+          };
+          addCart();
+        }
+        if (e.data.event === 'shopify_cart') {
+          const productVariantId = e.data.payload.id_variant;
+          const quantityProduct = e.data.payload.quantity;
+          const postCartShopify = async () => {
+            let formData = {
+              items: [
+                {
+                  id: productVariantId,
+                  quantity: quantityProduct,
+                },
+              ],
+            };
+            await fetch('/cart/add.js', {
+              method: 'POST',
+              body: JSON.stringify(formData),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((response) => {
+                return response.json();
+              })
+              .then((res) => {
+                console.log('Producto Agregado al carrito Shopify =>>>>', res);
+                quantityCartShop();
+              })
+              .catch((err) => console.error(err));
+          };
+          const getCartShopify = async () => {
+            const request = await fetch('/cart.js', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+            let response = await request.json();
+            let cartShopify = await response.items;
+            console.log('items traer', cartShopify);
+            try {
+              if (cartShopify.length > 0) {
+                const findIDCart = cartShopify.find(
+                  (element) => element.variant_id == productVariantId,
+                );
+                if (!findIDCart) {
+                  postCartShopify();
+                } else {
+                  let formDataUpdate = {
+                    updates: {
+                      [productVariantId]: quantityProduct, //PRODUCT VARIANT : QUANTITY
+                    },
+                  };
+                  fetch('/cart/update.js', {
+                    method: 'POST',
+                    body: JSON.stringify(formDataUpdate),
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  })
+                    .then((response) => {
+                      return response.json();
+                    })
+                    .then((res) => {
+                      console.log('Producto Actualizado Shopify =>>>>', res);
+                      quantityCartShop();
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                }
+              } else {
+                postCartShopify();
+              }
+            } catch (error) {
+              console.log('Error Carrito Shopify', error);
+            }
+          };
+          getCartShopify();
+        }
+        if (e.data.event === 'bsale_add_cart') {
+          const {
+            bdomain: domain,
+            productId,
+            quantity,
+            token,
+          } = e.data.payload;
+          // OBTIENE EL CARRO DE LA SESION
+          const postCart = async () => {
+            fetch(`${domain}/cart/create/${productId}?q=${quantity}`, {
+              method: 'GET',
+              headers: {
+                access_token: token,
+              },
+            })
+              .then((res) => res.json())
+              .then((data) => console.log('postCart data', data))
+              .catch((error) => console.error(error));
+          };
+          const putCart = async (cardDetailId) => {
+            fetch(
+              `${domain}/cart/update_detail/${cardDetailId}?q=${quantity}`,
+              {
+                method: 'GET',
+                headers: {
+                  access_token: token,
+                },
+              },
+            )
+              .then((res) => res.json())
+              .then((data) => console.log('putCart data', data))
+              .catch((error) => console.error(error));
+          };
+          const cartEvent = async () => {
+            fetch(`${domain}/gateway/cart/dynamic?expand=cartDetails`, {
+              method: 'GET',
+              headers: {
+                access_token: token,
+              },
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log('data', data.data);
+                const cartDetails = data.data.cartDetails;
+                const cartDetailsIndex = cartDetails.findIndex(
+                  (e) =>
+                    e.idVarianteProducto === Number(productId) &&
+                    e.id_variante_producto === Number(productId),
+                );
+                if (cartDetailsIndex >= 0) {
+                  console.log('put');
+                  putCart(cartDetails[cartDetailsIndex].id);
+                } else {
+                  console.log('post');
+                  postCart();
+                }
+              });
+          };
+
+          cartEvent();
+        }
+        if (e.data.event === 'quantity_woocommerce') {
+          quantityCartWoo(e.data.payload.wdomain);
+        }
+        if (e.data.event === 'quantity_shopify') {
+          quantityCartShop();
+        }
+        if (e.data.event === 'activate_cardinale_order_modal') {
+          console.log('Activating trackiong modal..');
+          activateOrderTrackingModal();
+        }
+
+        if (e.data.event === 'activate_ocular_widget') {
+          openOcularWidget();
+        }
+
+        if (e.data.event === 'open_phone') {
+          window.open(e.data.payload.value, '_blank');
+        }
+        if (e.data.event === 'open_email') {
+          window.open(e.data.payload.value, '_blank');
+        }
+      });
+
+      const quantityCartShop = async () => {
+        const databotIframe = document.getElementById('chat_box_identifier');
+        const request = await fetch('/cart.js', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        let response = await request.json();
+        let cart = await response;
+        let cartShopify = await response.items;
+        let countGeneral = 0;
+        cartShopify.forEach((element) => {
+          countGeneral = countGeneral + element.quantity;
+        });
+        console.log('cantidad carro shop ', countGeneral);
+        databotIframe.contentWindow.postMessage(
+          {
+            event: 'countTotalCartShopify',
+            payload: { quantity: countGeneral },
+          },
+          url_env,
+        );
+        databotIframe.contentWindow.postMessage(
+          { event: 'shopifyCartObject', payload: { cart } },
+          url_env,
+        );
+      };
+
+      const getCookie = (cookieName) => {
+        let cookiesArray = document.cookie.split(';');
+        for (let i = 0; i < cookiesArray.length; i++) {
+          let cookie = cookiesArray[i].trim();
+          // buscar cookie por nombre
+          if (cookie.startsWith(cookieName + '=')) {
+            return cookie.substring(cookieName.length + 1);
+          }
+        }
+        return null;
+      };
+
+      const quantityCartWoo = async (wdomain) => {
+        const databotIframe = document.getElementById('chat_box_identifier');
+        const res = await fetch(`${wdomain}/wp-json/wc/store/v1/cart/items`);
+        let cart = await res.json();
+        let countGeneral = 0;
+        const cookie = getCookie('woocommerce_cart_hash');
+        cart.forEach((element) => {
+          countGeneral += element.quantity;
+        });
+        databotIframe.contentWindow.postMessage(
+          {
+            event: 'woocommerceCart',
+            payload: { quantity: countGeneral, cart: cart, cartHash: cookie },
+          },
+          url_env,
+        );
+      };
+
+      // Agregar clases al insertar script del bot
+      if (invertPosition.includes(id)) customInitialClasses.push('p-left');
+      if (isSalcobrandBot.includes(id)) {
+        let url_origin = window?.location?.href;
+        // /content/ocular_copy
+        if (!url_origin?.includes('/content/ocular_copy', 0))
+          customInitialClasses.push('space-mobile');
+      }
+      // iframe whatsapp moved to event show_widget
+      let scriptIframe = `<iframe style="display:none;" id="chat_box_identifier" class="compact ${customInitialClasses.join(
+        ' ',
+      )}" src=\'${url_env}/bot?id=${id}&token=${token}&clientPathName=${clientPathName}&clientHostName=${clientHostName}`;
+      if (isPlayground) {
+        scriptIframe += `&isPlayground=${isPlayground}`;
+      }
+      scriptIframe += `'></iframe>`; // local
+      t.innerHTML = scriptIframe;
+      document.getElementsByTagName('body')[0].append(t);
+    }
+    function checkCustomScripts() {
+      // insertting dynamically script
+      const customScripts = {
+        756: 'constructor_31',
+        683: 'neourbe',
+        861: 'salfa_automotriz',
+        2351: 'cardinale',
+        1: 'salcobrand',
+        2674: 'salcobrand',
+      };
+      if (
+        Object.keys(customScripts).includes(id)
+        // && url_env === 'https://databot-api.herokuapp.com'
+      ) {
+        let script = document.createElement('script');
+        script.async = true;
+        script.setAttribute(
+          'src',
+          url_env + '/custom_scripts/' + customScripts[id] + '.js',
+        );
+        document.body.appendChild(script);
+      }
+    }
+    setChabot();
+    checkCustomScripts();
+  }
+})();
+
+/** another custom global functions */
+
+function databot_waitForElement(selector, callback) {
+  var interval = setInterval(function () {
+    if ((heading = document.querySelector(selector))) {
+      clearInterval(interval);
+      callback();
+    }
+  }, 300); // 500 represents how often the script checks for existence of heading in ms
+}
+
+function databot_sendEventToBot(eventName, payload) {
+  chatbotDatabotIframe.contentWindow.postMessage(
+    {
+      event: eventName,
+      payload,
+    },
+    '*',
+  );
+}

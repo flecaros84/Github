@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arriendos - MasterBikes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Session management script -->
+    <script src="../js/session.js"></script>
+    <script src="../js/cart.js" defer></script>
+    
+    
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --light-gray: #f8f9fa;
+            --dark-gray: #34495e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar filtros modernizado */
+        .sidebar {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(52, 152, 219, 0.15);
+        }
+        
+        .sidebar h5 {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar h5::before {
+            content: "🔍";
+            font-size: 1.2rem;
+        }
+        
+        /* Filtros individuales */
+        .filter-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .filter-group label::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+        
+        .filter-group:nth-child(2) label::before { content: "🚲"; }
+        .filter-group:nth-child(3) label::before { content: "📏"; }
+        .filter-group:nth-child(4) label::before { content: "🏷️"; }
+        .filter-group:nth-child(5) label::before { content: "💰"; }
+        .filter-group:nth-child(6) label::before { content: "⭐"; }
+        
+        /* Selects modernizados */
+        .form-select {
+            background: #fff;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .form-select:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+        
+        /* Range slider modernizado */
+        .price-range-container {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 15px;
+            margin-top: 5px;
+            width: 100%;
+            min-width: 280px;
+        }
+        
+        .form-range {
+            height: 10px !important;
+            background: linear-gradient(to right, var(--accent-color) var(--value, 0%), #e9ecef var(--value, 0%));
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .form-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--accent-color), #2980b9);
+            border: 4px solid #fff;
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-range::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.5);
+        }
+        
+        .form-range::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--accent-color), #2980b9);
+            border: 4px solid #fff;
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-range:focus {
+            outline: none;
+        }
+        
+        .price-display {
+            background: linear-gradient(145deg, var(--accent-color), #2980b9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.25);
+            margin-top: 10px;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+        
+        /* Botón limpiar filtros */
+        .clear-filters-btn {
+            background: linear-gradient(145deg, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .clear-filters-btn:hover {
+            background: linear-gradient(145deg, #5a6268, #495057);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(108,117,125,0.3);
+            color: white;
+        }
+        
+        /* Contador de resultados */
+        .results-counter {
+            background: linear-gradient(145deg, var(--accent-color), #2980b9);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            width: 100%;
+            justify-content: center;
+        }
+        
+        /* Bike cards mejoradas */
+        .bike-card {
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bike-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .bike-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .bike-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .bike-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .bike-card:hover .bike-image {
+            transform: scale(1.05);
+        }
+        
+        .price {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .discount-badge {
+            background: linear-gradient(145deg, var(--secondary-color), #c0392b);
+            color: #fff;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        .brand-name {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        
+        .btn-rent {
+            background: linear-gradient(145deg, var(--accent-color), #2980b9);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-rent:hover {
+            background: linear-gradient(145deg, #2980b9, #1f5f8b);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-rent:disabled {
+            background: #6c757d;
+            color: #fff;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-rent:disabled:hover {
+            background: #6c757d;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Indicadores de disponibilidad */
+        .availability-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .availability-available {
+            background: linear-gradient(145deg, var(--success-color), #20c997);
+            color: white;
+        }
+        
+        .availability-reserved {
+            background: linear-gradient(145deg, #ffc107, #fd7e14);
+            color: white;
+        }
+        
+        /* Mejoras en las tarjetas */
+        .bike-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bike-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .bike-card:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* Botones de vista activos */
+        .btn-view-active {
+            background: var(--accent-color) !important;
+            color: white !important;
+            border-color: var(--accent-color) !important;
+        }
+        
+        /* Estrellas de rating */
+        .rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Estilos para el carrito off-canvas */
+        #cartOffcanvas .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #cartOffcanvas .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-details h6 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        .cart-item-details .text-muted {
+            font-size: 0.9rem;
+        }
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .cart-item-remove {
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        #cart-total-container {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                margin-bottom: 30px;
+            }
+            
+            .sidebar h5 {
+                font-size: 1.1rem;
+            }
+            
+            .filter-group {
+                margin-bottom: 20px;
+            }
+            
+            .results-counter {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+        
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .bike-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .bike-card:nth-child(1) { animation-delay: 0.1s; }
+        .bike-card:nth-child(2) { animation-delay: 0.2s; }
+        .bike-card:nth-child(3) { animation-delay: 0.3s; }
+        .bike-card:nth-child(4) { animation-delay: 0.4s; }
+        .bike-card:nth-child(5) { animation-delay: 0.5s; }
+        .bike-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../images/logo.png" alt="MasterBikes" height="30" class="d-inline-block align-text-top me-2">
+                MasterBikes
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="arriendo.html">Arriendos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="personalizacion.html">Personalización</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="formulario.html">Contacto</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <!-- Cart button -->
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="bi bi-cart"></i> Carrito
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
+                        </button>
+                    </li>
+                    <!-- Login/Register buttons -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person"></i> Iniciar Sesión
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroModal">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </button>
+                    </li>
+                    <!-- User menu (hidden by default) -->
+                    <li class="nav-item dropdown" id="userMenu" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span class="user-name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="arriendo.html"><i class="bi bi-bicycle"></i> Mis Arriendos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-person"></i> Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registroModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-person-plus"></i> Registrarse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registroForm">
+                        <div class="mb-3">
+                            <label for="registroNombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="registroNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registroEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="registroEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registroPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registroPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registroPasswordConfirm" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="registroPasswordConfirm" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Off-canvas Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartOffcanvasLabel"><i class="bi bi-cart-fill me-2"></i>Carrito de Arriendo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="cart-items-container">
+            <!-- Cart items will be injected here -->
+            <p class="text-center text-muted" id="cart-empty-msg">Tu carrito está vacío.</p>
+        </div>
+        <div class="offcanvas-footer border-top p-3" id="cart-footer" style="display: none;">
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3" id="cart-total-container">
+                <span>Total:</span>
+                <span id="cart-total">$0</span>
+            </div>
+            <a href="pago.html" class="btn btn-primary w-100" id="checkout-btn">
+                <i class="bi bi-credit-card-fill me-2"></i>
+                Proceder al Pago
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container my-5" style="margin-top: 80px !important;">
+        
+        <!-- Contador de Resultados Prominente -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="results-counter">
+                    <i class="fas fa-bicycle me-2"></i>
+                    <span id="resultsCount">12</span> bicicletas encontradas
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Sidebar filtros -->
+            <div class="col-lg-3">
+                <div class="filters-container p-4 rounded-4 shadow-sm" style="background-color: #f8f9fa;">
+                    <h4 class="mb-4 fw-bold"><i class="bi bi-funnel-fill me-2"></i>Filtros de Búsqueda</h4>
+                    
+                    <!-- Filtros -->
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-12">
+                            <label for="filter-type" class="form-label fw-semibold"><i class="bi bi-bicycle me-2"></i>Tipo de bicicleta</label>
+                            <select id="filter-type" class="form-select">
+                                <option selected>Todas las bicicletas</option>
+                                <option>Montaña</option>
+                                <option>Ruta</option>
+                                <option>Urbana</option>
+                                <option>Eléctrica</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-12">
+                            <label for="filter-size" class="form-label fw-semibold"><i class="bi bi-rulers me-2"></i>Talla</label>
+                            <select id="filter-size" class="form-select">
+                                <option selected>Todas las tallas</option>
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="price-range" class="form-label fw-semibold"><i class="bi bi-currency-dollar me-2"></i>Rango de Precio</label>
+                            <div class="price-range-container">
+                                <input type="range" class="form-range" min="10000" max="100000" step="1000" id="price-range">
+                                <div class="price-display text-center mt-2 fw-semibold" id="price-display-value">$55,000</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de acción -->
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-primary" id="apply-filters-btn"><i class="bi bi-check-lg me-2"></i>Aplicar Filtros</button>
+                        <button class="btn btn-outline-secondary" id="clear-filters-btn"><i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar Filtros</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Listado de bicicletas -->
+            <section class="col-lg-9">
+                <div class="d-flex justify-content-end align-items-center mb-4">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary btn-sm" id="gridView">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" id="listView">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="bikeList" class="row g-4"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Bicicletas de ejemplo para arriendo
+        const bikes = [
+            {id: 1, type: 'Mountain Bike', name: 'Orion 4 Titanio', brand: 'Oxford', size: '29', price: 15000, img: '../images/ba2961-orion-4-29-titanio-2022-02.jpg', discount: 15, availability: 'available', rating: 4.7},
+            {id: 2, type: 'Mountain Bike', name: 'Halley Pro', brand: 'Oxford', size: '27.5', price: 12000, img: '../images/ba2732_halley_27_verde_2024-01_1.jpg', discount: 20, availability: 'available', rating: 4.5},
+            {id: 3, type: 'Mountain Bike', name: 'Merak 1 Elite', brand: 'Oxford', size: '29', price: 18000, img: '../images/ba2951_merak_29_negro_2025_12_2_1.jpg', discount: 10, availability: 'available', rating: 4.8},
+            {id: 4, type: 'Mountain Bike', name: 'Rift Zone Carbon 1', brand: 'Marin', size: '27.5', price: 25000, img: '../images/2022_Rift_Zone_Carbon_1_Color.webp', discount: 25, availability: 'reserved', rating: 4.9},
+            {id: 5, type: 'Mountain Bike', name: 'Pollux 7 Race', brand: 'Shimano', size: '29', price: 20000, img: '../images/bobcat_trail_5.webp', discount: 30, availability: 'available', rating: 4.6},
+            {id: 6, type: 'Mountain Bike', name: 'Luna 20 Kids', brand: 'Oxford', size: '20', price: 8000, img: '../images/AL_MARIN_28423579.webp', discount: 18, availability: 'available', rating: 4.3},
+            {id: 7, type: 'Urbana', name: 'City Cruiser', brand: 'Oxford', size: '27', price: 10000, img: '../images/AL_MARIN_28423565.webp', discount: 22, availability: 'available', rating: 4.4},
+            {id: 8, type: 'Eléctrica', name: 'E-Bike Pro', brand: 'Shimano', size: '-', price: 35000, img: '../images/AL_MARIN_28423559.webp', discount: 12, availability: 'reserved', rating: 4.7},
+            {id: 9, type: 'Mountain Bike', name: 'Mini Trail', brand: 'Oxford', size: '24', price: 7000, img: '../images/25_BCT5_action-1.jpg', discount: 17, availability: 'available', rating: 4.2},
+            {id: 10, type: 'Ruta', name: 'Speed Master', brand: 'Shimano', size: '29', price: 22000, img: '../images/pendiente.jpg', discount: 20, availability: 'available', rating: 4.8},
+            {id: 11, type: 'Mountain Bike', name: 'Classic MTB', brand: 'Oxford', size: '26', price: 9000, img: '../images/BOBCAT-TRAIL-5-29-MARIN24-P.webp', discount: 15, availability: 'available', rating: 4.1},
+            {id: 12, type: 'BMX', name: 'Freestyle Pro', brand: 'Giant', size: '20', price: 6000, img: '../images/pendiente.jpg', discount: 8, availability: 'available', rating: 4.6}
+        ];
+
+        const listEl = document.getElementById('bikeList');
+        const typeFilter = document.getElementById('filter-type');
+        const sizeFilter = document.getElementById('filter-size');
+        const priceRange = document.getElementById('price-range');
+        const priceDisplay = document.getElementById('price-display-value');
+        const resultsCountEl = document.getElementById('resultsCount');
+        const clearFiltersBtn = document.getElementById('clear-filters-btn');
+        const gridViewBtn = document.getElementById('gridView');
+        const listViewBtn = document.getElementById('listView');
+        const applyFiltersBtn = document.getElementById('apply-filters-btn');
+
+        function formatPrice(p) {
+            return new Intl.NumberFormat('es-CL', {style: 'currency', currency: 'CLP'}).format(p);
+        }
+
+        function renderBikes() {
+            const type = typeFilter.value;
+            const size = sizeFilter.value;
+            const maxPrice = +priceRange.value;
+
+            priceDisplay.textContent = formatPrice(maxPrice);
+            
+            const filteredBikes = bikes.filter(bike => {
+                const typeMatch = type === 'Todas las bicicletas' || bike.type.includes(type.replace(' ', ''));
+                const sizeMatch = size === 'Todas las tallas' || bike.size === size;
+                const priceMatch = bike.price <= maxPrice;
+                return typeMatch && sizeMatch && priceMatch;
+            });
+
+            listEl.innerHTML = '';
+            resultsCountEl.textContent = filteredBikes.length;
+            document.querySelector('.results-counter span').textContent = filteredBikes.length;
+
+            if (filteredBikes.length === 0) {
+                listEl.innerHTML = '<div class="col-12"><div class="alert alert-warning text-center">No se encontraron bicicletas con los filtros seleccionados.</div></div>';
+                return;
+            }
+            
+            filteredBikes.forEach(bike => {
+                const originalPrice = bike.discount ? Math.round(bike.price / (1 - (bike.discount / 100))) : null;
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4 bike-card-wrapper';
+
+                const isInCart = window.cart && window.cart.cart.some(item => item.id === bike.id);
+
+                const actionAreaHtml = bike.availability === 'available'
+                    ? `<div class="d-flex align-items-center mb-2">
+                            <label for="days-${bike.id}" class="form-label mb-0 small me-2 fw-semibold">Días:</label>
+                            <input type="number" id="days-${bike.id}" class="form-control form-control-sm" value="1" min="1" max="30" style="width: 80px;" ${isInCart ? 'disabled' : ''}>
+                        </div>
+                        <button class="btn ${isInCart ? 'btn-success' : 'btn-primary'} add-to-cart-btn w-100" data-id="${bike.id}" ${isInCart ? 'disabled' : ''}>
+                           <i class="bi ${isInCart ? 'bi-check-lg' : 'bi-cart-plus'} me-2"></i>
+                           ${isInCart ? 'En el Carrito' : 'Agregar al Carrito'}
+                       </button>`
+                    : `<button class="btn btn-secondary w-100" disabled>
+                           <i class="bi bi-x-circle me-2"></i>
+                           No Disponible
+                       </button>`;
+
+                col.innerHTML = `
+                    <div class="bike-card h-100 d-flex flex-column">
+                        <img src="${bike.img}" class="bike-image" alt="${bike.name}">
+                        ${bike.discount ? `<span class="discount-badge">-${bike.discount}%</span>` : ''}
+                        <span class="availability-badge availability-${bike.availability}">
+                            ${bike.availability === 'available' ? 'Disponible' : 'Reservado'}
+                        </span>
+                        <div class="brand-name">${bike.brand}</div>
+                        <h5 class="mb-2">${bike.name}</h5>
+                        <div class="rating mb-2">
+                            ${'★'.repeat(Math.floor(bike.rating))}${'☆'.repeat(5 - Math.floor(bike.rating))} (${bike.rating})
+                        </div>
+                        <p class="mb-2">
+                            ${originalPrice ? `<span class="old-price">${formatPrice(originalPrice)}</span>` : ''}
+                            <span class="price">${formatPrice(bike.price)}</span> <small>/día</small>
+                        </p>
+                        <div class="mt-auto pt-3 border-top">
+                            ${actionAreaHtml}
+                        </div>
+                    </div>
+                `;
+                listEl.appendChild(col);
+            });
+            updateRangeStyle();
+        }
+
+        // Event listeners
+        applyFiltersBtn.addEventListener('click', renderBikes);
+        priceRange.addEventListener('input', () => {
+            priceDisplay.textContent = formatPrice(priceRange.value);
+            updateRangeStyle();
+        });
+
+        clearFiltersBtn.addEventListener('click', () => {
+            typeFilter.value = 'Todas las bicicletas';
+            sizeFilter.value = 'Todas las tallas';
+            priceRange.value = priceRange.max;
+            renderBikes();
+            
+            clearFiltersBtn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Limpiado';
+            setTimeout(() => {
+                clearFiltersBtn.innerHTML = '<i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar Filtros';
+            }, 1500);
+        });
+
+        // Vista de cuadrícula/lista
+        gridViewBtn.addEventListener('click', function() {
+            listEl.className = 'row g-4';
+            this.classList.add('btn-view-active');
+            listViewBtn.classList.remove('btn-view-active');
+        });
+
+        listViewBtn.addEventListener('click', function() {
+            listEl.className = 'row g-2 list-view';
+            this.classList.add('btn-view-active');
+            gridViewBtn.classList.remove('btn-view-active');
+        });
+
+        function updateRangeStyle() {
+            const percent = (priceRange.value - priceRange.min) / (priceRange.max - priceRange.min) * 100;
+            priceRange.style.setProperty('--value', percent + '%');
+        }
+
+        // Render inicial
+        renderBikes();
+        updateRangeStyle();
+
+        // ===================== SISTEMA DE SESIÓN =====================
+        
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation
+            if (email && password) {
+                sessionManager.handleLogin({
+                    name: email.split('@')[0],
+                    email: email
+                });
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                modal.hide();
+                
+                alert('¡Inicio de sesión exitoso!');
+            } else {
+                alert('Por favor completa todos los campos.');
+            }
+        });
+
+        // Registration form handling
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('registroNombre').value;
+            const email = document.getElementById('registroEmail').value;
+            const password = document.getElementById('registroPassword').value;
+            const passwordConfirm = document.getElementById('registroPasswordConfirm').value;
+            
+            // Validation
+            if (password !== passwordConfirm) {
+                alert('Las contraseñas no coinciden.');
+                return;
+            }
+            
+            if (nombre && email && password) {
+                sessionManager.handleLogin({
+                    name: nombre,
+                    email: email
+                });
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('registroModal'));
+                modal.hide();
+                
+                alert('¡Registro exitoso! Ya puedes usar tu cuenta.');
+            } else {
+                alert('Por favor completa todos los campos.');
+            }
+        });
+    </script>
+
+    <!-- Footer estilo Oxford Store -->
+    <footer class="bg-white border-top mt-5 pt-4 pb-3">
+      <div class="container">
+        <div class="row text-center text-md-start">
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">SOBRE MASTERBIKES</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="text-dark text-decoration-none">Tiendas y puntos de retiro</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Precios taller</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Servicios técnicos autorizados</a></li>
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Trabaja con nosotros</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">SERVICIO CLIENTE</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Preguntas frecuentes</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Garantía MasterBikes</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Armados de bicicletas</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Registra tu bicicleta</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Términos y condiciones</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Políticas de devolución</a></li>
+              <li><a href="#" class="text-dark text-decoration-none">Métodos de envío</a></li>
+              <li><a href="#" class="fw-bold text-dark text-decoration-none">Seguimiento de pedidos</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-4 mb-md-0">
+            <h6 class="fw-bold mb-3">MÉTODOS DE PAGO</h6>
+            <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
+              <img src="../images/icon-webpay.png" alt="Webpay" height="28">
+              <a href="https://www.visa.cl/soporte/consumidores/viajes.html?gad_source=1&gad_campaignid=22511339436&gbraid=0AAAAABKhpWFMuBKZKUYc8vP14kTHlbMMV&gclid=CjwKCAjw3MXBBhAzEiwA0vLXQQmHYinaaYDiJYLtpVYt0QRFNY907zvN1Hza1bCsQcu11XLVOpdSthoCOmcQAvD_BwE" target="_blank">
+                <img src="../images/icon-visa.png" alt="Visa" height="28">
+              </a>
+              <img src="../images/icon-master.png" alt="Mastercard" height="28">
+              <img src="../images/icon-magna.png" alt="Magna" height="28">
+              <img src="../images/icon-cabal.png" alt="Cabal" height="28">
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <h6 class="fw-bold mb-3">SÍGUENOS EN NUESTRAS REDES</h6>
+            <div class="mb-2 d-flex align-items-center">
+              <a href="#" class="me-2"><img src="../images/facebook.png" alt="Facebook" height="28"></a>
+              <a href="#" class="me-2"><img src="../images/instagram.png" alt="Instagram" height="28"></a>
+              <a href="#" class="me-2"><img src="../images/youtube.png" alt="YouTube" height="28"></a>
+            </div>
+            <div class="mb-2">
+              <img src="../images/Gemini_Generated_Image_jydrg5jydrg5jydr.png" alt="MasterBikes" height="28" class="me-2">
+              <img src="../images/shimano-logo.avif" alt="Shimano" height="28">
+            </div>
+            <a href="formulario.html" class="btn btn-dark btn-sm w-100 mt-2" style="border-radius:0;">
+              <i class="bi bi-envelope-fill me-2"></i>Formulario de contacto
+            </a>
+          </div>
+        </div>
+        <div class="text-center mt-4 small text-muted">
+          &copy; 2024 MasterBikes. Todos los derechos reservados.
+        </div>
+      </div>
+    </footer>
+    <!-- Fin Footer -->
+</body>
+</html>

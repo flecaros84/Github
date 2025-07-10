@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administración de Productos - MasterBikes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Administración de Productos</h1>
+        <div id="admin-alert" class="alert d-none" role="alert"></div>
+        <ul class="nav nav-tabs" id="adminTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="componentes-tab" data-bs-toggle="tab" data-bs-target="#componentes" type="button" role="tab">Agregar Componente</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="bicicletas-tab" data-bs-toggle="tab" data-bs-target="#bicicletas" type="button" role="tab">Agregar Bicicleta</button>
+            </li>
+        </ul>
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="componentes" role="tabpanel">
+                <form id="form-componente" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <input type="text" class="form-control" id="tipo" name="tipo" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="marca" class="form-label">Marca</label>
+                        <input type="text" class="form-control" id="marca" name="marca" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="modelo" class="form-label">Modelo</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="precioUnitario" class="form-label">Precio Unitario</label>
+                        <input type="number" class="form-control" id="precioUnitario" name="precioUnitario" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Agregar Componente</button>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="bicicletas" role="tabpanel">
+                <form id="form-bicicleta" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="modeloBici" class="form-label">Modelo</label>
+                        <input type="text" class="form-control" id="modeloBici" name="modelo" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="tallaUsuario" class="form-label">Talla Usuario</label>
+                        <select class="form-select" id="tallaUsuario" name="tallaUsuario" required>
+                            <option value="">Selecciona</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="idMarco" class="form-label">ID Marco</label>
+                        <input type="number" class="form-control" id="idMarco" name="idMarco" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="idRueda" class="form-label">ID Rueda</label>
+                        <input type="number" class="form-control" id="idRueda" name="idRueda" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="idFreno" class="form-label">ID Freno</label>
+                        <input type="number" class="form-control" id="idFreno" name="idFreno" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="idManubrio" class="form-label">ID Manubrio</label>
+                        <input type="number" class="form-control" id="idManubrio" name="idManubrio" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="idSillin" class="form-label">ID Sillín</label>
+                        <input type="number" class="form-control" id="idSillin" name="idSillin" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="esPredefinida" class="form-label">¿Es Predefinida?</label>
+                        <select class="form-select" id="esPredefinida" name="esPredefinida" required>
+                            <option value="true">Sí</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Agregar Bicicleta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/admin-productos.js"></script>
+</body>
+</html>

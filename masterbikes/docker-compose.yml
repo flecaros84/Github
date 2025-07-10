@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "80:8080"
+    depends_on:
+      - catalogo-service
+      - inventario-service
+      - sucursal-service
+      - venta-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  catalogo-service:
+    build: ./catalogo-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+
+  inventario-service:
+    build: ./inventario-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+
+  sucursal-service:
+    build: ./sucursal-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+
+  venta-service:
+    build: ./venta-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default

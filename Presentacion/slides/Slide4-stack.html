@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologías que se utilizarán</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../css/stack.css">
+</head>
+<body>
+    <div class="slide flex flex-col text-white p-10 relative active">
+        <!-- Background decorative elements -->
+        <div class="bike-wheel" style="width: 500px; height: 500px; top: -150px; right: -100px; border-width: 10px; opacity: 0.2"></div>
+        <div class="bike-wheel" style="width: 300px; height: 300px; bottom: -50px; left: -50px; border-width: 8px; opacity: 0.15"></div>
+        
+        <div class="circle-pattern" style="width: 200px; height: 200px; top: 10%; left: 5%;"></div>
+        <div class="circle-pattern" style="width: 100px; height: 100px; bottom: 15%; right: 10%;"></div>
+        
+        <!-- Header -->
+        <div class="mb-6 z-10">
+            <h2 class="text-4xl font-bold">Tecnologías que se utilizarán</h2>
+            <div class="w-20 h-1 bg-green-400 mt-2"></div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="flex flex-1 z-10">
+            <!-- Left column: Technologies -->
+            <div class="w-1/2 pr-4">
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm h-full">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-laptop-code text-green-400 mr-3"></i>
+                        Stack Tecnológico
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div class="tech-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-blue-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fab fa-java text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Backend</h4>
+                                <p class="text-sm opacity-90">Java con Spring Boot (Arquitectura de Microservicios)</p>
+                                <p class="text-xs opacity-70 mt-1">Facilita escalabilidad e independencia entre módulos</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-red-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-database text-red-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Base de Datos</h4>
+                                <p class="text-sm opacity-90">Oracle Database (desplegada en AWS RDS)</p>
+                                <p class="text-xs opacity-70 mt-1">Base de datos relacional potente y escalable</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-yellow-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-code text-yellow-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Frontend</h4>
+                                <p class="text-sm opacity-90">HTML, CSS, JavaScript (con React o Vue)</p>
+                                <p class="text-xs opacity-70 mt-1">Interfaces responsivas y experiencia de usuario moderna</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-green-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-shield-alt text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">Seguridad</h4>
+                                <p class="text-sm opacity-90">Spring Security con JSON Web Tokens (JWT)</p>
+                                <p class="text-xs opacity-70 mt-1">Autenticación y autorización robusta para APIs</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card pl-3 py-2 rounded flex items-start">
+                            <div class="icon-container bg-purple-500 bg-opacity-20 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-project-diagram text-purple-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-semibold">API Gateway</h4>
+                                <p class="text-sm opacity-90">Spring Cloud Gateway</p>
+                                <p class="text-xs opacity-70 mt-1">Enrutamiento y filtrado centralizado de peticiones</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h4 class="text-base font-semibold mb-2">Otras tecnologías clave:</h4>
+                        <div class="flex flex-wrap">
+                            <div class="tech-chip text-xs flex items-center">
+                                <i class="fab fa-aws text-yellow-300 mr-1"></i> AWS EC2/RDS
+                            </div>
+                            <div class="tech-chip text-xs flex items-center">
+                                <i class="fab fa-github text-white mr-1"></i> GitHub
+                            </div>
+                            <div class="tech-chip text-xs flex items-center">
+                                <i class="fas fa-paper-plane text-blue-300 mr-1"></i> Postman
+                            </div>
+                            <div class="tech-chip text-xs flex items-center">
+                                <i class="fas fa-cogs text-gray-300 mr-1"></i> APIs Proveedores
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right column: Architecture diagram -->
+            <div class="w-1/2 pl-4">
+                <div class="bg-black bg-opacity-20 p-4 rounded-lg backdrop-filter backdrop-blur-sm mb-4 h-full flex flex-col">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-sitemap text-green-400 mr-3"></i>
+                        Arquitectura de Microservicios
+                    </h3>
+                    
+                    <div class="flex-grow" style="min-height: 450px;">
+                        <div class="mermaid h-full" style="height: 100%; min-height: 400px; width: 100%; font-size: 1.1em; display: flex; align-items: center; justify-content: center;">
+graph TB
+    CLIENT["Cliente Web/Móvil"]
+    GATEWAY["API Gateway"]
+    AUTH["Servicio de Autenticación"]
+    USER["Servicio de Usuarios"]
+    SALES["Servicio de Ventas"]
+    RENTAL["Servicio de Arriendo"]
+    REPAIR["Servicio de Reparaciones"]
+    INVENTORY["Servicio de Inventario"]
+    DB[("Base de Datos Oracle")]
+    CLIENT --> GATEWAY
+    GATEWAY --> AUTH
+    GATEWAY --> USER
+    GATEWAY --> SALES
+    GATEWAY --> RENTAL
+    GATEWAY --> REPAIR
+    GATEWAY --> INVENTORY
+    AUTH --> DB
+    USER --> DB
+    SALES --> DB
+    RENTAL --> DB
+    REPAIR --> DB
+    INVENTORY --> DB
+    classDef client fill:#2ecc71,stroke:#27ae60,color:#fff
+    classDef gateway fill:#3498db,stroke:#2980b9,color:#fff
+    classDef service fill:#34495e,stroke:#2c3e50,color:#fff
+    classDef database fill:#e74c3c,stroke:#c0392b,color:#fff
+    class CLIENT client
+    class GATEWAY gateway
+    class AUTH,USER,SALES,RENTAL,REPAIR,INVENTORY service
+    class DB database
+</div>
+                    </div>
+                    
+                    <div class="mt-4 bg-black bg-opacity-30 p-3 rounded-lg">
+                        <h4 class="text-base font-semibold mb-2">Justificación de la Arquitectura</h4>
+                        <ul class="text-sm space-y-1">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+                                <span>Los microservicios permiten desarrollo, despliegue y escalamiento independiente</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+                                <span>Cada equipo puede trabajar en servicios específicos sin afectar otros</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+                                <span>El API Gateway centraliza autenticación y facilita la comunicación con clientes</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+                                <span>Oracle ofrece alta confiabilidad para datos críticos del negocio</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Decorative gear icons -->
+        <i class="fas fa-cog text-white opacity-10 absolute top-20 right-20 text-5xl" style="animation: rotate 15s infinite linear;"></i>
+        <i class="fas fa-cog text-white opacity-10 absolute bottom-10 left-10 text-4xl" style="animation: rotate 10s infinite linear reverse;"></i>
+    </div>
+    
+    <div id="mermaidModal" class="modal">
+        <div class="modal-content">
+            <span id="modalClose" class="modal-close">&times;</span>
+            <div id="modalMermaid" class="mermaid"></div>
+        </div>
+    </div>
+    
+    <nav>
+        <a href="Slide1-indice.html" title="Índice"><i class="fas fa-list"></i></a>
+        <a href="Slide3-problematica.html" title="Anterior"><i class="fas fa-arrow-up"></i></a>
+        <a href="Slide5-avances.html" title="Siguiente"><i class="fas fa-arrow-down"></i></a>
+    </nav>
+    
+    <script src="../js/stack.js"></script>
+    <script>
+        // Navegación con teclas
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                window.location.href = 'Slide5-avances.html';
+            } else if (event.key === 'ArrowLeft') {
+                window.location.href = 'Slide3-problematica.html';
+            }
+        });
+    </script>
+</body>
+</html>
